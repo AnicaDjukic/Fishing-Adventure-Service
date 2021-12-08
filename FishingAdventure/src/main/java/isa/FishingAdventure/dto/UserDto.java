@@ -1,10 +1,16 @@
 package isa.FishingAdventure.dto;
 
+import java.sql.Timestamp;
+
+import javax.persistence.Column;
+
 import isa.FishingAdventure.model.Address;
 import isa.FishingAdventure.model.UserType;
 
 public class UserDto {
 
+	private Integer id;
+	
 	private String email;
 
 	private String password;
@@ -19,15 +25,31 @@ public class UserDto {
 
 	public UserDto() {}
 
-	public UserDto(String email, String password, String name, String surname, String phoneNumber,
+	public UserDto(Integer id, String email, String password, String name, String surname, String phoneNumber,
 			UserType userType) {
 		super();
+		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.surname = surname;
 		this.phoneNumber = phoneNumber;
 		this.userType = userType;
+	}
+
+	public UserDto(String email, String password, String name) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.name = name;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -77,7 +99,6 @@ public class UserDto {
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
-
 
 
 }

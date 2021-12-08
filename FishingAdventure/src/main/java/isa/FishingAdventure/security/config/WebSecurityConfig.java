@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 import isa.FishingAdventure.security.auth.RestAuthenticationEntryPoint;
+import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.UserService;
 
 /*
@@ -67,8 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	// Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
-	/*@Autowired
-	private TokenUtils tokenUtils;*/
+	@Autowired
+	private TokenUtils tokenUtils;
 
 	// Definisemo prava pristupa za zahteve ka odredjenim URL-ovima/rutama
 	@Override
@@ -83,7 +84,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			//.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
 			// svim korisnicima dopusti da pristupe sledecim putanjama:
-			.authorizeRequests().antMatchers("/users/**").permitAll()		// /auth/**
+			.authorizeRequests().antMatchers("/**").permitAll()		// /auth/**
 								.antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
 								.antMatchers("/api/foo").permitAll()		// /api/foo
 								
@@ -112,7 +113,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Zahtevi koji se mecuju za web.ignoring().antMatchers() nemaju pristup SecurityContext-u
 		
 		// Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
-		 web.ignoring().antMatchers(HttpMethod.POST, "/users/signup/async");
+		 web.ignoring().antMatchers(HttpMethod.POST, "/auth/signup");
 		 
 		// Ovim smo dozvolili pristup statickim resursima aplikacije
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",

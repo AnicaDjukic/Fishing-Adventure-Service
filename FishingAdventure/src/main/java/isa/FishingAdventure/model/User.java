@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -32,7 +33,7 @@ public abstract class User implements UserDetails {
     @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
-    @OneToOne(targetEntity = UserType.class,cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = UserType.class, cascade = CascadeType.MERGE)
     private UserType userType;
 
     public UserType getUserType() {
@@ -88,25 +89,32 @@ public abstract class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "addressId", referencedColumnName = "addressId")
     public Address address;
-
-    public User(Integer userId, String email, String password, String name, String surname, String phoneNumber, UserType userType, double points, UserCategory category, boolean activated, Address address) {
-        this.userId = userId;
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.phoneNumber = phoneNumber;
-        this.points = points;
-        this.category = category;
-        this.activated = activated;
-        this.address = address;
-    }
-
-
+    
+    @Column(name = "last_password_reset_date")
+    private Timestamp lastPasswordResetDate;
+    
     public User() {
     }
+    
+    public User(Integer userId, String email, String password, String name, String surname, String phoneNumber,
+			UserType userType, double points, UserCategory category, boolean activated, Address address,
+			Timestamp lastPasswordResetDate) {
+		super();
+		this.userId = userId;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.surname = surname;
+		this.phoneNumber = phoneNumber;
+		this.userType = userType;
+		this.points = points;
+		this.category = category;
+		this.activated = activated;
+		this.address = address;
+		this.lastPasswordResetDate = lastPasswordResetDate;
+	}
 
-    public Integer getUserId() {
+	public Integer getUserId() {
         return this.userId;
     }
 
@@ -161,6 +169,16 @@ public abstract class User implements UserDetails {
     public void setPoints(double points) {
         this.points = points;
     }
+    
+
+	public Timestamp getLastPasswordResetDate() {
+		return lastPasswordResetDate;
+	}
+
+
+	public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
+		this.lastPasswordResetDate = lastPasswordResetDate;
+	}
 
 
 	@Override

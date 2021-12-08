@@ -345,11 +345,13 @@ export default {
         name: this.user.name,
         surname: this.user.surname,
         phoneNumber: this.user.phoneNumber,
-        userType: "CLIENT"
+        userType: {
+            name: "CLIENT"
+        }
       };
 
       axios
-        .post("http://localhost:8080/users/signup/async", user, {
+        .post("http://localhost:8080/auth/signup", user, {
           headers: {
             'Access-Control-Allow-Origin': 'http://localhost:8080'
           }

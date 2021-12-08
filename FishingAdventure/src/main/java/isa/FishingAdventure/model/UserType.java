@@ -51,4 +51,20 @@ public class UserType implements GrantedAuthority {
         this.id = id;
     }
 
+    public UserType() {}
+    
+    
+	public UserType(String name) {
+		super();
+		this.name = name;
+	}
+
+	public UserType(Integer id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+    
+    
+
 }
