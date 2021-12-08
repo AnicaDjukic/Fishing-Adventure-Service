@@ -1,13 +1,13 @@
 <template>
   <div class="fa-page">
     <div class="main-img-fa">
-      <img src="@/assets/fa7.jpg" alt="" />
+      <img src="@/assets/c16.jpg" alt="" />
       <div class="tagline-fa">
         <h2>
-          Start your adventure <br />
+          Enjoy in your cottage <br />
           today!
         </h2>
-        <button class="book-btn">Book an adventure</button>
+        <button class="book-btn">Book a cottage</button>
       </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-info">
@@ -37,7 +37,6 @@
             </li>
             <li v-on:click="changeMenuDisplay" id="loc-fa">Location</li>
             <li v-on:click="changeMenuDisplay" id="pl-fa">Pricelist</li>
-            <li v-on:click="changeMenuDisplay" id="instr-fa">Instructor</li>
           </ul>
         </div>
       </div>
@@ -46,7 +45,7 @@
       <div class="menu-body-fa">
         <div class="menu-about-fa" style="text-align: justify">
           <div class="ma-top-part">
-            <h3>Adventure Title</h3>
+            <h3>Villa Madam</h3>
             <h5>For up to 3 people</h5>
           </div>
           <p>
@@ -55,8 +54,7 @@
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip ex ea commodo consequat. Duis aute irure dolor in
             reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            pariatur.
           </p>
         </div>
 
@@ -65,47 +63,38 @@
             <h4>With every reservation you will get:</h4>
             <ul>
               <li>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="12"
-                  style="color: rgb(22, 82, 161)"
-                  fill="currentColor"
-                  class="bi bi-circle-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <circle cx="5" cy="5" r="5" />
-                </svg>
-                A fishing rod and reel
+                <i
+                  class="fas fa-circle"
+                  style="
+                    color: rgb(22, 82, 161);
+                    font-size: 0.5em;
+                    margin-right: 2%;
+                  "
+                ></i>
+                Towels
               </li>
 
               <li>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="12"
-                  style="color: rgb(22, 82, 161)"
-                  fill="currentColor"
-                  class="bi bi-circle-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <circle cx="5" cy="5" r="5" />
-                </svg>
-                A fishing line
+                <i
+                  class="fas fa-circle"
+                  style="
+                    color: rgb(22, 82, 161);
+                    font-size: 0.5em;
+                    margin-right: 2%;
+                  "
+                ></i>
+                Bed sheets
               </li>
               <li>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="12"
-                  style="color: rgb(22, 82, 161)"
-                  fill="currentColor"
-                  class="bi bi-circle-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <circle cx="5" cy="5" r="5" />
-                </svg>
-                A tackle box
+                <i
+                  class="fas fa-circle"
+                  style="
+                    color: rgb(22, 82, 161);
+                    font-size: 0.5em;
+                    margin-right: 2%;
+                  "
+                ></i>
+                Small kitchen set
               </li>
             </ul>
           </div>
@@ -114,62 +103,26 @@
             <h4>Rulebook:</h4>
             <ul>
               <li>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="13"
-                  height="13"
-                  fill="currentColor"
-                  style="color: green; margin: 0 4px 1px 0"
-                  class="bi bi-check-circle"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                  />
-                  <path
-                    d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"
-                  />
-                </svg>
+                <i
+                  class="far fa-check-circle"
+                  style="color: green; margin-right: 2%"
+                ></i>
                 Pets
               </li>
 
               <li>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="13"
-                  height="13"
-                  fill="currentColor"
-                  style="color: red; margin: 0 4px 1px 0"
-                  class="bi bi-x-circle"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                  />
-                  <path
-                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
-                  />
-                </svg>
+                <i
+                  class="far fa-times-circle"
+                  style="color: red; margin-right: 2%"
+                ></i>
                 No smoking
               </li>
 
               <li>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="13"
-                  height="13"
-                  fill="currentColor"
-                  style="color: red; margin: 0 4px 1px 0"
-                  class="bi bi-x-circle"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                  />
-                  <path
-                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
-                  />
-                </svg>
+                <i
+                  class="far fa-times-circle"
+                  style="color: red; margin-right: 2%"
+                ></i>
                 No littering
               </li>
             </ul>
@@ -191,37 +144,23 @@
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td class="as-title">Fishing boat</td>
-                <td><span class="as-price">$45</span></td>
-                <td>you will not be restricted to only fishing on the shore</td>
+                <td class="as-title">TV kable</td>
+                <td><span class="as-price">$2</span></td>
               </tr>
 
               <tr>
-                <td class="as-title">Professional fishing gear</td>
-                <td><span class="as-price">$70</span></td>
-                <td>high quality rods, reels and lures</td>
+                <td class="as-title">Air conditioner</td>
+                <td><span class="as-price">$5</span></td>
+              </tr>
+
+              <tr>
+                <td class="as-title">Parking</td>
+                <td><span class="as-price">$2</span></td>
               </tr>
             </tbody>
 
             <tbody></tbody>
           </table>
-
-          <h6 style="margin-top: 5%">
-            *In case of cancelation the instructor keeps 20% of the full payment
-            including bought additional services
-          </h6>
-        </div>
-
-        <div class="menu-instr-fa" style="display: none">
-          <h4>John Smith</h4>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur.
-          </p>
         </div>
       </div>
     </div>
@@ -263,11 +202,23 @@
             data-bs-slide-to="2"
             aria-label="Slide 3"
           ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="3"
+            aria-label="Slide 4"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="4"
+            aria-label="Slide 5"
+          ></button>
         </div>
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img
-              src="@/assets/fa18.jpg"
+              src="@/assets/c16.jpg"
               class="d-block w-100"
               alt="..."
               style="object-fit: contain; height: 450px"
@@ -275,7 +226,7 @@
           </div>
           <div class="carousel-item">
             <img
-              src="@/assets/fa19.jpg"
+              src="@/assets/c16-2.jpg"
               class="d-block w-100"
               alt="..."
               style="object-fit: contain; height: 450px"
@@ -283,7 +234,23 @@
           </div>
           <div class="carousel-item">
             <img
-              src="@/assets/fa20.jpg"
+              src="@/assets/c16-3.jpg"
+              class="d-block w-100"
+              alt="..."
+              style="object-fit: contain; height: 450px"
+            />
+          </div>
+          <div class="carousel-item">
+            <img
+              src="@/assets/c16-4.jpg"
+              class="d-block w-100"
+              alt="..."
+              style="object-fit: contain; height: 450px"
+            />
+          </div>
+          <div class="carousel-item">
+            <img
+              src="@/assets/c16-5.jpg"
               class="d-block w-100"
               alt="..."
               style="object-fit: contain; height: 450px"
@@ -325,7 +292,7 @@
 
         <div class="review-fa continer">
           <div class="review-tp">
-            <img class="user-rev-img" src="@/assets/fa7.jpg" alt="" />
+            <img class="user-rev-img" src="@/assets/c16.jpg" alt="" />
             <div class="rev-info">
               <h5>John Smith</h5>
               <h6>01.12.2021.</h6>
@@ -338,54 +305,10 @@
                 align-content: center;
               "
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-star-fill rev-star"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
-                />
-              </svg>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-star-fill rev-star"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
-                />
-              </svg>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-star-fill rev-star"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
-                />
-              </svg>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-star-fill rev-star"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
-                />
-              </svg>
+              <i class="fas fa-star bi bi-star-fill rev-star"></i>
+              <i class="fas fa-star bi bi-star-fill rev-star"></i>
+              <i class="fas fa-star bi bi-star-fill rev-star"></i>
+              <i class="fas fa-star bi bi-star-fill rev-star"></i>
             </div>
           </div>
           <p>
@@ -404,6 +327,18 @@
 
 <script>
 export default {
+  data: function () {
+    return {
+      entity: "",
+    };
+  },
+  mounted() {
+    window.scrollTo(0, 0);
+    // axios.get("/cottage/" + this.$route.query.id).then((response) => {
+    //   this.entity = response.data;
+
+    // });
+  },
   name: "FishingAdventure",
   methods: {
     changeMenuDisplay: function (event) {
@@ -412,7 +347,6 @@ export default {
       document.getElementById("ex-info-fa").style.borderBottom = "0px";
       document.getElementById("loc-fa").style.borderBottom = "0px";
       document.getElementById("pl-fa").style.borderBottom = "0px";
-      document.getElementById("instr-fa").style.borderBottom = "0px";
 
       document.getElementById(elID).style.borderBottom = "1px solid white";
 
@@ -421,31 +355,26 @@ export default {
         document.querySelector(".menu-ex-info-fa").style.display = "none";
         document.querySelector(".menu-loc-fa").style.display = "none";
         document.querySelector(".menu-pl-fa").style.display = "none";
-        document.querySelector(".menu-instr-fa").style.display = "none";
       } else if (elID == "ex-info-fa") {
         document.querySelector(".menu-about-fa").style.display = "none";
         document.querySelector(".menu-ex-info-fa").style.display = "flex";
         document.querySelector(".menu-loc-fa").style.display = "none";
         document.querySelector(".menu-pl-fa").style.display = "none";
-        document.querySelector(".menu-instr-fa").style.display = "none";
       } else if (elID == "loc-fa") {
         document.querySelector(".menu-about-fa").style.display = "none";
         document.querySelector(".menu-ex-info-fa").style.display = "none";
         document.querySelector(".menu-loc-fa").style.display = "inline-flex";
         document.querySelector(".menu-pl-fa").style.display = "none";
-        document.querySelector(".menu-instr-fa").style.display = "none";
       } else if (elID == "pl-fa") {
         document.querySelector(".menu-about-fa").style.display = "none";
         document.querySelector(".menu-ex-info-fa").style.display = "none";
         document.querySelector(".menu-loc-fa").style.display = "none";
         document.querySelector(".menu-pl-fa").style.display = "block";
-        document.querySelector(".menu-instr-fa").style.display = "none";
       } else {
         document.querySelector(".menu-about-fa").style.display = "none";
         document.querySelector(".menu-ex-info-fa").style.display = "none";
         document.querySelector(".menu-loc-fa").style.display = "none";
         document.querySelector(".menu-pl-fa").style.display = "none";
-        document.querySelector(".menu-instr-fa").style.display = "block";
       }
     },
   },

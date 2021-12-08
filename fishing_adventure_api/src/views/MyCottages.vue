@@ -26,29 +26,25 @@
             New cottage
           </button>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <input
             class="form-control me-2"
             type="search"
             placeholder="Search"
             aria-label="Search"
+            v-model="searchText"
+            v-on:keyup="searchCottage"
+            v-on:click="searchCottage"
           />
         </div>
         <div class="col-md-4">
           <div style="display: flex">
-            <span class="input-group-text">Price</span>
-            <input
-              class="form-control"
-              type="search"
-              placeholder="Enter price.."
-              aria-label="Enter price.."
-            />
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div style="display: flex">
             <span class="input-group-text">Rating</span>
-            <div class="rating-div form-control" style="min-width: 135px">
+            <div
+              class="rating-div form-control"
+              style="min-width: 135px"
+              v-on:click="searchCottage"
+            >
               <div class="rating">
                 <input type="radio" name="star" id="star1" value="5" />
                 <label for="star1"></label>
@@ -67,7 +63,11 @@
       </div>
     </div>
     <div style="margin-top: 5%">
-      <CottageCard v-for="index in 10" :key="index"></CottageCard>
+      <CottageCard
+        v-for="entitie in searchResults"
+        :key="entitie.id"
+        v-bind:entitie="entitie"
+      ></CottageCard>
     </div>
   </div>
 </template>
@@ -79,9 +79,125 @@ export default {
   data: function () {
     return {
       numberOfPersons: "",
+      searchText: "",
+      searchResults: [
+        {
+          id: "1",
+          name: "Villa Madam",
+          description:
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+          cancellationRule: "",
+          rating: "4.85",
+          location: "768 Ketch Harbour Lane New Port Richey, FL 34653",
+          availabilityStart: "10 Dec 2021 14:00:00 GMT",
+          availabilityEnd: "15 Dec 2021 11:00:00 GMT",
+          image: "c1.jpg",
+          vacationHomeOwner: "jamesDean",
+        },
+        {
+          id: "2",
+          name: "Catherine's Vineyard",
+          description:
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+          cancellationRule: "",
+          rating: "3.95",
+          location: "849 Cedar Drive Niceville, FL 32578",
+          availabilityStart: "8 Dec 2021 14:00:00 GMT",
+          availabilityEnd: "12 Dec 2021 11:00:00 GMT",
+          image: "c3.jpg",
+          vacationHomeOwner: "jamesDean",
+        },
+      ],
+      entities: [
+        {
+          id: "1",
+          name: "Villa Madam",
+          description:
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+          cancellationRule: "",
+          rating: "4.85",
+          location: "768 Ketch Harbour Lane New Port Richey, FL 34653",
+          availabilityStart: "10 Dec 2021 14:00:00 GMT",
+          availabilityEnd: "15 Dec 2021 11:00:00 GMT",
+          image: "c1.jpg",
+          vacationHomeOwner: "jamesDean",
+        },
+        {
+          id: "2",
+          name: "Catherine's Vineyard",
+          description:
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+          cancellationRule: "",
+          rating: "3.95",
+          location: "849 Cedar Drive Niceville, FL 32578",
+          availabilityStart: "8 Dec 2021 14:00:00 GMT",
+          availabilityEnd: "12 Dec 2021 11:00:00 GMT",
+          image: "c3.jpg",
+          vacationHomeOwner: "jamesDean",
+        },
+      ],
     };
   },
-  methods: {},
+  methods: {
+    searchCottage: function () {
+      if (this.searchText != "" && this.searchText.trim().lenght != 0) {
+        let searchParts = this.searchText.trim().split(" ");
+
+        this.searchResults = [];
+        for (let entitie of this.entities) {
+          let matches = true;
+          for (let i = 0; i < searchParts.length; i++) {
+            if (
+              !entitie.name
+                .toLocaleLowerCase()
+                .includes(searchParts[i].toLocaleLowerCase()) &&
+              !entitie.location
+                .toLocaleLowerCase()
+                .includes(searchParts[i].toLocaleLowerCase()) &&
+              !entitie.vacationHomeOwner
+                .toLocaleLowerCase()
+                .includes(searchParts[i].toLocaleLowerCase())
+            ) {
+              matches = false;
+              break;
+            }
+          }
+          if (matches) {
+            this.searchResults.push(entitie);
+          }
+        }
+      } else {
+        this.searchResults = this.entities;
+      }
+
+      let stars = document.querySelector(
+        "input[type='radio'][name='star']:checked"
+      );
+      if (stars != null && this.searchResults != null) {
+        let rating;
+        if (document.getElementById("star1").checked) {
+          rating = 5;
+        } else if (document.getElementById("star2").checked) {
+          rating = 4;
+        } else if (document.getElementById("star3").checked) {
+          rating = 3;
+        } else if (document.getElementById("star4").checked) {
+          rating = 2;
+        } else {
+          rating = 1;
+        }
+
+        let newResults = [];
+        for (let entitie of this.searchResults) {
+          if (parseFloat(entitie.rating) >= rating) {
+            newResults.push(entitie);
+          }
+        }
+
+        this.searchResults = newResults;
+      }
+    },
+  },
 };
 </script>
 

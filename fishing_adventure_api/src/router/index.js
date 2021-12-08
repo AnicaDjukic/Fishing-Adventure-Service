@@ -55,12 +55,16 @@ const routes = [{
     name: 'HomeOwnerCalendar',
     component: () =>
         import ('../views/HomeOwnerCalendar.vue')
-},
-{
+}, {
     path: '/fishingAdventure',
     name: 'FishingAdventure',
     component: () =>
         import ('../views/FishingAdventure.vue')
+}, {
+    path: '/cottage',
+    name: 'CottageProfile',
+    component: () =>
+        import ('../views/CottageProfile.vue')
 }]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),

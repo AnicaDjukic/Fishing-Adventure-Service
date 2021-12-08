@@ -121,7 +121,7 @@ export default {
   name: "NavBar",
   data: function () {
     return {
-      loggedInUser: "",
+      loggedInUser: "homeOwner",
     };
   },
   methods: {

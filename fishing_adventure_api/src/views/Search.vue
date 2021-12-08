@@ -63,7 +63,11 @@
       </div>
     </div>
     <div v-if="searching == 'cottages'" style="margin-top: 5%">
-      <CottageCard v-for="index in 10" :key="index"></CottageCard>
+      <CottageCard
+        v-for="entitie in entities"
+        :key="entitie.id"
+        v-bind:entitie="entitie"
+      ></CottageCard>
     </div>
   </div>
 </template>
@@ -93,6 +97,60 @@ export default {
     return {
       numberOfPersons: "",
       searching: "",
+      entities: [
+        {
+          id: "1",
+          name: "Villa Madam",
+          description:
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+          cancellationRule: "",
+          rating: "4.85",
+          location: "",
+          availabilityStart: "10 Dec 2021 14:00:00 GMT",
+          availabilityEnd: "15 Dec 2021 11:00:00 GMT",
+          image: "c1.jpg",
+          vacationHomeOwner: "jamesDean",
+        },
+        {
+          id: "2",
+          name: "Catherine's Vineyard",
+          description:
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+          cancellationRule: "",
+          rating: "3.95",
+          location: "",
+          availabilityStart: "8 Dec 2021 14:00:00 GMT",
+          availabilityEnd: "12 Dec 2021 11:00:00 GMT",
+          image: "c3.jpg",
+          vacationHomeOwner: "jamesDean",
+        },
+        {
+          id: "3",
+          name: "Hillside Cottage",
+          description:
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+          cancellationRule: "",
+          rating: "4.44",
+          location: "",
+          availabilityStart: "6 Dec 2021 14:00:00 GMT",
+          availabilityEnd: "9 Dec 2021 11:00:00 GMT",
+          image: "c9.jpg",
+          vacationHomeOwner: "zoeyClemons",
+        },
+        {
+          id: "4",
+          name: "Morris cottage",
+          description:
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+          cancellationRule: "",
+          rating: "4.65",
+          location: "",
+          availabilityStart: "23 Dec 2021 14:00:00 GMT",
+          availabilityEnd: "25 Dec 2021 11:00:00 GMT",
+          image: "c14.jpg",
+          vacationHomeOwner: "nikkiMorrison",
+        },
+      ],
     };
   },
   mounted: function () {

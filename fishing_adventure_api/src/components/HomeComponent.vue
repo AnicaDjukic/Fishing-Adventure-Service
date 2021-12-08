@@ -36,7 +36,7 @@
       <div class="col" v-on:click="searchCottages">
         <div class="card h-100 bg-dark">
           <img
-            src="@/assets/c1.jpg"
+            src="@/assets/c2.jpg"
             class="card-img-top shadow-none"
             alt="..."
           />
