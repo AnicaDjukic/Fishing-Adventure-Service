@@ -1,12 +1,17 @@
 package isa.FishingAdventure.model;
 
 import javax.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Entity
 @Inheritance(strategy = TABLE_PER_CLASS)
-public abstract class User {
+public abstract class User implements UserDetails {
     @Id
     @SequenceGenerator(name = "mySeqGenV1", sequenceName = "mySeqV1", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGenV1")
@@ -27,10 +32,50 @@ public abstract class User {
     @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "userType", nullable = false)
+    @OneToOne(targetEntity = UserType.class,cascade = CascadeType.ALL)
     private UserType userType;
 
-    @Column(name = "points", nullable = false)
+    public UserType getUserType() {
+		return userType;
+	}
+
+
+	public void setUserType(UserType userType) {
+		this.userType = userType;
+	}
+
+
+	public UserCategory getCategory() {
+		return category;
+	}
+
+
+	public void setCategory(UserCategory category) {
+		this.category = category;
+	}
+
+
+	public boolean isActivated() {
+		return activated;
+	}
+
+
+	public void setActivated(boolean activated) {
+		this.activated = activated;
+	}
+
+
+	public Address getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+
+	@Column(name = "points", nullable = false)
     private double points;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,7 +96,6 @@ public abstract class User {
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
-        this.userType = userType;
         this.points = points;
         this.category = category;
         this.activated = activated;
@@ -110,14 +154,6 @@ public abstract class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public UserType getUserType() {
-        return this.userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
-
     public double getPoints() {
         return this.points;
     }
@@ -126,32 +162,48 @@ public abstract class User {
         this.points = points;
     }
 
-    public UserCategory getCategory() {
-        return this.category;
-    }
 
-    public void setCategory(UserCategory category) {
-        this.category = category;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		ArrayList<UserType> userTypes = new ArrayList<UserType>();
+		userTypes.add(userType);
+		return userTypes;
+	}
 
-    public boolean isActivated() {
-        return this.activated;
-    }
 
-    public boolean getActivated() {
-        return this.activated;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
 
-    public Address getAddress() {
-        return this.address;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
 
 }
