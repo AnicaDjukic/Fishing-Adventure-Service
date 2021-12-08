@@ -94,6 +94,19 @@
               <p class="shadow-none" style="margin: 0">
                 {{ entitie.location }}
               </p>
+              <p
+                class="shadow-none"
+                style="
+                  margin: 0;
+                  text-align: right;
+                  margin-left: auto;
+                  font-size: x-large;
+                "
+              >
+                <i class="fas fa-dollar-sign shadow-none"
+                  >{{ entitie.price }}/day</i
+                >
+              </p>
             </div>
           </div>
         </div>

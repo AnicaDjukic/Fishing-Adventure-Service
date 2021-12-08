@@ -22,6 +22,8 @@
           <button
             type="button"
             class="btn btn-outline-primary text-nowrap me-2"
+            data-bs-toggle="modal"
+            data-bs-target="#NewCottageModal"
           >
             New cottage
           </button>
@@ -70,12 +72,14 @@
       ></CottageCard>
     </div>
   </div>
+  <NewCottageModal></NewCottageModal>
 </template>
 
 <script>
 import CottageCard from "@/components/CottageCard.vue";
+import NewCottageModal from "@/components/NewCottageModal.vue";
 export default {
-  components: { CottageCard },
+  components: { CottageCard, NewCottageModal },
   data: function () {
     return {
       numberOfPersons: "",
@@ -93,6 +97,7 @@ export default {
           availabilityEnd: "15 Dec 2021 11:00:00 GMT",
           image: "c1.jpg",
           vacationHomeOwner: "jamesDean",
+          price: 50.0,
         },
         {
           id: "2",
@@ -106,6 +111,7 @@ export default {
           availabilityEnd: "12 Dec 2021 11:00:00 GMT",
           image: "c3.jpg",
           vacationHomeOwner: "jamesDean",
+          price: 45.55,
         },
       ],
       entities: [
@@ -121,6 +127,7 @@ export default {
           availabilityEnd: "15 Dec 2021 11:00:00 GMT",
           image: "c1.jpg",
           vacationHomeOwner: "jamesDean",
+          price: 30.0,
         },
         {
           id: "2",
@@ -134,6 +141,7 @@ export default {
           availabilityEnd: "12 Dec 2021 11:00:00 GMT",
           image: "c3.jpg",
           vacationHomeOwner: "jamesDean",
+          price: 61.0,
         },
       ],
     };
