@@ -40,11 +40,11 @@ public class ClientService{
 		u.setSurname(userDto.getSurname());
 		u.setPhoneNumber(userDto.getPhoneNumber());
 		u.setEmail(userDto.getEmail());
+		u.setAddress(userDto.getAddress());
 
 		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
 		List<UserType> roles = userTypeService.findByName("CLIENT");
 		u.setUserType(roles.get(0));
-		System.out.println(u.getUserType().getName() + u.getUserType().getId());
 		u.setPoints(0.0);
 		u.setPenalties(0);
 		

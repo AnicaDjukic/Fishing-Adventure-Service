@@ -22,6 +22,8 @@ public class UserDto {
 	private String phoneNumber;
 
 	private UserType userType;
+	
+	private Address address; 
 
 	public UserDto() {}
 
@@ -100,5 +102,11 @@ public class UserDto {
 		this.userType = userType;
 	}
 
+	public Address getAddress() {
+		return address;
+	}
 
+	public void setAddress(Address address) {
+		this.address = address;
+	}
 }

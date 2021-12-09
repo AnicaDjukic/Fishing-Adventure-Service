@@ -84,6 +84,7 @@
                 type="text"
                 class="col login-inputs"
                 placeholder="Country"
+                v-model="user.country"
               />
             </div>
             <input
@@ -347,6 +348,11 @@ export default {
         phoneNumber: this.user.phoneNumber,
         userType: {
             name: "CLIENT"
+        },
+        address: {
+            street: this.user.street,
+            city: this.user.city,
+            country: this.user.country
         }
       };
 
