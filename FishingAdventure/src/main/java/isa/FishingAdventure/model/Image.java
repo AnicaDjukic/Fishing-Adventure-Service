@@ -11,8 +11,7 @@ public class Image {
     @Column(name = "path", nullable = false)
     private String path;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "serviceProfileId")
+    @ManyToOne(targetEntity = ServiceProfile.class,cascade = CascadeType.ALL)
     public ServiceProfile serviceProfile;
 
     public Image(Integer id, String path, ServiceProfile serviceProfile) {

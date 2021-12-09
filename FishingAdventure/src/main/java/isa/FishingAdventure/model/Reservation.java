@@ -11,19 +11,14 @@ public class Reservation {
     @Column(name = "place", nullable = false)
     private String place;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "appointmentId", referencedColumnName = "appointmentId")
+    @OneToOne(targetEntity = Appointment.class,cascade = CascadeType.ALL)
     public Appointment appointment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clientId")
+    @ManyToOne(targetEntity = Client.class,cascade = CascadeType.ALL)
     public Client client;
 
-    @OneToOne(mappedBy = "reservation")
+    @ManyToMany(targetEntity = Review.class,cascade = CascadeType.ALL)
     public Review review;
-
-    @OneToOne(mappedBy = "reservation")
-    private ReservationReport reservationReport;
 
     public Reservation(Integer reservationId, String place, Appointment appointment, Client client) {
         this.reservationId = reservationId;

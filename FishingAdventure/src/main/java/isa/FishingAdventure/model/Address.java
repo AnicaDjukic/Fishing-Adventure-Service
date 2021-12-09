@@ -2,7 +2,6 @@ package isa.FishingAdventure.model;
 
 import javax.persistence.*;
 
-
 @Entity
 public class Address {
     @Id
@@ -27,7 +26,7 @@ public class Address {
     public Address() {
     }
 
-	public Integer getAddressId() {
+    public Integer getAddressId() {
         return this.addressId;
     }
 
@@ -58,6 +57,4 @@ public class Address {
     public void setStreet(String street) {
         this.street = street;
     }
-
-
 }

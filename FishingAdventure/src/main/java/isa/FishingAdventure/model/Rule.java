@@ -16,9 +16,6 @@ public class Rule {
     @Column(name = "isEnforced", nullable = false)
     private boolean isEnforced;
 
-    @ManyToMany(mappedBy = "rules")
-    public Set<ServiceProfile> serviceProfiles = new HashSet<ServiceProfile>();
-
     public Rule(Integer id, String content, boolean isEnforced) {
         this.id = id;
         this.content = content;
@@ -62,13 +59,5 @@ public class Rule {
 
     public void setEnforced(boolean enforced) {
         isEnforced = enforced;
-    }
-
-    public Set<ServiceProfile> getServiceProfiles() {
-        return serviceProfiles;
-    }
-
-    public void setServiceProfiles(Set<ServiceProfile> serviceProfiles) {
-        this.serviceProfiles = serviceProfiles;
     }
 }

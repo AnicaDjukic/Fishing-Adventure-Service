@@ -11,8 +11,7 @@ public class ReservationReport {
     @Column(name = "report", nullable = false)
     private String report;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "reservationId", referencedColumnName = "reservationId")
+    @OneToOne(targetEntity = Reservation.class,cascade = CascadeType.ALL)
     public Reservation reservation;
 
     public ReservationReport(String report, Reservation reservation) {

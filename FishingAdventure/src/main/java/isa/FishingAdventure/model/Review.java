@@ -14,14 +14,9 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "reservationId", referencedColumnName = "reservationId")
-    public Reservation reservation;
-
     public Review(String content, int rating, Reservation reservation) {
         this.content = content;
         this.rating = rating;
-        this.reservation = reservation;
     }
 
     public Review() {
@@ -50,13 +45,4 @@ public class Review {
     public void setRating(int rating) {
         this.rating = rating;
     }
-
-    public Reservation getReservation() {
-        return this.reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
 }

@@ -32,19 +32,8 @@ public class Appointment {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @ManyToMany
-    @JoinTable(name = "appointmentServices",
-            joinColumns = @JoinColumn(name = "appointmentId", referencedColumnName = "appointmentId"),
-            inverseJoinColumns = @JoinColumn(name = "additionalServiceId", referencedColumnName = "id"))
+    @ManyToMany(targetEntity = AdditionalService.class,cascade = CascadeType.ALL)
     public Set<AdditionalService> chosenServices;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "serviceProfileId")
-    public ServiceProfile serviceProfile;
-
-    @OneToOne(mappedBy = "appointment")
-    private Reservation reservation;
-
 
     public Appointment(Integer appointmentId, double discount, boolean isReserved, Date startDate, Date endDate, Duration duration, int maxPersons, double price, Set<AdditionalService> chosenServices) {
         this.appointmentId = appointmentId;
@@ -143,21 +132,5 @@ public class Appointment {
 
     public void setChosenServices(Set<AdditionalService> chosenServices) {
         this.chosenServices = chosenServices;
-    }
-
-    public ServiceProfile getServiceProfile() {
-        return serviceProfile;
-    }
-
-    public void setServiceProfile(ServiceProfile serviceProfile) {
-        this.serviceProfile = serviceProfile;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
     }
 }

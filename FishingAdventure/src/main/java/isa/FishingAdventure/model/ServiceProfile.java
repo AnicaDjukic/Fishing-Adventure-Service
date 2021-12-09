@@ -32,23 +32,14 @@ public abstract class ServiceProfile {
     @OneToOne(targetEntity = Location.class,cascade = CascadeType.ALL)
     public Location location;
 
-    @OneToMany(mappedBy = "serviceProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Appointment.class,cascade = CascadeType.ALL)
     private Set<Appointment> appointments;
 
-    @ManyToMany
-    @JoinTable(name = "rulesInServiceProfile",
-            joinColumns = @JoinColumn(name = "serviceId", referencedColumnName = "serviceId"),
-            inverseJoinColumns = @JoinColumn(name = "ruleId", referencedColumnName = "id"))
+    @ManyToMany(targetEntity = Rule.class,cascade = CascadeType.ALL)
     private Set<Rule> rules;
 
-    @OneToMany(mappedBy = "serviceProfiles", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = AdditionalService.class,cascade = CascadeType.ALL)
     private Set<AdditionalService> additionalServices;
-
-    @ManyToMany(mappedBy = "subscriptions")
-    private Set<Client> subscribedClients = new HashSet<Client>();
-
-    @OneToMany(mappedBy = "serviceProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Image> images = new HashSet<Image>();
 
     public ServiceProfile(Integer serviceId, String name, String description, double cancellationRule, double rating, Location location, Set<Appointment> appointments, Set<Rule> rules, Set<AdditionalService> additionalServices) {
         this.serviceId = serviceId;
@@ -135,21 +126,5 @@ public abstract class ServiceProfile {
 
     public void setAdditionalServices(Set<AdditionalService> additionalServices) {
         this.additionalServices = additionalServices;
-    }
-
-    public Set<Client> getSubscribedClients() {
-        return subscribedClients;
-    }
-
-    public void setSubscribedClients(Set<Client> subscribedClients) {
-        this.subscribedClients = subscribedClients;
-    }
-
-    public Set<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<Image> images) {
-        this.images = images;
     }
 }

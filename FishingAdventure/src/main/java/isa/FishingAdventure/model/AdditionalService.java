@@ -17,14 +17,6 @@ public class AdditionalService {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @ManyToMany(mappedBy = "chosenServices")
-    private Set<Appointment> appointments = new HashSet<Appointment>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "serviceProfileId")
-    private ServiceProfile serviceProfiles;
-
-
     public AdditionalService(Integer id, String name, double price) {
         this.id = id;
         this.name = name;
@@ -56,21 +48,5 @@ public class AdditionalService {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public Set<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(Set<Appointment> appointments) {
-        this.appointments = appointments;
-    }
-
-    public ServiceProfile getServiceProfiles() {
-        return serviceProfiles;
-    }
-
-    public void setServiceProfiles(ServiceProfile serviceProfiles) {
-        this.serviceProfiles = serviceProfiles;
     }
 }

@@ -27,7 +27,7 @@ public abstract class User {
     @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "userType", nullable = false)
+    @OneToOne(targetEntity = UserType.class, cascade = CascadeType.MERGE)
     private UserType userType;
 
     @Column(name = "points", nullable = false)

@@ -10,13 +10,7 @@ public class Client extends User {
     @Column(name = "penalties", nullable = false)
     private Integer penalties;
 
-    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Reservation> reservations = new HashSet<Reservation>();
-
-    @ManyToMany
-    @JoinTable(name = "subscriptions",
-            joinColumns = @JoinColumn(name = "userId", referencedColumnName = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "serviceId", referencedColumnName = "serviceId"))
+    @ManyToMany(targetEntity = ServiceProfile.class,cascade = CascadeType.ALL)
     public Set<ServiceProfile> subscriptions;
 
     public Client(Integer userId, String email, String password, String name, String surname, String phoneNumber,
@@ -41,13 +35,5 @@ public class Client extends User {
 
     public void setSubscriptions(Set<ServiceProfile> subscriptions) {
         this.subscriptions = subscriptions;
-    }
-
-    public Set<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(Set<Reservation> reservations) {
-        this.reservations = reservations;
     }
 }
