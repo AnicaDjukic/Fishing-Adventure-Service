@@ -19,9 +19,6 @@ public class UserCategory {
     @Column(name = "percentage", nullable = false)
     private double percentage;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private final Set<User> users = new HashSet<User>();
-
     public UserCategory(Integer id, double points, UserCategoryName category, double percentage) {
         this.id = id;
         this.points = points;

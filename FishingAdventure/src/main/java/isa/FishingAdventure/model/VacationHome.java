@@ -13,8 +13,7 @@ public class VacationHome extends ServiceProfile {
     @Column(name = "availabilityEnd", nullable = false)
     private Date availabilityEnd;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vacationHomeId")
+    @ManyToOne(targetEntity = VacationHomeOwner.class,cascade = CascadeType.ALL)
     public VacationHomeOwner vocationHomeOwner;
 
     @OneToMany(mappedBy = "vacationHome", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -2,6 +2,7 @@ package isa.FishingAdventure.model;
 
 import javax.persistence.*;
 
+
 @Entity
 public class Location {
     @Id
@@ -14,11 +15,7 @@ public class Location {
     @Column(name = "latitude", nullable = false)
     private double latitude;
 
-    @OneToOne(mappedBy = "location")
-    private ServiceProfile serviceProfile;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "addressId", referencedColumnName = "addressId")
+    @OneToOne(targetEntity = Address.class,cascade = CascadeType.ALL)
     public Address address;
 
     public Location(Integer locationId, double longitude, double latitude, Address address) {
@@ -31,7 +28,8 @@ public class Location {
     public Location() {
     }
 
-    public Integer getLocationId() {
+
+	public Integer getLocationId() {
         return this.locationId;
     }
 
@@ -63,11 +61,4 @@ public class Location {
         this.address = address;
     }
 
-    public ServiceProfile getServiceProfile() {
-        return serviceProfile;
-    }
-
-    public void setServiceProfile(ServiceProfile serviceProfile) {
-        this.serviceProfile = serviceProfile;
-    }
 }

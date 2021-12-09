@@ -1,6 +1,9 @@
 package isa.FishingAdventure.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,8 +29,7 @@ public abstract class ServiceProfile {
     @Column(name = "rating", nullable = false)
     private double rating;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "locationId", referencedColumnName = "locationId")
+    @OneToOne(targetEntity = Location.class,cascade = CascadeType.ALL)
     public Location location;
 
     @OneToMany(mappedBy = "serviceProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

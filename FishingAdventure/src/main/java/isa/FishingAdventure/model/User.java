@@ -33,15 +33,13 @@ public abstract class User {
     @Column(name = "points", nullable = false)
     private double points;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "catagoryId")
+    @ManyToOne(targetEntity = UserCategory.class,cascade = CascadeType.ALL)
     private UserCategory category;
 
     @Column(name = "activated", nullable = false)
     private boolean activated;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "addressId", referencedColumnName = "addressId")
+    @OneToOne(targetEntity = Address.class,cascade = CascadeType.ALL)
     public Address address;
 
     public User(Integer userId, String email, String password, String name, String surname, String phoneNumber, UserType userType, double points, UserCategory category, boolean activated, Address address) {

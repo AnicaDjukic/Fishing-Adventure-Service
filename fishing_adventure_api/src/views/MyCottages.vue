@@ -26,6 +26,15 @@
             New cottage
           </button>
         </div>
+        <div class="col-md-2">
+          <button
+            type="button"
+            class="btn btn-outline-primary text-nowrap me-2"
+            v-on:click="probajMetodu"
+          >
+            New cottage
+          </button>
+        </div>
         <div class="col-md-3">
           <input
             class="form-control me-2"
@@ -74,6 +83,7 @@
 
 <script>
 import CottageCard from "@/components/CottageCard.vue";
+import axios from "axios";
 export default {
   components: { CottageCard },
   data: function () {
@@ -81,7 +91,19 @@ export default {
       numberOfPersons: "",
     };
   },
-  methods: {},
+  methods: {
+    probajMetodu: function () {
+      axios
+        .get("http://localhost:8080/vacationHome/all", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        });
+    },
+  },
 };
 </script>
 
