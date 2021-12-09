@@ -218,6 +218,7 @@
             type="button"
             v-if="mode == 'logIn'"
             class="btn btn-outline-primary"
+            v-on:click="loginUser"
           >
             Log in
           </button>
@@ -338,6 +339,24 @@ export default {
       element.classList.add("active");
       element = document.getElementById("register-btn");
       element.classList.remove("active");
+    },
+    loginUser: function() {
+      let user = {
+        email: this.user.email,
+        password: this.user.password1
+      }
+
+      axios
+        .post("http://localhost:8080/auth/login", user, {
+          headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:8080'
+          }
+      })
+        .then((res) => {
+        console.log(res.data.accessToken);
+        //this.access_token = res.accessToken;
+        localStorage.setItem("jwt", res.data.accessToken)});
+
     },
     registerUser: function () {
       let user = {
