@@ -97,11 +97,15 @@ export default {
         .get("http://localhost:8080/vacationHome/all", {
           headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Authorization": "Bearer " + localStorage.jwt 
           },
         })
         .then((res) => {
           console.log(res);
-        });
+          console.log(localStorage.jwt);
+        },
+        (err) => {console.log(err);
+          console.log(localStorage.jwt);});
     },
   },
 };

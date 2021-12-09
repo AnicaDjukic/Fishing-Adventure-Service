@@ -366,7 +366,7 @@ export default {
         surname: this.user.surname,
         phoneNumber: this.user.phoneNumber,
         userType: {
-            name: "CLIENT"
+            name: "ROLE_CLIENT"
         },
         address: {
             street: this.user.street,

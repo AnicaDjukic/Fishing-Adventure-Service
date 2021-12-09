@@ -43,7 +43,7 @@ public class ClientService{
 		u.setAddress(userDto.getAddress());
 
 		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
-		List<UserType> roles = userTypeService.findByName("CLIENT");
+		List<UserType> roles = userTypeService.findByName("ROLE_CLIENT");
 		u.setUserType(roles.get(0));
 		u.setPoints(0.0);
 		u.setPenalties(0);
