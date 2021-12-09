@@ -69,6 +69,7 @@ export default {
   data: function () {
     return {
       numberOfPersons: "",
+      date: "",
     };
   },
   methods: {},
