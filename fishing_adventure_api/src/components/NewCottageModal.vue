@@ -364,7 +364,6 @@ export default {
     var element = document.getElementById("logIn-btn");
     element.classList.add("active");
     if (this.cottage) {
-      console.log(this.cottage);
       this.cottageName = this.cottage.name;
       this.cottageDescription = this.cottage.description;
       this.images = this.cottage.image;
@@ -378,9 +377,6 @@ export default {
     }
   },
   methods: {
-    loadCottage: function () {
-      console.log(this.cottage);
-    },
     nextClick: function () {
       if (this.mode == "1") {
         if (

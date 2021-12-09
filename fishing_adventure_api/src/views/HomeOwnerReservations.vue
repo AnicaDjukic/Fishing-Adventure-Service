@@ -84,6 +84,7 @@ export default {
         start: new Date(2020, 9, 12),
         end: new Date(2020, 9, 16),
       },
+      date: "",
     };
   },
   methods: {},
