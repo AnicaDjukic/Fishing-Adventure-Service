@@ -21,7 +21,9 @@
             NEW COTTAGE
           </h3>
           <h3
-            v-if="(mode == '2') | (mode === '3')"
+            v-if="
+              (mode == '2') | (mode === '3') | (mode === '4') | (mode === '5')
+            "
             style="
               color: white;
               font-weight: bold;
@@ -47,18 +49,12 @@
               class="login-inputs"
               placeholder="Cottage name"
             />
-            <label
-              class="error"
-              id="cottageNameErr"
-              name="labels"
-              display="hidden"
-            >
-            </label>
 
             <textarea
               class="login-inputs"
               placeholder="Cottage description"
               style="resize: none"
+              v-model="cottageDescription"
             />
 
             <label
@@ -78,13 +74,6 @@
               multiple
               v-on:change="fileUploaded"
             />
-            <label
-              class="error"
-              id="cottageLogoErr"
-              name="labels"
-              display="hidden"
-            >
-            </label>
 
             <div class="image-preview" id="imagePreview">
               <img
@@ -96,6 +85,13 @@
               <span class="image-preview__default-text">Image Preview</span>
             </div>
           </form>
+          <label
+            class="error"
+            id="cottageImagesErr"
+            name="labels"
+            display="hidden"
+          >
+          </label>
         </div>
         <div class="modal-body" v-if="mode === '2'">
           <div class="login-title">
@@ -140,7 +136,7 @@
           </form>
         </div>
         <div class="modal-body" v-if="mode === '3'">
-          <h6>(Additional))</h6>
+          <h6>(Additional)</h6>
           <h6>Plase fill extra information about your cottage:</h6>
 
           <div style="margin-top: 5%">
@@ -186,10 +182,10 @@
           </div>
         </div>
         <div class="modal-body" v-if="mode === '4'">
-          <h6>(Additional))</h6>
+          <h6>(Additional)</h6>
           <h6>Plase fill extra information about your cottage:</h6>
 
-          <div>
+          <div style="margin-top: 5%">
             <div class="input-header">
               <h6>Rule book</h6>
               <i class="far fa-check-circle" v-on:click="addPositiveRule"></i>
@@ -237,7 +233,7 @@
           <h6>(Additional)</h6>
           <h6>Plase fill extra information about your cottage:</h6>
 
-          <div>
+          <div style="margin-top: 5%">
             <div class="input-header">
               <h6>Price list</h6>
               <i class="far fa-plus-square" v-on:click="addPriceListItem"></i>
@@ -332,7 +328,7 @@
             type="button"
             v-if="mode == '5'"
             class="btn btn-outline-primary"
-            v-on:click="nextClick"
+            v-on:click="createCottage"
           >
             Create
           </button>
@@ -344,6 +340,7 @@
 
 <script>
 export default {
+  props: ["cottage"],
   name: "RegisterModal",
   data: function () {
     return {
@@ -366,14 +363,45 @@ export default {
   mounted: function () {
     var element = document.getElementById("logIn-btn");
     element.classList.add("active");
+    if (this.cottage) {
+      console.log(this.cottage);
+      this.cottageName = this.cottage.name;
+      this.cottageDescription = this.cottage.description;
+      this.images = this.cottage.image;
+      this.street = this.cottage.location.street;
+      this.houseNumber = this.cottage.location.houseNumber;
+      this.city = this.cottage.location.city;
+      this.country = this.cottage.location.country;
+      this.rooms = this.cottage.rooms;
+      this.rules = this.cottage.rules;
+      this.priceList = this.cottage.additionalServices;
+    }
   },
   methods: {
+    loadCottage: function () {
+      console.log(this.cottage);
+    },
     nextClick: function () {
       if (this.mode == "1") {
-        this.mode = "2";
-        document.getElementById("back-btn").style.visibility = "visible";
+        if (
+          !this.cottageName ||
+          !this.cottageDescription ||
+          this.images.length == 0
+        ) {
+          document.getElementById("cottageImagesErr").innerHTML =
+            "All fields must be filled.";
+        } else {
+          this.mode = "2";
+          document.getElementById("back-btn").style.visibility = "visible";
+          document.getElementById("cottageImagesErr").innerHTML = "";
+        }
       } else if (this.mode == "2") {
-        this.mode = "3";
+        if (!this.street || !this.houseNumber || !this.city || !this.country) {
+          document.getElementById("secondErr").style = "color: red";
+        } else {
+          this.mode = "3";
+          document.getElementById("secondErr").style = "color: white";
+        }
       } else if (this.mode == "3") {
         this.mode = "4";
       } else if (this.mode == "4") {
@@ -495,6 +523,7 @@ export default {
         }
       }
     },
+    createCottage: function () {},
   },
 };
 </script>

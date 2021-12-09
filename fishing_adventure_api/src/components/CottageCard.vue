@@ -20,8 +20,18 @@
               <p
                 v-if="path == 'mycottages'"
                 class="top-right-corner shadow-none"
+                v-on:click="preventPropagation"
               >
-                <i class="fas fa-minus-square fa-lg shadow-none"></i>
+                <i
+                  class="fas fa-edit fa-lg shadow-none me-3"
+                  style="color: #293c4e"
+                  data-bs-toggle="modal"
+                  :data-bs-target="'#entitie' + entitie.id"
+                ></i>
+                <i
+                  class="fas fa-minus-square fa-lg shadow-none"
+                  v-on:click="delteCottage"
+                ></i>
               </p>
             </div>
             <div class="card-text shadow-none" style="display: flex">
@@ -92,7 +102,9 @@
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
               <p class="shadow-none" style="margin: 0">
-                {{ entitie.location }}
+                {{ entitie.location.houseNumber }}
+                {{ entitie.location.street }} {{ entitie.location.city }}
+                {{ entitie.location.country }}
               </p>
               <p
                 class="shadow-none"
@@ -113,12 +125,19 @@
       </div>
     </div>
   </div>
+
+  <NewCottageModal
+    :cottage="entitie"
+    :id="'entitie' + entitie.id"
+  ></NewCottageModal>
 </template>
 
 <script>
 import { ref, onMounted } from "vue";
+import NewCottageModal from "@/components/NewCottageModal.vue";
 
 export default {
+  components: { NewCottageModal },
   props: ["entitie"],
   setup(props) {
     const date = ref();
@@ -149,6 +168,10 @@ export default {
   methods: {
     openCottage: function () {
       window.location.href = "/cottage/?id=" + this.entitie.id;
+    },
+    preventPropagation: function (event) {
+      event.preventDefault();
+      event.stopPropagation();
     },
   },
 };

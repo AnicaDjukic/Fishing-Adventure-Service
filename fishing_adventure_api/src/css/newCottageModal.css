@@ -119,6 +119,11 @@
     align-items: center;
 }
 
-.input-header h6 {
+.modal-body h6 {
     margin: 0;
+    text-align: center;
+}
+
+.modal-body p {
+    text-align: center;
 }

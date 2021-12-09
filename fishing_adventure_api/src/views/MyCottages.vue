@@ -82,6 +82,7 @@ export default {
   components: { CottageCard, NewCottageModal },
   data: function () {
     return {
+      clickedCottageForEdit: "",
       numberOfPersons: "",
       searchText: "",
       searchResults: [
@@ -92,7 +93,12 @@ export default {
             "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
           cancellationRule: "",
           rating: "4.85",
-          location: "768 Ketch Harbour Lane New Port Richey, FL 34653",
+          location: {
+            street: "Ketch Harbour Lane",
+            houseNumber: "768",
+            city: "New Port Richey",
+            country: "USA",
+          },
           availabilityStart: "10 Dec 2021 14:00:00 GMT",
           availabilityEnd: "15 Dec 2021 11:00:00 GMT",
           image: "c1.jpg",
@@ -106,7 +112,12 @@ export default {
             "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
           cancellationRule: "",
           rating: "3.95",
-          location: "849 Cedar Drive Niceville, FL 32578",
+          location: {
+            street: "Cedar Drive",
+            houseNumber: "849",
+            city: "Niceville",
+            country: "USA",
+          },
           availabilityStart: "8 Dec 2021 14:00:00 GMT",
           availabilityEnd: "12 Dec 2021 11:00:00 GMT",
           image: "c3.jpg",
@@ -122,7 +133,12 @@ export default {
             "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
           cancellationRule: "",
           rating: "4.85",
-          location: "768 Ketch Harbour Lane New Port Richey, FL 34653",
+          location: {
+            street: "Ketch Harbour Lane",
+            houseNumber: "768",
+            city: "New Port Richey",
+            country: "USA",
+          },
           availabilityStart: "10 Dec 2021 14:00:00 GMT",
           availabilityEnd: "15 Dec 2021 11:00:00 GMT",
           image: "c1.jpg",
@@ -136,7 +152,12 @@ export default {
             "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
           cancellationRule: "",
           rating: "3.95",
-          location: "849 Cedar Drive Niceville, FL 32578",
+          location: {
+            street: "Ketch Harbour Lane",
+            houseNumber: "768",
+            city: "New Port Richey",
+            country: "USA",
+          },
           availabilityStart: "8 Dec 2021 14:00:00 GMT",
           availabilityEnd: "12 Dec 2021 11:00:00 GMT",
           image: "c3.jpg",
@@ -204,6 +225,12 @@ export default {
 
         this.searchResults = newResults;
       }
+    },
+    editCottage: function (event) {
+      console.log("DA");
+      console.log(event);
+      // this.$("#NewCottageModal").modal({ show: false });
+      // this.$("#NewCottageModal").modal("show");
     },
   },
 };
