@@ -6,14 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -22,8 +26,11 @@ import isa.FishingAdventure.dto.UserDto;
 import isa.FishingAdventure.dto.UserTokenState;
 import isa.FishingAdventure.exception.ResourceConflictException;
 import isa.FishingAdventure.model.Client;
+import isa.FishingAdventure.model.ConfirmationToken;
 import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.ClientService;
+import isa.FishingAdventure.service.ConfirmationTokenService;
+import isa.FishingAdventure.service.EmailService;
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
@@ -38,6 +45,12 @@ public class AuthenticationController {
 
 	@Autowired
 	private ClientService clientService;
+	
+	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
+	private ConfirmationTokenService confirmationTokenService;
 	
 	// Prvi endpoint koji pogadja korisnik kada se loguje.
 	// Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
@@ -65,16 +78,46 @@ public class AuthenticationController {
 
 	// Endpoint za registraciju novog korisnika
 	@PostMapping("/signup")
-	public ResponseEntity<Client> addUser(@RequestBody UserDto userRequest, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<Client> addUser(@RequestBody UserDto userDto, UriComponentsBuilder ucBuilder) throws MailException, InterruptedException {
 
-		Client existUser = this.clientService.findByEmail(userRequest.getEmail());
+		Client existUser = this.clientService.findByEmail(userDto.getEmail());
 		
 		if (existUser != null) {
-			throw new ResourceConflictException(userRequest.getId(), "Username already exists");
+			throw new ResourceConflictException(userDto.getId(), "Username already exists");
 		}
-
-		Client user = this.clientService.save(userRequest);
+		
+		Client user = this.clientService.save(userDto);
+		
+		try {
+			emailService.sendNotificaitionAsync(userDto);
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
 
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
+	
+	@GetMapping("/confirm-account")
+	public ResponseEntity<String>  confirm(@RequestParam(name = "token") String token) {
+		
+		ConfirmationToken confirmationToken = confirmationTokenService.findByConfirmationToken(token);
+
+        if(token != null)
+        {
+            Client user = clientService.findByEmail(confirmationToken.getEmail());
+            user.setActivated(true);
+            clientService.save(user);
+            confirmationTokenService.delete(confirmationToken);
+        }
+        else
+        {
+        	return ResponseEntity.badRequest()
+    		        .body("Error");
+        }
+		
+		return ResponseEntity.ok()
+		        .body("Sucess");
+	}
+
 }
