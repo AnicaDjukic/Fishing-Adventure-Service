@@ -79,7 +79,7 @@
               </ul>
             </li>
           </ul>
-          <div class="d-flex" v-if="loggedInUser == ''">
+          <div class="d-flex" v-if="loggedInUser == undefined">
             <button
               type="button"
               class="btn btn-outline-primary"
@@ -90,7 +90,7 @@
             </button>
           </div>
 
-          <div class="d-flex" v-if="loggedInUser != ''">
+          <div class="d-flex" v-if="loggedInUser != undefined">
             <button
               type="button"
               class="btn btn-outline-primary me-2"
@@ -121,8 +121,11 @@ export default {
   name: "NavBar",
   data: function () {
     return {
-      loggedInUser: "homeOwner",
+      loggedInUser: undefined,
     };
+  },
+  mounted: function() {
+    this.loggedInUser = localStorage.role
   },
   methods: {
     openProfile: function () {

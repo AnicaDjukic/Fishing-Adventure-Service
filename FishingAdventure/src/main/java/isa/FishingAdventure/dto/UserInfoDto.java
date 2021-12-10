@@ -1,10 +1,10 @@
 package isa.FishingAdventure.dto;
 
 import isa.FishingAdventure.model.Address;
+import isa.FishingAdventure.model.User;
 import isa.FishingAdventure.model.UserType;
 
-public class UserDto {
-
+public class UserInfoDto {
 	private Integer id;
 	
 	private String email;
@@ -17,14 +17,16 @@ public class UserDto {
 
 	private String phoneNumber;
 
-	private UserType userType;
+	private String street;
 	
-	private Address address; 
+	private String city;
+	
+	private String country;
 
-	public UserDto() {}
+	public UserInfoDto() {}
 
-	public UserDto(Integer id, String email, String password, String name, String surname, String phoneNumber,
-			UserType userType) {
+	public UserInfoDto(Integer id, String email, String password, String name, String surname, String phoneNumber,
+			String street, String city, String country) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -32,14 +34,21 @@ public class UserDto {
 		this.name = name;
 		this.surname = surname;
 		this.phoneNumber = phoneNumber;
-		this.userType = userType;
+		this.street = street;
+		this.city = city;
+		this.country = country;
 	}
-
-	public UserDto(String email, String password, String name) {
-		super();
-		this.email = email;
-		this.password = password;
-		this.name = name;
+	
+	public UserInfoDto(User user) {
+		this.id = user.getUserId();
+		this.email = user.getEmail();
+		this.password = user.getPassword();
+		this.name = user.getName();
+		this.surname = user.getSurname();
+		this.phoneNumber = user.getPhoneNumber();
+		this.street = user.getAddress().getStreet();
+		this.city = user.getAddress().getCity();
+		this.country = user.getAddress().getCountry();
 	}
 
 	public Integer getId() {
@@ -90,19 +99,28 @@ public class UserDto {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public UserType getUserType() {
-		return userType;
+	public String getStreet() {
+		return street;
 	}
 
-	public void setUserType(UserType userType) {
-		this.userType = userType;
+	public void setStreet(String street) {
+		this.street = street;
 	}
 
-	public Address getAddress() {
-		return address;
+	public String getCity() {
+		return city;
 	}
 
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setCity(String city) {
+		this.city = city;
 	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
 }

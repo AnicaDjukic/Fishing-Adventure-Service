@@ -1,9 +1,12 @@
 package isa.FishingAdventure.security.util;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import isa.FishingAdventure.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -12,8 +15,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import isa.FishingAdventure.dto.UserDto;
-import isa.FishingAdventure.model.Client;
 
 // Utility klasa za rad sa JSON Web Tokenima
 @Component
@@ -235,14 +236,60 @@ public class TokenUtils {
 	 * @return Informacija da li je token validan ili ne.
 	 */
 	public Boolean validateToken(String token, UserDetails userDetails) {
-		Client user = (Client) userDetails;
+		List<String> roles = userDetails.getAuthorities().stream()
+				.map(item -> item.getAuthority())
+				.collect(Collectors.toList());
+
+		Client userClient = null;
+		VacationHomeOwner userHomeOwner = null;
+		BoatOwner userBoatOwner = null;
+		FishingInstructor userInstructor = null;
+		Admin userAdmin = null;
+		switch (roles.get(0)){
+			case "ROLE_CLIENT":
+				userClient = (Client) userDetails;
+				break;
+			case "ROLE_VACATION_HOME_OWNER":
+				userHomeOwner = (VacationHomeOwner) userDetails;
+				break;
+			case "ROLE_BOAT_OWNER":
+				userBoatOwner = (BoatOwner) userDetails;
+				break;
+			case "ROLE_FISHING_INSTRUCTOR":
+				userInstructor = (FishingInstructor) userDetails;
+				break;
+			case "ROLE_ADMIN":
+				userAdmin = (Admin) userDetails;
+				break;
+
+		}
 		final String username = getUsernameFromToken(token);
 		final Date created = getIssuedAtDateFromToken(token);
+
+		if(userAdmin != null){
+			return (username != null // korisnicko ime nije null
+					&& username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
+					&& !isCreatedBeforeLastPasswordReset(created, userAdmin.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+		}else if(userClient != null){
+			return (username != null // korisnicko ime nije null
+					&& username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
+					&& !isCreatedBeforeLastPasswordReset(created, userClient.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+		}else if( userInstructor != null){
+			return (username != null // korisnicko ime nije null
+					&& username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
+					&& !isCreatedBeforeLastPasswordReset(created, userInstructor.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+		}else if(userHomeOwner != null){
+			return (username != null // korisnicko ime nije null
+					&& username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
+					&& !isCreatedBeforeLastPasswordReset(created, userHomeOwner.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+		}else if(userBoatOwner != null){
+			return (username != null // korisnicko ime nije null
+					&& username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
+					&& !isCreatedBeforeLastPasswordReset(created, userBoatOwner.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+		}
 		
 		// Token je validan kada:
-		return (username != null // korisnicko ime nije null
-			&& username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
-			&& !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())); // nakon kreiranja tokena korisnik nije menjao svoju lozinku 
+		return null;
 	}
 	
 	/**

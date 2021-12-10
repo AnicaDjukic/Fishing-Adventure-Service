@@ -62,9 +62,9 @@
                       class="shadow-none login-inputs col-md-8 mb-2"
                     />
                   </div>
-                  <div class="row shadow-none">
+                  <div v-if="role == 'ROLE_FISHINGINSTRUCTOR'" class="row shadow-none">
                     <p class="card-text text-left shadow-none col-md-3">
-                      Description:
+                      Biography:
                     </p>
                     <textarea
                       name="aboutMe"
@@ -114,7 +114,7 @@
                       id="saveAboutMe"
                       style="display: none"
                       class="btn btn-primary col-md-4"
-                      v-on:click="saveAboutMe"
+                      v-on:click="saveInfo"
                     >
                       Save
                     </button>
@@ -206,14 +206,29 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   mounted: function () {
     let element = document.getElementById("btnradio1");
     element.checked = true;
     this.readioChecked = "1";
+    axios
+      .get("http://localhost:8080/users/get?email=" + localStorage.email, {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+           Authorization: "Bearer " + localStorage.jwt,
+        },
+      })
+      .then((res) => {
+        this.name = res.data.name + ' ' + res.data.surname;
+        this.account = res.data.email;
+        this.phonenumber = res.data.phoneNumber;
+        this.address = res.data.street + ', ' + res.data.city + ', ' + res.data.country
+      });
   },
   data: function () {
     return {
+      role: localStorage.role,
       password1: "",
       password2: "",
       readioChecked: "",
@@ -272,6 +287,34 @@ export default {
       this.password1 = "";
       this.password2 = "";
     },
+    saveInfo: function(){
+      let user = {
+        passwod : this.password1,
+        name : this.name.split(' ')[0],
+        surname : this.name.split(' ')[1],
+        email: this.account,
+        phoneNumber : this.phonenumber,
+        street : this.address.split(', ')[0],
+        city : this.address.split(', ')[1],
+        country : this.address.split(', ')[2]
+      };
+      if(localStorage.role != 'ROLE_FISHINGINSTRUCTOR'){
+        axios
+          .put("http://localhost:8080/users/update", user, {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+            },
+          })
+          .then((res) => {
+            this.name = res.data.name + ' ' + res.data.surname;
+            this.account = res.data.email;
+            this.phonenumber = res.data.phoneNumber;
+            this.address = res.data.street + ', ' + res.data.city + ', ' + res.data.country
+          });
+      }
+
+      this.saveAboutMe();
+    }
   },
 };
 </script>
