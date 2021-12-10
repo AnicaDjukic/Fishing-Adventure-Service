@@ -98,6 +98,11 @@ const routes = [{
     name: 'InstructorReservations',
     component: () =>
         import ('../views/InstructorReservations.vue')
+}, {
+    path: '/instructorSpecialOffers',
+    name: 'InstructorSpecialOffers',
+    component: () =>
+        import ('../views/InstructorSpecialOffers.vue')
 }]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),

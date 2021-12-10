@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title">
-      <h1>My reservations</h1>
+      <h1>Reservations</h1>
       <i
         class="fas fa-id-card fa-3x"
         style="font-family: 'Font Awesome 5 Pro'"
@@ -61,12 +61,12 @@
     <div style="margin-top: 5%">
       <FishingAdventureReservationCard
         :review="false"
-        v-for="index in 5"
+        v-for="index in 3"
         :key="index"
       ></FishingAdventureReservationCard>
       <FishingAdventureReservationCard
         :review="true"
-        v-for="index in 2"
+        v-for="index in 1"
         :key="index"
       ></FishingAdventureReservationCard>
     </div>
