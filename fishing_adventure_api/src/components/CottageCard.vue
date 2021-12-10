@@ -13,7 +13,7 @@
         <div class="col-md-8 shadow-none" name="main-col">
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
-              <!--<h5 class="card-title shadow-none">{{ entitie.name }}</h5>-->
+              <h5 class="card-title shadow-none">{{ entitie.name }}</h5>
               <p class="advertiserTitle shadow-none">
                 @{{ entitie.vacationHomeOwner.name }}{{ entitie.vacationHomeOwner.surname }}
               </p>
@@ -114,9 +114,6 @@
                   font-size: x-large;
                 "
               >
-                <i class="fas fa-dollar-sign shadow-none"
-                  >{{ entitie.price }}/day</i
-                >
               </p>
             </div>
           </div>
@@ -153,8 +150,6 @@ export default {
     };
   },
   mounted: function () {
-    alert('DA')
-    console.log(this.entitie)
     if (window.location.href.includes("/search/cottages")) {
       this.path = "searchcottages";
     } else if (window.location.href.includes("/cottages")) {

@@ -137,9 +137,7 @@ export default {
       })
       .then((res) => {
         this.homeEntities = res.data;
-        console.log(res.data)
         for (let e of this.homeEntities) {
-          alert(e.name)
           e.rating = Number(e.rating).toFixed(2);
         }
       });

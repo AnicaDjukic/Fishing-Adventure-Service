@@ -28,7 +28,7 @@ public class VacationHomeDto {
 	
 	private Date availabilityEnd;
 	
-	public VacationHomeOwner vocationHomeOwner;
+	public VacationHomeOwner vacationHomeOwner;
 	
 	public VacationHomeDto(int id, String name, String description, double rating, String street, String city,
 			String country, String imagePath, Date availabilityStart, Date availabilityEnd,
@@ -44,7 +44,7 @@ public class VacationHomeDto {
 		this.imagePath = imagePath;
 		this.availabilityStart = availabilityStart;
 		this.availabilityEnd = availabilityEnd;
-		this.vocationHomeOwner = vocationHomeOwner;
+		this.vacationHomeOwner = vocationHomeOwner;
 	}
 
 	public VacationHomeDto(VacationHome home) {
@@ -61,7 +61,7 @@ public class VacationHomeDto {
 		}
 		this.availabilityStart = home.getAvailabilityStart();
 		this.availabilityEnd = home.getAvailabilityEnd();
-		this.vocationHomeOwner = home.getVocationHomeOwner();
+		this.vacationHomeOwner = home.getVocationHomeOwner();
 	}
 
 	public VacationHomeDto() {
@@ -149,11 +149,11 @@ public class VacationHomeDto {
 		this.availabilityEnd = availabilityEnd;
 	}
 
-	public VacationHomeOwner getVocationHomeOwner() {
-		return vocationHomeOwner;
+	public VacationHomeOwner getVacationHomeOwner() {
+		return vacationHomeOwner;
 	}
 
-	public void setVocationHomeOwner(VacationHomeOwner vocationHomeOwner) {
-		this.vocationHomeOwner = vocationHomeOwner;
+	public void setVacationHomeOwner(VacationHomeOwner vacationHomeOwner) {
+		this.vacationHomeOwner = vacationHomeOwner;
 	}
 }
