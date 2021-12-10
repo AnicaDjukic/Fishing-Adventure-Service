@@ -49,8 +49,6 @@
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <li><a class="dropdown-item" href="/search" v-if="loggedInUser != 'administrator'">All</a></li>
-                <li><hr class="dropdown-divider"  v-if="loggedInUser != 'administrator'" /></li>
                 <li><a class="dropdown-item" href="/search/boats">Boats</a></li>
                 <li>
                   <a class="dropdown-item" href="/search/cottages">Cottages</a>
@@ -62,6 +60,34 @@
                 </li>
               </ul>
             </li>
+
+             <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarScrollingDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                v-if="loggedInUser == 'ROLE_CLIENT'"
+              >
+                Reservations
+              </a>
+              <ul
+                class="dropdown-menu text-center dropdown-menu-dark"
+                aria-labelledby="navbarScrollingDropdown"
+              >
+                <li><a class="dropdown-item" href="/client/pastReservations">Past reservations</a></li>
+                <li>
+                  <a class="dropdown-item" href="/client/currentReservations">Current reservations</a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item" v-if="loggedInUser == 'ROLE_CLIENT'">
+              <a class="nav-link" aria-current="page" href="/client/subscriptions">Subscriptions</a>
+            </li>
+
 
             <li class="nav-item dropdown" v-if="loggedInUser == 'homeOwner'">
               <a

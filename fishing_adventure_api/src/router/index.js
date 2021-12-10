@@ -53,7 +53,26 @@ const routes = [{
     name: 'HomeOwnerReservations',
     component: () =>
         import ('../views/HomeOwnerReservations.vue')
-}, {
+},
+{
+    path: '/client/currentReservations',
+    name: 'CurrentClientReservations',
+    component: () =>
+        import ('../views/CurrentClientReservations.vue')
+},
+{
+    path: '/client/pastReservations',
+    name: 'PastClientReservations',
+    component: () =>
+        import ('../views/PastClientReservations.vue')
+},
+{
+    path: '/client/subscriptions',
+    name: 'ClientSubscriptions',
+    component: () =>
+        import ('../views/ClientSubscriptions.vue')
+}, 
+{
     path: '/specialOffers',
     name: 'HomeOwnerSpecialOffers',
     component: () =>

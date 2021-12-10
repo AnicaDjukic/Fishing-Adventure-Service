@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2 v-if="role == 'ROLE_CLIENT'" style="color:white;"> You have 2 penalties, after 3 penalties you will not be allow create any reservation</h2>
     <div class="card mb-3 bg-dark mt-3" style="width: 80%; margin: auto">
       <div class="row g-0">
         <div class="col-md-4 shadow-none">
@@ -119,6 +120,8 @@
                       Save
                     </button>
                   </div>
+                  <h2 v-if="role == 'ROLE_CLIENT'" style="color:white"> User category: <b style="color:orange"> GOLD USER </b></h2>
+                  <h2 v-if="role == 'ROLE_CLIENT'" style="color:white"> Your points: 50 </h2>
                 </div>
               </div>
               <div

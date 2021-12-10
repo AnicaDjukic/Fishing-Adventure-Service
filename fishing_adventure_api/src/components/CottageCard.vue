@@ -15,8 +15,7 @@
             <div class="card-text shadow-none" style="display: flex">
               <h5 class="card-title shadow-none">{{ entitie.name }}</h5>
               <p class="advertiserTitle shadow-none">
-                @{{ entitie.vocationHomeOwner.name
-                }}{{ entitie.vocationHomeOwner.surname }}
+                @{{ entitie.vacationHomeOwner.name}}{{ entitie.vacationHomeOwner.surname }}
               </p>
               <p
                 v-if="path == 'mycottages'"
@@ -133,8 +132,8 @@ export default {
   setup(props) {
     const date = ref();
     onMounted(() => {
-      const startDate = new Date(Date.parse(props.entitie.availabilityStart));
-      const endDate = new Date(Date.parse(props.entitie.availabilityEnd));
+      const startDate = new Date(props.entitie.availabilityStart);
+      const endDate = new Date(props.entitie.availabilityEnd);
       startDate.setHours(startDate.getHours() - 1);
       endDate.setHours(endDate.getHours() - 1);
       date.value = [startDate, endDate];
