@@ -107,12 +107,7 @@
               v-model="user.password2"
             />
 
-            <label
-              class="error"
-              id="emptyFieldsError"
-              name="labels"
-              display="hidden"
-            >
+            <label class="error" id="passwords" name="labels" display="hidden">
             </label>
           </form>
         </div>
@@ -320,6 +315,7 @@ export default {
       }
     },
     backClick: function () {
+      document.getElementById("passwords").innerHTML = "";
       if (this.mode == "registerCustomer" || this.mode === "advertiserInfo") {
         this.mode = "registerRole";
       } else if (this.mode == "registerAdvertiser") {
@@ -368,6 +364,7 @@ export default {
         });
     },
     registerUser: function () {
+      document.getElementById("passwords").innerHTML = "";
       let user = {
         email: this.user.email,
         password: this.user.password1,
@@ -400,20 +397,30 @@ export default {
           break;
       }
 
-      axios
-        .post(path, user, {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
-          },
-        })
-        .then((res) => {
-          if (res != null) {
-            document.getElementById("msg").innerHTML =
-              "Varification mail is sent to your email address.";
-            document.getElementById("create-btn").style.visibility = "hidden";
-            document.getElementById("back-btn").style.visibility = "hidden";
-          }
-        });
+      if (this.user.password1 === this.user.password2) {
+        axios
+          .post(path, user, {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+            },
+          })
+          .then((res) => {
+            if (res != null) {
+              if (localStorage.role == "ROLE_CLIENT") {
+                document.getElementById("msg").innerHTML =
+                  "Varification mail is sent to your email address.";
+              } else {
+                document.getElementById("msg").innerHTML =
+                  "Your request is sent.";
+              }
+              document.getElementById("create-btn").style.visibility = "hidden";
+              document.getElementById("back-btn").style.visibility = "hidden";
+            }
+          });
+      } else {
+        document.getElementById("passwords").innerHTML =
+          "Passwords doesn't match.";
+      }
     },
   },
 };

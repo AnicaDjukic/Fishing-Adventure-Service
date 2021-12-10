@@ -109,27 +109,26 @@ public class AuthenticationController {
 	@PostMapping("/signup")
 	public ResponseEntity<Client> addUser(@RequestBody UserDto userDto, UriComponentsBuilder ucBuilder) throws MailException, InterruptedException {
 
-		Client existClient = this.clientService.findByEmail(userDto.getEmail());
-		Admin existAdmin = null;
-		FishingInstructor existInstructor = null;
-		VacationHomeOwner existHomeOwner = null;
-		BoatOwner existBoatOwner = null;
-				
-		if(existClient == null) {
-			existAdmin = this.adminService.findByEmail(userDto.getEmail());
-			if(existAdmin == null) {
-				existInstructor = this.instructorService.findByEmail(userDto.getEmail());
-				if(existHomeOwner == null) {
-					existHomeOwner = this.homeOwnerService.findByEmail(userDto.getEmail());
-					if(existBoatOwner == null) {
-						existBoatOwner = this.boatOwnerService.findByEmail(userDto.getEmail());
+		try {
+			Client existClient = this.clientService.findByEmail(userDto.getEmail());
+			Admin existAdmin = null;
+			FishingInstructor existInstructor = null;
+			VacationHomeOwner existHomeOwner = null;
+			BoatOwner existBoatOwner = null;
+			
+			if(existClient == null) {
+				existAdmin = this.adminService.findByEmail(userDto.getEmail());
+				if(existAdmin == null) {
+					existInstructor = this.instructorService.findByEmail(userDto.getEmail());
+					if(existHomeOwner == null) {
+						existHomeOwner = this.homeOwnerService.findByEmail(userDto.getEmail());
+						if(existBoatOwner == null) {
+							existBoatOwner = this.boatOwnerService.findByEmail(userDto.getEmail());
+						}
 					}
 				}
 			}
-		}
-		
-		
-		if (existClient != null || existAdmin != null || existInstructor != null || existHomeOwner != null) {
+		} catch (Exception e) {
 			throw new ResourceConflictException(userDto.getId(), "Email already exists");
 		}
 
@@ -148,38 +147,31 @@ public class AuthenticationController {
 	@PostMapping("/signup/homeOwner")
 	public ResponseEntity<VacationHomeOwner> addHomeOwner(@RequestBody UserDto userDto, UriComponentsBuilder ucBuilder) throws MailException, InterruptedException {
 
-		Client existClient = this.clientService.findByEmail(userDto.getEmail());
-		Admin existAdmin = null;
-		FishingInstructor existInstructor = null;
-		VacationHomeOwner existHomeOwner = null;
-		BoatOwner existBoatOwner = null;
-				
-		if(existClient == null) {
-			existAdmin = this.adminService.findByEmail(userDto.getEmail());
-			if(existAdmin == null) {
-				existInstructor = this.instructorService.findByEmail(userDto.getEmail());
-				if(existHomeOwner == null) {
-					existHomeOwner = this.homeOwnerService.findByEmail(userDto.getEmail());
-					if(existBoatOwner == null) {
-						existBoatOwner = this.boatOwnerService.findByEmail(userDto.getEmail());
+		try {
+			Client existClient = this.clientService.findByEmail(userDto.getEmail());
+			Admin existAdmin = null;
+			FishingInstructor existInstructor = null;
+			VacationHomeOwner existHomeOwner = null;
+			BoatOwner existBoatOwner = null;
+			
+			if(existClient == null) {
+				existAdmin = this.adminService.findByEmail(userDto.getEmail());
+				if(existAdmin == null) {
+					existInstructor = this.instructorService.findByEmail(userDto.getEmail());
+					if(existHomeOwner == null) {
+						existHomeOwner = this.homeOwnerService.findByEmail(userDto.getEmail());
+						if(existBoatOwner == null) {
+							existBoatOwner = this.boatOwnerService.findByEmail(userDto.getEmail());
+						}
 					}
 				}
 			}
-		}
-		
-		
-		if (existClient != null || existAdmin != null || existInstructor != null || existHomeOwner != null) {
+		} catch (Exception e) {
 			throw new ResourceConflictException(userDto.getId(), "Email already exists");
 		}
 
 		VacationHomeOwner userVacationHomeOwner = this.homeOwnerService.save(userDto); 
-		
-		try {
-			emailService.sendNotificaitionAsync(userDto);
-		}
-		catch(Exception e){
-			System.out.println(e);
-		}
+
 
 		return new ResponseEntity<>(userVacationHomeOwner, HttpStatus.CREATED);
 	}
@@ -187,30 +179,28 @@ public class AuthenticationController {
 	@PostMapping("/signup/boatOwner")
 	public ResponseEntity<BoatOwner> addBoatOwner(@RequestBody UserDto userDto, UriComponentsBuilder ucBuilder) throws MailException, InterruptedException {
 
-		Client existClient = this.clientService.findByEmail(userDto.getEmail());
-		Admin existAdmin = null;
-		FishingInstructor existInstructor = null;
-		VacationHomeOwner existHomeOwner = null;
-		BoatOwner existBoatOwner = null;
-				
-		if(existClient == null) {
-			existAdmin = this.adminService.findByEmail(userDto.getEmail());
-			if(existAdmin == null) {
-				existInstructor = this.instructorService.findByEmail(userDto.getEmail());
-				if(existHomeOwner == null) {
-					existHomeOwner = this.homeOwnerService.findByEmail(userDto.getEmail());
-					if(existBoatOwner == null) {
-						existBoatOwner = this.boatOwnerService.findByEmail(userDto.getEmail());
+		try {
+			Client existClient = this.clientService.findByEmail(userDto.getEmail());
+			Admin existAdmin = null;
+			FishingInstructor existInstructor = null;
+			VacationHomeOwner existHomeOwner = null;
+			BoatOwner existBoatOwner = null;
+			
+			if(existClient == null) {
+				existAdmin = this.adminService.findByEmail(userDto.getEmail());
+				if(existAdmin == null) {
+					existInstructor = this.instructorService.findByEmail(userDto.getEmail());
+					if(existHomeOwner == null) {
+						existHomeOwner = this.homeOwnerService.findByEmail(userDto.getEmail());
+						if(existBoatOwner == null) {
+							existBoatOwner = this.boatOwnerService.findByEmail(userDto.getEmail());
+						}
 					}
 				}
 			}
-		}
-		
-		
-		if (existClient != null || existAdmin != null || existInstructor != null || existHomeOwner != null) {
+		} catch (Exception e) {
 			throw new ResourceConflictException(userDto.getId(), "Email already exists");
 		}
-
 		BoatOwner userBoatOwner = this.boatOwnerService.save(userDto); 
 		
 		try {
@@ -226,27 +216,26 @@ public class AuthenticationController {
 	@PostMapping("/signup/fishingInstructor")
 	public ResponseEntity<FishingInstructor> addFishingInstructor(@RequestBody UserDto userDto, UriComponentsBuilder ucBuilder) throws MailException, InterruptedException {
 
-		Client existClient = this.clientService.findByEmail(userDto.getEmail());
-		Admin existAdmin = null;
-		FishingInstructor existInstructor = null;
-		VacationHomeOwner existHomeOwner = null;
-		BoatOwner existBoatOwner = null;
-				
-		if(existClient == null) {
-			existAdmin = this.adminService.findByEmail(userDto.getEmail());
-			if(existAdmin == null) {
-				existInstructor = this.instructorService.findByEmail(userDto.getEmail());
-				if(existHomeOwner == null) {
-					existHomeOwner = this.homeOwnerService.findByEmail(userDto.getEmail());
-					if(existBoatOwner == null) {
-						existBoatOwner = this.boatOwnerService.findByEmail(userDto.getEmail());
+		try {
+			Client existClient = this.clientService.findByEmail(userDto.getEmail());
+			Admin existAdmin = null;
+			FishingInstructor existInstructor = null;
+			VacationHomeOwner existHomeOwner = null;
+			BoatOwner existBoatOwner = null;
+			
+			if(existClient == null) {
+				existAdmin = this.adminService.findByEmail(userDto.getEmail());
+				if(existAdmin == null) {
+					existInstructor = this.instructorService.findByEmail(userDto.getEmail());
+					if(existHomeOwner == null) {
+						existHomeOwner = this.homeOwnerService.findByEmail(userDto.getEmail());
+						if(existBoatOwner == null) {
+							existBoatOwner = this.boatOwnerService.findByEmail(userDto.getEmail());
+						}
 					}
 				}
 			}
-		}
-		
-		
-		if (existClient != null || existAdmin != null || existInstructor != null || existHomeOwner != null) {
+		} catch (Exception e) {
 			throw new ResourceConflictException(userDto.getId(), "Email already exists");
 		}
 

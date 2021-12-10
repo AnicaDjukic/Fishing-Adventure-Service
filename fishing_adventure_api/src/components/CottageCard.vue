@@ -15,7 +15,8 @@
             <div class="card-text shadow-none" style="display: flex">
               <h5 class="card-title shadow-none">{{ entitie.name }}</h5>
               <p class="advertiserTitle shadow-none">
-                @{{ entitie.vacationHomeOwner.name}}{{ entitie.vacationHomeOwner.surname }}
+                @{{ entitie.vocationHomeOwner.name
+                }}{{ entitie.vocationHomeOwner.surname }}
               </p>
               <p
                 v-if="path == 'mycottages'"
