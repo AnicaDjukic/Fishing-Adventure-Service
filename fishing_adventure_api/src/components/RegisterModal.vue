@@ -354,6 +354,7 @@ export default {
         })
         .then((res) => {
           localStorage.setItem("jwt", res.data.accessToken);
+          localStorage.setItem("email", res.data.email);
           localStorage.setItem("role", res.data.roles[0]);
         });
     },

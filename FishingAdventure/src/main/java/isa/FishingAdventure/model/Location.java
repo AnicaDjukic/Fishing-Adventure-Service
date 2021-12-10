@@ -15,7 +15,7 @@ public class Location {
     @Column(name = "latitude", nullable = false)
     private double latitude;
 
-    @OneToOne(targetEntity = Address.class,cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = Address.class,cascade = CascadeType.ALL)
     public Address address;
 
     public Location(Integer locationId, double longitude, double latitude, Address address) {

@@ -198,15 +198,12 @@
                 <th>Delete</th>
               </thead>
               <tbody>
-                <tr v-for="rule in rules" :key="rule.id">
+                <tr v-for="rule in rules" :key="rule.content">
                   <td>
-                    <i
-                      class="far fa-check-circle"
-                      v-if="rule.type == 'positive'"
-                    ></i>
+                    <i class="far fa-check-circle" v-if="rule.type == true"></i>
                     <i
                       class="far fa-times-circle"
-                      v-if="rule.type == 'negative'"
+                      v-if="rule.type == false"
                     ></i>
                   </td>
                   <td>
@@ -215,13 +212,13 @@
                       type="text"
                       class="login-inputs"
                       style="border: 0; margin: 0"
-                      v-model="rule.description"
+                      v-model="rule.content"
                     />
                   </td>
                   <td>
                     <i
                       class="far fa-trash-alt"
-                      v-on:click="removeRule(rule.id)"
+                      v-on:click="removeRule(rule.content)"
                     ></i>
                   </td>
                 </tr>
@@ -248,14 +245,14 @@
                 <th>Delete</th>
               </thead>
               <tbody>
-                <tr v-for="priceItem in priceList" :key="priceItem.id">
+                <tr v-for="priceItem in priceList" :key="priceItem.name">
                   <td>
                     <input
                       placeholder="Description"
                       type="text"
                       class="login-inputs"
                       style="border: 0; margin: 0"
-                      v-model="priceItem.description"
+                      v-model="priceItem.name"
                     />
                   </td>
                   <td>
@@ -270,7 +267,7 @@
                   <td>
                     <i
                       class="far fa-trash-alt"
-                      v-on:click="removePriceItem(priceItem.id)"
+                      v-on:click="removePriceItem(priceItem.name)"
                     ></i>
                   </td>
                 </tr>
@@ -339,6 +336,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   props: ["cottage"],
   name: "RegisterModal",
@@ -356,8 +354,6 @@ export default {
       rules: [],
       priceList: [],
       roomsId: 0,
-      rulesId: 0,
-      priceListId: 0,
     };
   },
   mounted: function () {
@@ -379,11 +375,7 @@ export default {
   methods: {
     nextClick: function () {
       if (this.mode == "1") {
-        if (
-          !this.cottageName ||
-          !this.cottageDescription ||
-          this.images.length == 0
-        ) {
+        if (!this.cottageName || !this.cottageDescription || !this.images) {
           document.getElementById("cottageImagesErr").innerHTML =
             "All fields must be filled.";
         } else {
@@ -428,8 +420,6 @@ export default {
       this.rules = [];
       this.priceList = [];
       this.roomsId = 0;
-      this.rulesId = 0;
-      this.priceListId = 0;
     },
     fileUploaded: function () {
       let inpFile = document.getElementById("inpFile");
@@ -473,29 +463,23 @@ export default {
     },
     addPositiveRule: function () {
       let newRule = {
-        id: this.rulesId,
         desccription: "",
-        type: "positive",
+        type: true,
       };
-      this.rulesId = this.rulesId + 1;
       this.rules.push(newRule);
     },
     addNegativeRule: function () {
       let newRule = {
-        id: this.rulesId,
         desccription: "",
-        type: "negative",
+        type: false,
       };
-      this.rulesId = this.rulesId + 1;
       this.rules.push(newRule);
     },
     addPriceListItem: function () {
       let newItem = {
-        id: this.priceListId,
         desccription: "",
         price: "",
       };
-      this.priceListId = this.priceListId + 1;
       this.priceList.push(newItem);
     },
     removeRoom: function (id) {
@@ -505,21 +489,64 @@ export default {
         }
       }
     },
-    removeRule: function (id) {
+    removeRule: function (content) {
       for (var rule of this.rules) {
-        if (rule.id === id) {
+        if (rule.content === content) {
           this.rules.pop(rule);
         }
       }
     },
-    removePriceItem: function (id) {
+    removePriceItem: function (name) {
       for (var priceItem of this.priceList) {
-        if (priceItem.id === id) {
+        if (priceItem.name === name) {
           this.priceList.pop(priceItem);
         }
       }
     },
-    createCottage: function () {},
+    createCottage: function () {
+      let additionalServices = [];
+      for (let service of this.priceList) {
+        additionalServices.push({ name: service.name, price: service.price });
+      }
+
+      let rulesFinal = [];
+      for (let rule of this.rules) {
+        rulesFinal.push({ content: rule.content, isEnforced: rule.type });
+      }
+
+      let roomsFinal = [];
+      for (let room of this.rooms) {
+        roomsFinal.push({ bedNumber: room.beds });
+      }
+      let home = {
+        name: this.cottageName,
+        description: this.cottageDescription,
+        images: null,
+        location: {
+          longitude: 0,
+          latitude: 0,
+          address: {
+            street: this.street,
+            city: this.city,
+            country: this.country,
+          },
+        },
+        rooms: roomsFinal,
+        rules: rulesFinal,
+        additionalServices: additionalServices,
+        vocationHomeOwner: localStorage.email,
+      };
+      console.log(home);
+
+      axios
+        .post("http://localhost:8080/vacationHome/newHome", home, {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.jwt,
+          },
+        })
+        .then(window.location.reload());
+    },
   },
 };
 </script>

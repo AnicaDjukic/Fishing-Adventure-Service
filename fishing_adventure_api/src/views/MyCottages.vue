@@ -28,15 +28,6 @@
             New cottage
           </button>
         </div>
-        <div class="col-md-2">
-          <button
-            type="button"
-            class="btn btn-outline-primary text-nowrap me-2"
-            v-on:click="probajMetodu"
-          >
-            New cottage
-          </button>
-        </div>
         <div class="col-md-4">
           <input
             class="form-control me-2"
@@ -95,108 +86,28 @@ export default {
       clickedCottageForEdit: "",
       numberOfPersons: "",
       searchText: "",
-      searchResults: [
-        {
-          id: "1",
-          name: "Villa Madam",
-          description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-          cancellationRule: "",
-          rating: "4.85",
-          location: {
-            street: "Ketch Harbour Lane",
-            houseNumber: "768",
-            city: "New Port Richey",
-            country: "USA",
-          },
-          availabilityStart: "10 Dec 2021 14:00:00 GMT",
-          availabilityEnd: "15 Dec 2021 11:00:00 GMT",
-          image: "c1.jpg",
-          vacationHomeOwner: "jamesDean",
-          price: 50.0,
-        },
-        {
-          id: "2",
-          name: "Catherine's Vineyard",
-          description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-          cancellationRule: "",
-          rating: "3.95",
-          location: {
-            street: "Cedar Drive",
-            houseNumber: "849",
-            city: "Niceville",
-            country: "USA",
-          },
-          availabilityStart: "8 Dec 2021 14:00:00 GMT",
-          availabilityEnd: "12 Dec 2021 11:00:00 GMT",
-          image: "c3.jpg",
-          vacationHomeOwner: "jamesDean",
-          price: 45.55,
-        },
-      ],
-      entities: [
-        {
-          id: "1",
-          name: "Villa Madam",
-          description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-          cancellationRule: "",
-          rating: "4.85",
-          location: {
-            street: "Ketch Harbour Lane",
-            houseNumber: "768",
-            city: "New Port Richey",
-            country: "USA",
-          },
-          availabilityStart: "10 Dec 2021 14:00:00 GMT",
-          availabilityEnd: "15 Dec 2021 11:00:00 GMT",
-          image: "c1.jpg",
-          vacationHomeOwner: "jamesDean",
-          price: 30.0,
-        },
-        {
-          id: "2",
-          name: "Catherine's Vineyard",
-          description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-          cancellationRule: "",
-          rating: "3.95",
-          location: {
-            street: "Ketch Harbour Lane",
-            houseNumber: "768",
-            city: "New Port Richey",
-            country: "USA",
-          },
-          availabilityStart: "8 Dec 2021 14:00:00 GMT",
-          availabilityEnd: "12 Dec 2021 11:00:00 GMT",
-          image: "c3.jpg",
-          vacationHomeOwner: "jamesDean",
-          price: 61.0,
-        },
-      ],
+      searchResults: [],
     };
   },
+  mounted: function () {
+    axios
+      .get("http://localhost:8080/vacationHome/all/" + localStorage.email, {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.jwt,
+        },
+      })
+      .then(
+        (res) => {
+          console.log(res.data);
+          this.searchResults = res.data;
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  },
   methods: {
-    probajMetodu: function () {
-      axios
-        .get("http://localhost:8080/vacationHome/all", {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
-            Authorization: "Bearer " + localStorage.jwt,
-          },
-        })
-        .then(
-          (res) => {
-            console.log(res);
-            console.log(localStorage.jwt);
-          },
-          (err) => {
-            console.log(err);
-            console.log(localStorage.jwt);
-          }
-        );
-    },
     searchCottage: function () {
       if (this.searchText != "" && this.searchText.trim().lenght != 0) {
         let searchParts = this.searchText.trim().split(" ");

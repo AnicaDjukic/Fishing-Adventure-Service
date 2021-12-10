@@ -29,16 +29,16 @@ public abstract class ServiceProfile {
     @Column(name = "rating", nullable = false)
     private double rating;
 
-    @OneToOne(targetEntity = Location.class,cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = Location.class,cascade = CascadeType.ALL)
     public Location location;
 
-    @OneToMany(targetEntity = Appointment.class,cascade = CascadeType.MERGE)
+    @OneToMany(targetEntity = Appointment.class,cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Appointment> appointments;
 
-    @ManyToMany(targetEntity = Rule.class,cascade = CascadeType.MERGE)
+    @ManyToMany(targetEntity = Rule.class,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Rule> rules;
 
-    @OneToMany(targetEntity = AdditionalService.class,cascade = CascadeType.MERGE)
+    @OneToMany(targetEntity = AdditionalService.class,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AdditionalService> additionalServices;
     
     @OneToMany(targetEntity = Image.class,cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

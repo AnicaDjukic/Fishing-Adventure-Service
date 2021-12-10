@@ -39,7 +39,15 @@ const routes = [{
     path: '/cottages',
     name: 'MyCottages',
     component: () =>
-        import ('../views/MyCottages.vue')
+        import ('../views/MyCottages.vue'),
+    beforeEnter: (to, from, next) => {
+        console.log("DA")
+        if (localStorage.role == "ROLE_VACATION_HOME_OWNER") {
+            next();
+        } else {
+            next('/');
+        }
+    }
 }, {
     path: '/reservations',
     name: 'HomeOwnerReservations',

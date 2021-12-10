@@ -15,7 +15,8 @@
             <div class="card-text shadow-none" style="display: flex">
               <h5 class="card-title shadow-none">{{ entitie.name }}</h5>
               <p class="advertiserTitle shadow-none">
-                @{{ entitie.vacationHomeOwner }}
+                @{{ entitie.vocationHomeOwner.name
+                }}{{ entitie.vocationHomeOwner.surname }}
               </p>
               <p
                 v-if="path == 'mycottages'"
@@ -30,7 +31,7 @@
                 ></i>
                 <i
                   class="fas fa-minus-square fa-lg shadow-none"
-                  v-on:click="delteCottage"
+                  v-on:click="deleteCottage"
                 ></i>
               </p>
             </div>
@@ -102,7 +103,6 @@
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
               <p class="shadow-none" style="margin: 0">
-                {{ entitie.location.houseNumber }}
                 {{ entitie.location.street }} {{ entitie.location.city }}
                 {{ entitie.location.country }}
               </p>
@@ -135,6 +135,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import NewCottageModal from "@/components/NewCottageModal.vue";
+import axios from "axios";
 
 export default {
   components: { NewCottageModal },
@@ -172,6 +173,21 @@ export default {
     preventPropagation: function (event) {
       event.preventDefault();
       event.stopPropagation();
+    },
+    deleteCottage: function () {
+      console.log(this.entitie);
+      axios
+        .get(
+          "http://localhost:8080/vacationHome/deleteHome/" +
+            this.entitie.serviceId,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.jwt,
+            },
+          }
+        )
+        .then(window.location.reload());
     },
   },
 };

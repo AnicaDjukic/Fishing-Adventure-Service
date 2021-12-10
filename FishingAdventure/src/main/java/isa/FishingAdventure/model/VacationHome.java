@@ -1,6 +1,10 @@
 package isa.FishingAdventure.model;
 
 import javax.persistence.*;
+
+import isa.FishingAdventure.dto.NewHomeDto;
+import isa.FishingAdventure.dto.VacationHomeDto;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -16,13 +20,12 @@ public class VacationHome extends ServiceProfile {
     @ManyToOne(targetEntity = VacationHomeOwner.class,cascade = CascadeType.MERGE)
     public VacationHomeOwner vocationHomeOwner;
 
-    @OneToMany(targetEntity = Room.class,cascade = CascadeType.MERGE)
+    @OneToMany(targetEntity = Room.class,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<Room> rooms;
 
     public VacationHome(int serviceId, String name, String description, double cancellationRule, double rating, Location location, Set<Appointment> appointments, Set<Rule> rules, Set<AdditionalService> additionalServices) {
         super(serviceId, name, description, cancellationRule, rating, location, appointments, rules, additionalServices);
     }
-
 
     public VacationHome() {
     }
