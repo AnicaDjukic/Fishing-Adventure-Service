@@ -386,7 +386,7 @@ export default {
           path = "http://localhost:8080/auth/signup/homeOwner";
           break;
         case "ROLE_FISHING_INSTRUCTOR":
-          //path = "http://localhost:8080/auth/signup/";
+          path = "http://localhost:8080/auth/signup/fishingInstructor";
           break;
       }
       axios
