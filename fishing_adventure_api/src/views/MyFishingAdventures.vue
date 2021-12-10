@@ -22,8 +22,6 @@
           <button
             type="button"
             class="btn btn-outline-primary text-nowrap me-2"
-            data-bs-toggle="modal"
-            data-bs-target="#NewCottageModal"
           >
             New adventure
           </button>
@@ -72,15 +70,13 @@
       ></AdventureCard>
     </div>
   </div>
-  <NewCottageModal></NewCottageModal>
 </template>
 
 <script>
 import AdventureCard from "@/components/AdventureCard.vue";
 import axios from "axios";
-import NewCottageModal from "@/components/NewCottageModal.vue";
 export default {
-    components: { AdventureCard, NewCottageModal },
+    components: { AdventureCard },
     data: function () {
         return {
         clickedAdventureCardForEdit: "",
@@ -224,8 +220,6 @@ export default {
         },
         editAdventure: function (event) {
         console.log(event);
-        // this.$("#NewCottageModal").modal({ show: false });
-        // this.$("#NewCottageModal").modal("show");
         },
     },
 };
