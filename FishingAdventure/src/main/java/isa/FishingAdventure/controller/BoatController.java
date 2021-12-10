@@ -24,12 +24,11 @@ public class BoatController {
 	
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<BoatDto>> getAllBoats() {
-		List<ServiceProfile> boats = boatService.findAll();
+		List<Boat> boats = boatService.findAll();
 
 		List<BoatDto> boatDtos = new ArrayList<BoatDto>();
-		for (ServiceProfile b : boats) {
-			Boat boat = (Boat) b;
-			BoatDto dto = new BoatDto(boat);
+		for (Boat b : boats) {
+			BoatDto dto = new BoatDto(b);
 			boatDtos.add(dto);
 		}
 

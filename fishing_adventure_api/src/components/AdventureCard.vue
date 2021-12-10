@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            src="@/assets/fa21.jpg"
+            :src="'/img/' + adventureEntitie.imagePath"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -13,8 +13,8 @@
         <div class="col-md-8 shadow-none" name="main-col">
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
-              <h5 class="card-title shadow-none">Marina Gibson</h5>
-              <p class="advertiserTitle shadow-none">@marinaGibson</p>
+              <h5 class="card-title shadow-none">{{ adventureEntitie.name }}</h5>
+              <p class="advertiserTitle shadow-none">@{{adventureEntitie.fishingInstructor.name}}{{adventureEntitie.fishingInstructor.surname}}</p>
               <p
                 v-if="path == 'myadventures'"
                 class="top-right-corner shadow-none"
@@ -25,55 +25,7 @@
             <div class="card-text shadow-none" style="display: flex">
               <div class="shadow-none">
                 <p class="card-text text-left shadow-none mb-1">
-                  It is a long established fact that a reader will be distracted
-                  by the readable content of a page when looking at its layout.
-                </p>
-                <p
-                  class="card-text text-left shadow-none mb-3 flex-column d-flex flex-md-row"
-                  style="align-items: center"
-                >
-                  Available:
-                  <Datepicker
-                    v-if="path == 'myadventures'"
-                    style="
-                      margin-left: 2%;
-                      margin-top: 2%;
-                      border: 1px solid white;
-                      border-radius: 5px;
-                      width: 100%;
-                      box-shadow: none !important;
-                    "
-                    dark
-                    id="picker"
-                    v-model="date"
-                    range
-                    :partialRange="false"
-                    placeholder="Select date"
-                    :enableTimePicker="true"
-                    minutesIncrement="15"
-                    :minDate="new Date()"
-                  ></Datepicker>
-                  <Datepicker
-                    v-if="path != 'myadventures'"
-                    style="
-                      margin-left: 2%;
-                      margin-top: 2%;
-                      border: 1px solid white;
-                      border-radius: 5px;
-                      width: 100%;
-                      box-shadow: none !important;
-                    "
-                    dark
-                    id="picker"
-                    v-model="date"
-                    range
-                    :partialRange="false"
-                    placeholder="Select date"
-                    :enableTimePicker="true"
-                    minutesIncrement="15"
-                    :minDate="new Date()"
-                    disabled
-                  ></Datepicker>
+                  {{ adventureEntitie.description }}
                 </p>
               </div>
               <p
@@ -86,12 +38,13 @@
                   width: 30%;
                 "
               >
-                <i class="fas fa-star shadow-none"> 5.0</i>
+                <i class="fas fa-star shadow-none"> {{ adventureEntitie.rating }}</i>
               </p>
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
               <p class="shadow-none" style="margin: 0">
-                341 Preston Street, Pheonix
+                {{ adventureEntitie.street}} {{ adventureEntitie.city}}
+                {{ adventureEntitie.country }}
               </p>
               <p
                 class="shadow-none"
@@ -102,7 +55,6 @@
                   font-size: x-large;
                 "
               >
-                <i class="fas fa-dollar-sign shadow-none">50.00/day</i>
               </p>
             </div>
           </div>
@@ -116,6 +68,7 @@
 import { ref, onMounted } from "vue";
 
 export default {
+  props: ["adventureEntitie"],
   setup() {
     const date = ref();
     onMounted(() => {

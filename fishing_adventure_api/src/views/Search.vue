@@ -2,7 +2,11 @@
   <div>
     <div class="title">
       <h1>Find your perfect vacation</h1>
-      <i v-if="searching == '' || searching == 'cottages'" class="far fa-home fa-3x" style="font-family: 'Font Awesome 5 Pro'"></i
+      <i
+        v-if="searching == '' || searching == 'cottages'"
+        class="far fa-home fa-3x"
+        style="font-family: 'Font Awesome 5 Pro'"
+      ></i
       ><i
         v-if="searching == '' || searching == 'boats'"
         class="far fa-anchor fa-3x"
@@ -33,7 +37,7 @@
             aria-label="Search"
           />
         </div>
-        <div class="col-md-5">
+        <div v-if="searching == 'cottages'" class="col-md-5">
           <Datepicker
             style="
               width: 100%;
@@ -70,13 +74,17 @@
       ></CottageCard>
     </div>
     <div v-if="searching == 'boats'" style="margin-top: 5%">
-      <BoatCard 
+      <BoatCard
         v-for="boatEntitie in boatEntities"
         :key="boatEntitie.id"
-        v-bind:boatEntitie="boatEntitie"></BoatCard>
+        v-bind:boatEntitie="boatEntitie"
+      ></BoatCard>
     </div>
-    <div v-if="searching == 'fishingInstructors'" style="margin-top: 5%">
-      <InstructorCard v-for="index in 10" :key="index"></InstructorCard>
+    <div v-if="searching == 'adventures'" style="margin-top: 5%">
+      <AdventureCard 
+        v-for="adventureEntitie in adventureEntities"
+        :key="adventureEntitie.id"
+        v-bind:adventureEntitie="adventureEntitie"></AdventureCard>
     </div>
   </div>
 </template>
@@ -87,10 +95,10 @@ import "vue3-date-time-picker/dist/main.css";
 import { ref, onMounted } from "vue";
 import CottageCard from "@/components/CottageCard.vue";
 import BoatCard from "@/components/BoatCard.vue";
-import InstructorCard from "@/components/InstructorCard.vue";
-import axios from "axios"
+import AdventureCard from "@/components/AdventureCard.vue";
+import axios from "axios";
 export default {
-  components: { Datepicker, CottageCard, BoatCard, InstructorCard },
+  components: { Datepicker, CottageCard, BoatCard, AdventureCard },
   setup() {
     const date = ref();
     // For demo purposes assign range from the current date
@@ -162,44 +170,43 @@ export default {
           vacationHomeOwner: "nikkiMorrison",
         },
       ],
-      boatEntities:[],
-      fishingInstructor:[]
+      boatEntities: [],
+      adventureEntities: [],
     };
   },
   mounted: function () {
     if (window.location.href.includes("/search/cottages")) {
       this.searching = "cottages";
-    } else if (window.location.href.includes("/search/fishingInstructors")) {
-      this.searching = "fishingInstructors";
+    } else if (window.location.href.includes("/search/adventures")) {
+      this.searching = "adventures";
     } else if (window.location.href.includes("/search/boats")) {
       this.searching = "boats";
     }
     axios
-        .get("http://localhost:8080/boat/all", {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080"
-          },
-        })
-        .then(
-          (res) => {
-            this.boatEntities = res.data
-            for(let boat of this.boatEntities){
-              boat.rating = (Number(boat.rating)).toFixed(2);
-            }
-          }
-        );
+      .get("http://localhost:8080/boat/all", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+        },
+      })
+      .then((res) => {
+        this.boatEntities = res.data;
+        for (let boat of this.boatEntities) {
+          boat.rating = Number(boat.rating).toFixed(2);
+        }
+      });
 
     axios
-        .get("http://localhost:8080/fishingInstructor/all", {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080"
-          },
-        })
-        .then(
-          (res) => {
-            this.fishingInstructor = res.data
-          }
-        );
+      .get("http://localhost:8080/fishingAdventure/all", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+        },
+      })
+      .then((res) => {
+        this.adventureEntities = res.data;
+        for (let adventure of this.adventureEntities) {
+          adventure.rating = Number(adventure.rating).toFixed(2);
+        }
+      });
   },
   methods: {},
 };

@@ -58,7 +58,7 @@
             alt="..."
           />
           <div class="card-body shadow-none">
-            <h5 class="card-title text-white shadow-none">Fishing instructors</h5>
+            <h5 class="card-title text-white shadow-none">Fishing adventures</h5>
             <p class="card-text shadow-none">
               This is a longer card with supporting text below as a natural
               lead-in to additional content.
@@ -81,7 +81,7 @@ export default {
       window.location.href = "/search/cottages";
     },
     searchAdventures: function () {
-      window.location.href = "/search/fishingInstructors";
+      window.location.href = "/search/adventures";
     },
   },
 };

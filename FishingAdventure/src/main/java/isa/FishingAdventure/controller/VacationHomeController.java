@@ -29,10 +29,10 @@ public class VacationHomeController{
 	@PreAuthorize("hasRole('CLIENT')")
 	public ResponseEntity<List<VacationHomeDto>> getAllVacationHomes() {
 		System.out.println("DA");
-		List<ServiceProfile> vacationHomes = homeService.findAll();
+		List<VacationHome> vacationHomes = homeService.findAll();
 
 		List<VacationHomeDto> VacationHomeDto = new ArrayList<>();
-		for (ServiceProfile h : vacationHomes) {
+		for (VacationHome h : vacationHomes) {
 			VacationHome home = (VacationHome)h;
 			VacationHomeDto dto = new VacationHomeDto(home);
 			VacationHomeDto.add(dto);
