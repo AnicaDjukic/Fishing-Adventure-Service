@@ -19,6 +19,7 @@
                 v-if="path == 'myadventures'"
                 class="top-right-corner shadow-none"
               >
+                <i class="fas fa-edit fa-lg shadow-none me-3" style="color: #293c4e"></i>
                 <i class="fas fa-minus-square fa-lg shadow-none"></i>
               </p>
             </div>
@@ -26,6 +27,53 @@
               <div class="shadow-none">
                 <p class="card-text text-left shadow-none mb-1">
                   {{ adventureEntitie.description }}
+                </p>
+                 <p
+                  class="card-text text-left shadow-none mb-3 flex-column d-flex flex-md-row"
+                  style="align-items: center"
+                >
+                  Available:
+                  <Datepicker
+                    v-if="path == 'myadventures'"
+                    style="
+                      margin-left: 2%;
+                      margin-top: 2%;
+                      border: 1px solid white;
+                      border-radius: 5px;
+                      width: 100%;
+                      box-shadow: none !important;
+                    "
+                    dark
+                    id="picker"
+                    v-model="date"
+                    range
+                    :partialRange="false"
+                    placeholder="Select date"
+                    :enableTimePicker="true"
+                    minutesIncrement="15"
+                    :minDate="new Date()"
+                  ></Datepicker>
+                  <Datepicker
+                    v-if="path != 'myadventures'"
+                    style="
+                      margin-left: 2%;
+                      margin-top: 2%;
+                      border: 1px solid white;
+                      border-radius: 5px;
+                      width: 100%;
+                      box-shadow: none !important;
+                    "
+                    dark
+                    id="picker"
+                    v-model="date"
+                    range
+                    :partialRange="false"
+                    placeholder="Select date"
+                    :enableTimePicker="true"
+                    minutesIncrement="15"
+                    :minDate="new Date()"
+                    disabled
+                  ></Datepicker>
                 </p>
               </div>
               <p
@@ -88,7 +136,7 @@ export default {
   mounted: function () {
     if (window.location.href.includes("/search/adventures")) {
       this.path = "searchadventures";
-    } else if (window.location.href.includes("/adventures")) {
+    } else if (window.location.href.includes("/fishingAdventures")) {
       this.path = "myadventures";
     }
   },

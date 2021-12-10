@@ -30,7 +30,7 @@
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                v-if="loggedInUser != 'administrator'"
+                v-if="loggedInRole != 'ROLE_ADMIN'"
               >
                 Explore
               </a>
@@ -49,8 +49,8 @@
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <li><a class="dropdown-item" href="/search" v-if="loggedInUser != 'administrator'">All</a></li>
-                <li><hr class="dropdown-divider"  v-if="loggedInUser != 'administrator'" /></li>
+                <li><a class="dropdown-item" href="/search" v-if="loggedInRole != 'ROLE_ADMIN'">All</a></li>
+                <li><hr class="dropdown-divider"  v-if="loggedInRole != 'ROLE_ADMIN'" /></li>
                 <li><a class="dropdown-item" href="/search/boats">Boats</a></li>
                 <li>
                   <a class="dropdown-item" href="/search/cottages">Cottages</a>
@@ -86,12 +86,15 @@
                     >Special offers</a
                   >
                 </li>
-                <li v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER' || loggedInRole == 'ROLE_FISHING_INSTRUCTOR'">
+                <li v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER'">
                   <a class="dropdown-item" href="/reservations">Reservations</a>
+                </li>
+                <li v-if="loggedInRole == 'ROLE_FISHING_INSTRUCTOR'">
+                  <a class="dropdown-item" href="/instructorReservations">Reservations</a>
                 </li>
               </ul>
             </li>
-            <li class="nav-item dropdown" v-if="loggedInUser == 'administrator'">
+            <li class="nav-item dropdown" v-if="loggedInRole == 'ROLE_ADMIN'">
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -111,7 +114,7 @@
               </ul>
             </li>
           </ul>
-          <div class="d-flex" v-if="loggedInUser == undefined">
+          <div class="d-flex" v-if="loggedInRole == undefined">
             <button
               type="button"
               class="btn btn-outline-primary"
@@ -122,7 +125,7 @@
             </button>
           </div>
 
-          <div class="d-flex" v-if="loggedInUser != undefined">
+          <div class="d-flex" v-if="loggedInRole != undefined">
             <button
               type="button"
               class="btn btn-outline-primary me-2"
@@ -153,11 +156,11 @@ export default {
   name: "NavBar",
   data: function () {
     return {
-      loggedInUser: undefined,
+      loggedInRole: undefined,
     };
   },
   mounted: function () {
-    this.loggedInUser = localStorage.role;
+    this.loggedInRole = "ROLE_FISHING_INSTRUCTOR"; //localStorage.role;
   },
   methods: {
     openProfile: function () {

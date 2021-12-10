@@ -25,16 +25,7 @@
             data-bs-toggle="modal"
             data-bs-target="#NewCottageModal"
           >
-            New cottage
-          </button>
-        </div>
-        <div class="col-md-2">
-          <button
-            type="button"
-            class="btn btn-outline-primary text-nowrap me-2"
-            v-on:click="probajMetodu"
-          >
-            New cottage
+            New adventure
           </button>
         </div>
         <div class="col-md-4">
@@ -44,8 +35,8 @@
             placeholder="Search"
             aria-label="Search"
             v-model="searchText"
-            v-on:keyup="searchCottage"
-            v-on:click="searchCottage"
+            v-on:keyup="searchAdventures"
+            v-on:click="searchAdventures"
           />
         </div>
         <div class="col-md-4">
@@ -54,7 +45,7 @@
             <div
               class="rating-div form-control"
               style="min-width: 135px"
-              v-on:click="searchCottage"
+              v-on:click="searchAdventures"
             >
               <div class="rating">
                 <input type="radio" name="star" id="star1" value="5" />
@@ -74,194 +65,169 @@
       </div>
     </div>
     <div style="margin-top: 5%">
-      <CottageCard
+      <AdventureCard
         v-for="entitie in searchResults"
         :key="entitie.id"
-        v-bind:entitie="entitie"
-      ></CottageCard>
+        v-bind:adventureEntitie="entitie"
+      ></AdventureCard>
     </div>
   </div>
   <NewCottageModal></NewCottageModal>
 </template>
 
 <script>
-import CottageCard from "@/components/CottageCard.vue";
+import AdventureCard from "@/components/AdventureCard.vue";
 import axios from "axios";
 import NewCottageModal from "@/components/NewCottageModal.vue";
 export default {
-  components: { CottageCard, NewCottageModal },
-  data: function () {
-    return {
-      clickedCottageForEdit: "",
-      numberOfPersons: "",
-      searchText: "",
-      searchResults: [
-        {
+    components: { AdventureCard, NewCottageModal },
+    data: function () {
+        return {
+        clickedAdventureCardForEdit: "",
+        numberOfPersons: "",
+        searchText: "",
+        //searchResults: [],
+        searchResults: [{
           id: "1",
+          imagePath: "fa21.jpg",
           name: "Villa Madam",
           description:
             "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
           cancellationRule: "",
           rating: "4.85",
-          location: {
             street: "Ketch Harbour Lane",
-            houseNumber: "768",
             city: "New Port Richey",
             country: "USA",
-          },
           availabilityStart: "10 Dec 2021 14:00:00 GMT",
           availabilityEnd: "15 Dec 2021 11:00:00 GMT",
           image: "c1.jpg",
-          vacationHomeOwner: "jamesDean",
-          price: 50.0,
-        },
-        {
-          id: "2",
-          name: "Catherine's Vineyard",
-          description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-          cancellationRule: "",
-          rating: "3.95",
-          location: {
-            street: "Cedar Drive",
-            houseNumber: "849",
-            city: "Niceville",
-            country: "USA",
-          },
-          availabilityStart: "8 Dec 2021 14:00:00 GMT",
-          availabilityEnd: "12 Dec 2021 11:00:00 GMT",
-          image: "c3.jpg",
-          vacationHomeOwner: "jamesDean",
-          price: 45.55,
-        },
-      ],
-      entities: [
-        {
-          id: "1",
-          name: "Villa Madam",
-          description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-          cancellationRule: "",
-          rating: "4.85",
-          location: {
-            street: "Ketch Harbour Lane",
-            houseNumber: "768",
-            city: "New Port Richey",
-            country: "USA",
-          },
-          availabilityStart: "10 Dec 2021 14:00:00 GMT",
-          availabilityEnd: "15 Dec 2021 11:00:00 GMT",
-          image: "c1.jpg",
-          vacationHomeOwner: "jamesDean",
+          fishingInstructor:  {
+            id: "1",
+            name: "Sam",
+            surname: "Lee",
+            email: "sam_lee@gmail.com",
+            userType: "FISHING_INSTRUCTOR",
+            date: "03.12.2021.",
+            telephone: "0634375921",
+            country: "Serbia",
+            city: "City",
+            street: "Street 2",
+            },
           price: 30.0,
         },
         {
           id: "2",
+          imagePath: "fa21.jpg",
           name: "Catherine's Vineyard",
           description:
             "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
           cancellationRule: "",
           rating: "3.95",
-          location: {
             street: "Ketch Harbour Lane",
-            houseNumber: "768",
             city: "New Port Richey",
             country: "USA",
-          },
           availabilityStart: "8 Dec 2021 14:00:00 GMT",
           availabilityEnd: "12 Dec 2021 11:00:00 GMT",
           image: "c3.jpg",
-          vacationHomeOwner: "jamesDean",
+          fishingInstructor: {
+            id: "2",
+            name: "John",
+            surname: "Larsson",
+            email: "john_smith@gmail.com",
+            userType: "FISHING_INSTRUCTOR",
+            date: "01.12.2021.",
+            telephone: "0632868924",
+            country: "Germany",
+            city: "City",
+            street: "Street 7",
+            },
           price: 61.0,
-        },
-      ],
-    };
-  },
-  methods: {
-    probajMetodu: function () {
-      axios
-        .get("http://localhost:8080/vacationHome/all", {
-          headers: {
+        },]
+        };
+    },
+    mounted: function () {
+        axios
+        .get("http://localhost:8080/vacationHome/all/" + localStorage.email, {
+            headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.jwt,
-          },
+            },
         })
         .then(
-          (res) => {
-            console.log(res);
-            console.log(localStorage.jwt);
-          },
-          (err) => {
+            (res) => {
+            console.log(res.data);
+            this.searchResults = res.data;
+            },
+            (err) => {
             console.log(err);
-            console.log(localStorage.jwt);
-          }
+            }
         );
     },
-    searchCottage: function () {
-      if (this.searchText != "" && this.searchText.trim().lenght != 0) {
-        let searchParts = this.searchText.trim().split(" ");
+    methods: {
+        searchAdventures: function () {
+        if (this.searchText != "" && this.searchText.trim().lenght != 0) {
+            let searchParts = this.searchText.trim().split(" ");
 
-        this.searchResults = [];
-        for (let entitie of this.entities) {
-          let matches = true;
-          for (let i = 0; i < searchParts.length; i++) {
-            if (
-              !entitie.name
-                .toLocaleLowerCase()
-                .includes(searchParts[i].toLocaleLowerCase()) &&
-              !entitie.location
-                .toLocaleLowerCase()
-                .includes(searchParts[i].toLocaleLowerCase()) &&
-              !entitie.vacationHomeOwner
-                .toLocaleLowerCase()
-                .includes(searchParts[i].toLocaleLowerCase())
-            ) {
-              matches = false;
-              break;
+            this.searchResults = [];
+            for (let entitie of this.entities) {
+            let matches = true;
+            for (let i = 0; i < searchParts.length; i++) {
+                if (
+                !entitie.name
+                    .toLocaleLowerCase()
+                    .includes(searchParts[i].toLocaleLowerCase()) &&
+                !entitie.location
+                    .toLocaleLowerCase()
+                    .includes(searchParts[i].toLocaleLowerCase()) &&
+                !entitie.vacationHomeOwner
+                    .toLocaleLowerCase()
+                    .includes(searchParts[i].toLocaleLowerCase())
+                ) {
+                matches = false;
+                break;
+                }
             }
-          }
-          if (matches) {
-            this.searchResults.push(entitie);
-          }
-        }
-      } else {
-        this.searchResults = this.entities;
-      }
-
-      let stars = document.querySelector(
-        "input[type='radio'][name='star']:checked"
-      );
-      if (stars != null && this.searchResults != null) {
-        let rating;
-        if (document.getElementById("star1").checked) {
-          rating = 5;
-        } else if (document.getElementById("star2").checked) {
-          rating = 4;
-        } else if (document.getElementById("star3").checked) {
-          rating = 3;
-        } else if (document.getElementById("star4").checked) {
-          rating = 2;
+            if (matches) {
+                this.searchResults.push(entitie);
+            }
+            }
         } else {
-          rating = 1;
+            this.searchResults = this.entities;
         }
 
-        let newResults = [];
-        for (let entitie of this.searchResults) {
-          if (parseFloat(entitie.rating) >= rating) {
-            newResults.push(entitie);
-          }
-        }
+        let stars = document.querySelector(
+            "input[type='radio'][name='star']:checked"
+        );
+        if (stars != null && this.searchResults != null) {
+            let rating;
+            if (document.getElementById("star1").checked) {
+            rating = 5;
+            } else if (document.getElementById("star2").checked) {
+            rating = 4;
+            } else if (document.getElementById("star3").checked) {
+            rating = 3;
+            } else if (document.getElementById("star4").checked) {
+            rating = 2;
+            } else {
+            rating = 1;
+            }
 
-        this.searchResults = newResults;
-      }
+            let newResults = [];
+            for (let entitie of this.searchResults) {
+            if (parseFloat(entitie.rating) >= rating) {
+                newResults.push(entitie);
+            }
+            }
+
+            this.searchResults = newResults;
+        }
+        },
+        editAdventure: function (event) {
+        console.log(event);
+        // this.$("#NewCottageModal").modal({ show: false });
+        // this.$("#NewCottageModal").modal("show");
+        },
     },
-    editCottage: function (event) {
-      console.log("DA");
-      console.log(event);
-      // this.$("#NewCottageModal").modal({ show: false });
-      // this.$("#NewCottageModal").modal("show");
-    },
-  },
 };
 </script>
 
