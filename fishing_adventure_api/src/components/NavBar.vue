@@ -63,7 +63,7 @@
               </ul>
             </li>
 
-            <li class="nav-item dropdown" v-if="loggedInUser == 'homeOwner'">
+            <li class="nav-item dropdown" v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER' || loggedInRole == 'ROLE_FISHING_INSTRUCTOR' || loggedInRole == 'ROLE_BOAT_OWNER'" >
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -78,14 +78,15 @@
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <li><a class="dropdown-item" href="/cottages">Cottages</a></li>
-                <li><a class="dropdown-item" href="/calendar">Calander</a></li>
+                <li v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER'"><a class="dropdown-item" href="/cottages">Cottages</a></li>
+                <li v-if="loggedInRole == 'ROLE_FISHING_INSTRUCTOR'"><a class="dropdown-item" href="/fishingAdventures">Fishing adventures</a></li>
+                <li v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER' || loggedInRole == 'ROLE_FISHING_INSTRUCTOR'"><a class="dropdown-item" href="/calendar">Calander</a></li>
                 <li>
                   <a class="dropdown-item" href="/specialOffers"
-                    >Special Offers</a
+                    >Special offers</a
                   >
                 </li>
-                <li>
+                <li v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER' || loggedInRole == 'ROLE_FISHING_INSTRUCTOR'">
                   <a class="dropdown-item" href="/reservations">Reservations</a>
                 </li>
               </ul>
