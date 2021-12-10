@@ -62,7 +62,7 @@
                       class="shadow-none login-inputs col-md-8 mb-2"
                     />
                   </div>
-                  <div v-if="role == 'ROLE_FISHING_INSTRUCTOR'" class="row shadow-none">
+                  <div v-if="role == 'ROLE_FISHINGINSTRUCTOR'" class="row shadow-none">
                     <p class="card-text text-left shadow-none col-md-3">
                       Biography:
                     </p>
@@ -298,7 +298,7 @@ export default {
         city : this.address.split(', ')[1],
         country : this.address.split(', ')[2]
       };
-      if(localStorage.role != 'ROLE_FISHINGINSTRUCTOR'){
+      if(localStorage.role != undefined){
         axios
           .put("http://localhost:8080/users/update", user, {
             headers: {

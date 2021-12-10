@@ -165,7 +165,7 @@ export default {
     };
   },
   mounted: function () {
-    this.loggedInRole = "ROLE_FISHING_INSTRUCTOR"; //localStorage.role;
+    this.loggedInRole = localStorage.role;
   },
   methods: {
     openProfile: function () {

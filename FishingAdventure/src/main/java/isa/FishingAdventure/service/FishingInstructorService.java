@@ -24,7 +24,7 @@ public class FishingInstructorService{
 	private UserTypeService userTypeService;
 
 	public FishingInstructor findByEmail(String email) {
-		return (FishingInstructor) fishingInstructorRepository.findByEmail(email);
+		return fishingInstructorRepository.findByEmail(email);
 	}
 
 	public FishingInstructor save(UserDto userDto) {

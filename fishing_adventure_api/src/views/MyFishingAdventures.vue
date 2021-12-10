@@ -82,7 +82,7 @@ export default {
         clickedAdventureCardForEdit: "",
         numberOfPersons: "",
         searchText: "",
-        //searchResults: [],
+         //searchResults: [],
         searchResults: [{
           id: "1",
           imagePath: "fa21.jpg",
@@ -139,11 +139,12 @@ export default {
             },
           price: 61.0,
         },]
+        
         };
     },
     mounted: function () {
         axios
-        .get("http://localhost:8080/vacationHome/all/" + localStorage.email, {
+        .get("http://localhost:8080/fishingAdventure/all/" + localStorage.email, {
             headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.jwt,
