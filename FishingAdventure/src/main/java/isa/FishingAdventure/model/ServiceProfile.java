@@ -40,6 +40,9 @@ public abstract class ServiceProfile {
 
     @OneToMany(targetEntity = AdditionalService.class,cascade = CascadeType.MERGE)
     private Set<AdditionalService> additionalServices;
+    
+    @OneToMany(targetEntity = Image.class,cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    public Set<Image> images;
 
     public ServiceProfile(Integer serviceId, String name, String description, double cancellationRule, double rating, Location location, Set<Appointment> appointments, Set<Rule> rules, Set<AdditionalService> additionalServices) {
         this.serviceId = serviceId;
@@ -111,4 +114,28 @@ public abstract class ServiceProfile {
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
     }
+
+	public Set<Rule> getRules() {
+		return rules;
+	}
+
+	public void setRules(Set<Rule> rules) {
+		this.rules = rules;
+	}
+
+	public Set<AdditionalService> getAdditionalServices() {
+		return additionalServices;
+	}
+
+	public void setAdditionalServices(Set<AdditionalService> additionalServices) {
+		this.additionalServices = additionalServices;
+	}
+
+	public Set<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<Image> images) {
+		this.images = images;
+	}
 }

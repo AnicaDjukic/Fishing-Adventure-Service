@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            src="@/assets/b10.jpg"
+            :src="'/img/' + boatEntitie.imagePath"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -13,8 +13,8 @@
         <div class="col-md-8 shadow-none" name="main-col">
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
-              <h5 class="card-title shadow-none">James' Boat</h5>
-              <p class="advertiserTitle shadow-none">@jamesDean</p>
+              <h5 class="card-title shadow-none">{{ boatEntitie.name }}</h5>
+              <p class="advertiserTitle shadow-none">@{{ boatEntitie.boatOwner.name }}{{ boatEntitie.boatOwner.surname }}</p>
               <p
                 v-if="path == 'mycottages'"
                 class="top-right-corner shadow-none"
@@ -25,55 +25,7 @@
             <div class="card-text shadow-none" style="display: flex">
               <div class="shadow-none">
                 <p class="card-text text-left shadow-none mb-1">
-                  It is a long established fact that a reader will be distracted
-                  by the readable content of a page when looking at its layout.
-                </p>
-                <p
-                  class="card-text text-left shadow-none mb-3 flex-column d-flex flex-md-row"
-                  style="align-items: center"
-                >
-                  Available:
-                  <Datepicker
-                    v-if="path == 'myboats'"
-                    style="
-                      margin-left: 2%;
-                      margin-top: 2%;
-                      border: 1px solid white;
-                      border-radius: 5px;
-                      width: 100%;
-                      box-shadow: none !important;
-                    "
-                    dark
-                    id="picker"
-                    v-model="date"
-                    range
-                    :partialRange="false"
-                    placeholder="Select date"
-                    :enableTimePicker="true"
-                    minutesIncrement="15"
-                    :minDate="new Date()"
-                  ></Datepicker>
-                  <Datepicker
-                    v-if="path != 'myboats'"
-                    style="
-                      margin-left: 2%;
-                      margin-top: 2%;
-                      border: 1px solid white;
-                      border-radius: 5px;
-                      width: 100%;
-                      box-shadow: none !important;
-                    "
-                    dark
-                    id="picker"
-                    v-model="date"
-                    range
-                    :partialRange="false"
-                    placeholder="Select date"
-                    :enableTimePicker="true"
-                    minutesIncrement="15"
-                    :minDate="new Date()"
-                    disabled
-                  ></Datepicker>
+                  {{ boatEntitie.description }}
                 </p>
               </div>
               <p
@@ -86,12 +38,13 @@
                   width: 30%;
                 "
               >
-                <i class="fas fa-star shadow-none"> 5.0</i>
+                <i class="fas fa-star shadow-none"> {{ boatEntitie.rating }}</i>
               </p>
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
               <p class="shadow-none" style="margin: 0">
-                341 Preston Street, Pheonix
+                {{ boatEntitie.street }} {{ boatEntitie.city }}
+                {{ boatEntitie.country }}
               </p>
               <p
                 class="shadow-none"
@@ -102,7 +55,6 @@
                   font-size: x-large;
                 "
               >
-                <i class="fas fa-dollar-sign shadow-none">50.00/day</i>
               </p>
             </div>
           </div>
@@ -116,12 +68,10 @@
 import { ref, onMounted } from "vue";
 
 export default {
+  props: ["boatEntitie"],
   setup() {
     const date = ref();
     onMounted(() => {
-      const startDate = new Date(2021, 12, 5, 14);
-      const endDate = new Date(2021, 12, 15, 11);
-      date.value = [startDate, endDate];
     });
     return {
       date,
@@ -129,7 +79,7 @@ export default {
   },
   data: function () {
     return {
-      path: "",
+      path: ""
     };
   },
   mounted: function () {
@@ -138,7 +88,7 @@ export default {
     } else if (window.location.href.includes("/boats")) {
       this.path = "myboats";
     }
-  },
+  }
 };
 </script>
 <style scoped>

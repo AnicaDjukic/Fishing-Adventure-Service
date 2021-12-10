@@ -11,9 +11,6 @@ public class Image {
     @Column(name = "path", nullable = false)
     private String path;
 
-    @ManyToOne(targetEntity = ServiceProfile.class,cascade = CascadeType.MERGE)
-    public ServiceProfile serviceProfile;
-
     public Image(Integer id, String path, ServiceProfile serviceProfile) {
         this.id = id;
         this.path = path;
@@ -37,13 +34,4 @@ public class Image {
     public void setPath(String path) {
         this.path = path;
     }
-
-    public ServiceProfile getServiceProfile() {
-        return this.serviceProfile;
-    }
-
-    public void setServiceProfile(ServiceProfile serviceProfile) {
-        this.serviceProfile = serviceProfile;
-    }
-
 }
