@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade dark"
-    id="registration-request"
+    :id="id"
     tabindex="-1"
     aria-labelledby="LogInModalLabel"
     aria-hidden="true"
@@ -22,7 +22,9 @@
         <div
           class="modal-body"
         >
-          <h5 style="margin-bottom:20px">Fishing instructor <i class="fas fa-fish fa-lg" aria-hidden="true"></i></h5>
+          <h5 style="margin-bottom:20px"  v-if="user.userType == 'FISHING_INSTRUCTOR'">Fishing instructor <i class="fas fa-fish fa-lg" aria-hidden="true"></i></h5>
+          <h5 style="margin-bottom:20px"  v-else-if="user.userType == 'COTTAGE_OWNER'">Cottage owner <i class="fas fa-home fa-lg" aria-hidden="true"></i></h5>
+          <h5 style="margin-bottom:20px"  v-else-if="user.userType == 'BOAT_OWNER'">Boat owner <i class="fas fa-anchor fa-lg" aria-hidden="true"></i></h5>
           <div class="reg-request-body" style="color:white">
                 <div style="display: inline-flex; justify: space-between; width: 100%; justify-content: space-between;">
                     <div> 
@@ -34,18 +36,16 @@
                     </div>
 
                     <div>
-                        <div class="rr-row"><span class="rr-right"> example@gmail.com </span></div>
-                        <div class="rr-row"><span class="rr-right"> Mark Smith </span></div>
-                        <div class="rr-row"><span class="rr-right"> 063487923 </span></div>
-                        <div class="rr-row"><span class="rr-right"> Serbia </span></div>
-                        <div class="rr-row"><span class="rr-right"> Street 2, City </span></div>
+                        <div class="rr-row"><span class="rr-right"> {{user.email}} </span></div>
+                        <div class="rr-row"><span class="rr-right">  {{user.name}}  {{user.surname}} </span></div>
+                        <div class="rr-row"><span class="rr-right">  {{user.telephone}} </span></div>
+                        <div class="rr-row"><span class="rr-right">  {{user.country}} </span></div>
+                        <div class="rr-row"><span class="rr-right">  {{user.street}},  {{user.city}} </span></div>
                     </div>
 
                 </div>
                     <div class="rr-row">Reason for joining:</div>
-                <div class="rr-reason-txt">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum ut lectus et efficitur. Quisque finibus facilisis rutrum. 
-                    Mauris sed ipsum congue, euismod mauris ac, volutpat mi. 
-                    Sed sollicitudin ullamcorper varius. Ut ullamcorper ac ex a suscipit.</div>
+                <div class="rr-reason-txt">{{user.reason_for_registration}}</div>
           </div>
         </div>
         <div class="modal-body" v-if="mode === 'registerRole'">
@@ -77,7 +77,7 @@
 <script>
 export default {
     name: "RequestForRegistration",
-    props: ['user'],
+    props: ['id', 'user'],
     data: function () {
         return {
         };
@@ -107,12 +107,13 @@ export default {
     border-radius: 10px;
 }
 
-
-
 .rr-reason-txt {
     background-color: #333b42; 
     padding: 5px 10px;
     text-align: justify;
     border-radius: 10px;
+    min-height: fit-content;
+    max-height: 150px;
+    overflow-y: auto;
 }
 </style>

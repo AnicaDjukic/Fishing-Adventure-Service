@@ -84,8 +84,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in users" :key="user.id" v-bind:user="user"  v-on:click="showRequest(user)" data-bs-toggle="modal"
-              data-bs-target="#registration-request">
+                <tr v-for="user in users" :key="user.id" v-bind:user="user" data-bs-toggle="modal"
+                    :data-bs-target="'#registration-request' + user.id">
+                 
                     <td>
                         <i v-if="user.userType == 'CLIENT'" class="fas fa-user fa-lg" style="color:#003148" aria-hidden="true"></i>
                         <i v-else-if="user.userType == 'ADMINISTRATOR'" class="fas fa-cog fa-lg" style="color:#003148" aria-hidden="true"></i>
@@ -99,14 +100,14 @@
                     <td>{{user.name}}</td>
                     <td>{{user.surname}}</td>
                     <td>{{user.email}}</td>
+
+                    <registration-request :id="'registration-request' + user.id" :user="user"></registration-request>
                 </tr>
                 <!-- <tr v-if="searchResults.length == 0">
                     <td colspan="6"><h3  style="text-align:center" >No users found</h3></td>
                 </tr> -->
             </tbody>
         </table>
-      <registration-request v-if="selectedUser != undefined" 
-                    v-bind:selectedUser="user"></registration-request>
     </div>
   </div>
  
@@ -130,6 +131,11 @@ export default {
             email: "curtis_lee@gmail.com",
             userType: "BOAT_OWNER",
             date: "03.12.2021.",
+            telephone: "0634375921",
+            country: "Serbia",
+            city: "City",
+            street: "Street 2",
+            reason_for_registration: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum ut lectus et efficitur. Quisque finibus facilisis rutrum. Mauris sed ipsum congue, euismod mauris ac, volutpat mi. Sed sollicitudin ullamcorper varius. Ut ullamcorper ac ex a suscipit." 
             },
             {
             id: "2",
@@ -138,6 +144,11 @@ export default {
             email: "simon_smith@gmail.com",
             userType: "COTTAGE_OWNER",
             date: "01.12.2021.",
+            telephone: "0632868924",
+            country: "Germany",
+            city: "City",
+            street: "Street 7",
+            reason_for_registration: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum ut lectus et efficitur." 
             },
             {
             id: "3",
@@ -146,6 +157,11 @@ export default {
             email: "nick@gmail.com",
             userType: "FISHING_INSTRUCTOR",
             date: "29.11.2021.",
+            telephone: "0634825938",
+            country: "Norway",
+            city: "City",
+            street: "Street 8",
+            reason_for_registration: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum ut lectus et efficitur." 
             }
         ]
         };
