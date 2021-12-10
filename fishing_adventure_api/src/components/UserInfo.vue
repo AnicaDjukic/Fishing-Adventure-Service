@@ -6,7 +6,12 @@
           <img
             width="100"
             height="225"
-            style="width: 100%; object-fit: cover; position: relative; padding-top:10px"
+            style="
+              width: 100%;
+              object-fit: cover;
+              position: relative;
+              padding-top: 10px;
+            "
             src="@/assets/advertiser.png"
             class="img-fluid rounded-start shadow-none overlay"
           />
@@ -62,7 +67,10 @@
                       class="shadow-none login-inputs col-md-8 mb-2"
                     />
                   </div>
-                  <div v-if="role == 'ROLE_FISHINGINSTRUCTOR'" class="row shadow-none">
+                  <div
+                    v-if="role == 'ROLE_FISHINGINSTRUCTOR'"
+                    class="row shadow-none"
+                  >
                     <p class="card-text text-left shadow-none col-md-3">
                       Biography:
                     </p>
@@ -172,13 +180,13 @@
                         id="editAccount"
                         v-on:click="enableAccount"
                       >
-                        Edit settings
+                        Change password
                       </button>
                       <button
                         id="saveAccount"
                         style="display: none"
                         class="btn btn-primary col-md-4"
-                        v-on:click="saveAccount"
+                        v-on:click="changePassword"
                       >
                         Save
                       </button>
@@ -206,7 +214,7 @@
 </template>
 
 <script>
-import axios from "axios"
+import axios from "axios";
 export default {
   mounted: function () {
     let element = document.getElementById("btnradio1");
@@ -216,14 +224,15 @@ export default {
       .get("http://localhost:8080/users/get?email=" + localStorage.email, {
         headers: {
           "Access-Control-Allow-Origin": "http://localhost:8080",
-           Authorization: "Bearer " + localStorage.jwt,
+          Authorization: "Bearer " + localStorage.jwt,
         },
       })
       .then((res) => {
-        this.name = res.data.name + ' ' + res.data.surname;
+        this.name = res.data.name + " " + res.data.surname;
         this.account = res.data.email;
         this.phonenumber = res.data.phoneNumber;
-        this.address = res.data.street + ', ' + res.data.city + ', ' + res.data.country
+        this.address =
+          res.data.street + ", " + res.data.city + ", " + res.data.country;
       });
   },
   data: function () {
@@ -261,6 +270,24 @@ export default {
         element.disabled = true;
       }
     },
+    changePassword: function () {
+      let dto = {
+        email: localStorage.email,
+        newPassword: this.password1,
+        passwordAgain: this.password2,
+      };
+
+      if (this.password1 === this.password2) {
+        axios
+          .put("http://localhost:8080/users/changePassword", dto, {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+            },
+          })
+          .then(console.log("success"));
+      }
+      this.saveAccount();
+    },
     enableAccount: function () {
       var elements = document.getElementsByName("account");
       var editBtn = document.getElementById("editAccount");
@@ -287,18 +314,18 @@ export default {
       this.password1 = "";
       this.password2 = "";
     },
-    saveInfo: function(){
+    saveInfo: function () {
       let user = {
-        passwod : this.password1,
-        name : this.name.split(' ')[0],
-        surname : this.name.split(' ')[1],
+        passwod: this.password1,
+        name: this.name.split(" ")[0],
+        surname: this.name.split(" ")[1],
         email: this.account,
-        phoneNumber : this.phonenumber,
-        street : this.address.split(', ')[0],
-        city : this.address.split(', ')[1],
-        country : this.address.split(', ')[2]
+        phoneNumber: this.phonenumber,
+        street: this.address.split(", ")[0],
+        city: this.address.split(", ")[1],
+        country: this.address.split(", ")[2],
       };
-      if(localStorage.role != 'ROLE_FISHINGINSTRUCTOR'){
+      if (localStorage.role != "ROLE_FISHINGINSTRUCTOR") {
         axios
           .put("http://localhost:8080/users/update", user, {
             headers: {
@@ -306,15 +333,16 @@ export default {
             },
           })
           .then((res) => {
-            this.name = res.data.name + ' ' + res.data.surname;
+            this.name = res.data.name + " " + res.data.surname;
             this.account = res.data.email;
             this.phonenumber = res.data.phoneNumber;
-            this.address = res.data.street + ', ' + res.data.city + ', ' + res.data.country
+            this.address =
+              res.data.street + ", " + res.data.city + ", " + res.data.country;
           });
       }
 
       this.saveAboutMe();
-    }
+    },
   },
 };
 </script>
@@ -325,8 +353,13 @@ export default {
   height: 100%;
 }
 .overlay {
-  background: rgb(17,16,16);
-  background: linear-gradient(90deg, rgba(17,16,16,1) 0%, rgba(30,34,36,1) 50%, rgba(33,37,41,1) 100%);
+  background: rgb(17, 16, 16);
+  background: linear-gradient(
+    90deg,
+    rgba(17, 16, 16, 1) 0%,
+    rgba(30, 34, 36, 1) 50%,
+    rgba(33, 37, 41, 1) 100%
+  );
 }
 
 .navigation-btn {
