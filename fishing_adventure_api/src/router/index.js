@@ -75,6 +75,11 @@ const routes = [{
     name: 'AllUsers',
     component: () =>
         import ('../views/AllUsers.vue')
+}, {
+    path: '/registrationRequests',
+    name: 'RegistrationRequests',
+    component: () =>
+        import ('../views/RegistrationRequests.vue')
 }]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),

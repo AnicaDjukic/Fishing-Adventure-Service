@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="title">
-      <h1>All users</h1>
+      <h1>Registration requests</h1>
       <i
-        class="far fa-users fa-3x"
+        class="fas fa-envelope-open-text fa-3x"
         style="font-family: 'Font Awesome 5 Pro'"
       ></i>
     </div>
@@ -18,15 +18,6 @@
         class="container w-100 row row-cols-1 row-cols-sm-1 row-cols-md-4"
         style="justify-content: space-evenly; align-items: center"
       >
-        <div class="col-md-2">
-          <button
-            type="button"
-            class="btn btn-outline-primary text-nowrap me-2"
-            data-bs-toggle="modal"
-          >
-            Add new admin
-          </button>
-        </div>
         <div class="col-md-3">
           <input
             class="form-control me-2"
@@ -62,10 +53,6 @@
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <span class="dropdown-item" style="text-align:left"> 
-                    <input type="checkbox" style="margin-right:10px; margin-left:5px">
-                    <label style="font-size: 17px;">Clients</label>
-                </span>
                <span class="dropdown-item" style="text-align:left"> 
                     <input type="checkbox" style="margin-right:10px; margin-left:5px">
                     <label style="font-size: 17px">Cottage owners</label>
@@ -77,12 +64,7 @@
                 <span class="dropdown-item" style="text-align:left"> 
                     <input type="checkbox" style="margin-right:10px; margin-left:5px">
                     <label style="font-size: 17px">Fishing instructors</label>
-                </span>
-                <span class="dropdown-item"  style="text-align:left"> 
-                    <input type="checkbox" style="margin-right:10px; margin-left:5px">
-                    <label style="font-size: 17px">Administrators</label>
-                </span>
-                
+                </span>       
               </ul>
             </div>
             </div>
@@ -94,93 +76,92 @@
         <table class="table-users">
             <thead>
                 <tr>
-                    <th>Role</th>
+                    <th>Advertiser type</th>
+                    <th v-on:click="sortByDate" id="name-th">Date of request <i class="fa fa-sort"></i></th>
                     <th v-on:click="sortByName" id="name-th">Name <i class="fa fa-sort"></i></th>
                     <th v-on:click="sortBySurname" id="surname-th">Surname <i class="fa fa-sort"></i></th>
                     <th v-on:click="sortByEmail" id="email-th">Email <i class="fa fa-sort"></i></th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in users" :key="user.id" v-bind:user="user">
+                <tr v-for="user in users" :key="user.id" v-bind:user="user"  v-on:click="showRequest(user)" data-bs-toggle="modal"
+              data-bs-target="#registration-request">
                     <td>
                         <i v-if="user.userType == 'CLIENT'" class="fas fa-user fa-lg" style="color:#003148" aria-hidden="true"></i>
                         <i v-else-if="user.userType == 'ADMINISTRATOR'" class="fas fa-cog fa-lg" style="color:#003148" aria-hidden="true"></i>
                         <i v-else-if="user.userType == 'FISHING_INSTRUCTOR'" class="fas fa-fish fa-lg" style="color:#003148" aria-hidden="true"></i>
                         <i v-else-if="user.userType == 'COTTAGE_OWNER'" class="fas fa-home fa-lg" style="color:#003148" aria-hidden="true"></i>
                         <i v-else-if="user.userType == 'BOAT_OWNER'" class="fas fa-anchor fa-lg" style="color:#003148" aria-hidden="true"></i>
-                        </td>
+                    </td>
+                    <td>
+                        {{user.date}}
+                    </td>
                     <td>{{user.name}}</td>
                     <td>{{user.surname}}</td>
                     <td>{{user.email}}</td>
-                    <td>
-                         <button class="black-btn" v-if="user.userType=='ADMINISTRATOR'"  disabled ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                        <button class="black-btn" v-else ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                    </td>
                 </tr>
                 <!-- <tr v-if="searchResults.length == 0">
                     <td colspan="6"><h3  style="text-align:center" >No users found</h3></td>
                 </tr> -->
             </tbody>
         </table>
-      
+      <registration-request v-if="selectedUser != undefined" 
+                    v-bind:selectedUser="user"></registration-request>
     </div>
   </div>
  
 </template>
 
 <script>
-export default {
-  data: function () {
-    return {
-      searchText: "",
-      searchResults: [],
-      users: [
-        {
-          id: "0",
-          name: "Simon",
-          surname: "Smith",
-          email: "simon_smith@gmail.com",
-          userType: "CLIENT",
-        },
-        {
-          id: "1",
-          name: "Curtis",
-          surname: "Lee",
-          email: "curtis_lee@gmail.com",
-          userType: "BOAT_OWNER",
-        },
-        {
-          id: "2",
-          name: "Amy",
-          surname: "Larsson",
-          email: "simon_smith@gmail.com",
-          userType: "COTTAGE_OWNER",
-        },
-        {
-          id: "3",
-          name: "Nick",
-          surname: "Ness",
-          email: "nick@gmail.com",
-          userType: "FISHING_INSTRUCTOR",
-        },
-        {
-          id: "4",
-          name: "Mike",
-          surname: "Garvey",
-          email: "mike_g@gmail.com",
-          userType: "ADMINISTRATOR",
-        }
-      ]
-    };
-  },
-  methods: {
-    searchUsers: function () {
+import RequestForRegistration from "@/components/RequestForRegistration.vue";
 
+export default {
+    components: { "registration-request": RequestForRegistration },
+    data: function () {
+        return {
+        searchText: "",
+        searchResults: [],
+        selectedUser: undefined,
+        users: [
+            {
+            id: "1",
+            name: "Curtis",
+            surname: "Lee",
+            email: "curtis_lee@gmail.com",
+            userType: "BOAT_OWNER",
+            date: "03.12.2021.",
+            },
+            {
+            id: "2",
+            name: "Amy",
+            surname: "Larsson",
+            email: "simon_smith@gmail.com",
+            userType: "COTTAGE_OWNER",
+            date: "01.12.2021.",
+            },
+            {
+            id: "3",
+            name: "Nick",
+            surname: "Ness",
+            email: "nick@gmail.com",
+            userType: "FISHING_INSTRUCTOR",
+            date: "29.11.2021.",
+            }
+        ]
+        };
     },
-  },
+    methods: {
+        searchUsers: function () {
+
+        },
+        showRequest: function(user) {
+            this.selectedUser = user;
+        }
+    },
 };
 </script>
 
 <style scoped src="@/css/mycottages.css"></style>
 <style scoped src="@/css/admin.css"></style>
+
+
