@@ -49,8 +49,20 @@
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <li><a class="dropdown-item" href="/search" v-if="loggedInUser != 'administrator'">All</a></li>
-                <li><hr class="dropdown-divider"  v-if="loggedInUser != 'administrator'" /></li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="/search"
+                    v-if="loggedInUser != 'administrator'"
+                    >All</a
+                  >
+                </li>
+                <li>
+                  <hr
+                    class="dropdown-divider"
+                    v-if="loggedInUser != 'administrator'"
+                  />
+                </li>
                 <li><a class="dropdown-item" href="/search/boats">Boats</a></li>
                 <li>
                   <a class="dropdown-item" href="/search/cottages">Cottages</a>
@@ -63,7 +75,10 @@
               </ul>
             </li>
 
-            <li class="nav-item dropdown" v-if="loggedInUser == 'homeOwner'">
+            <li
+              class="nav-item dropdown"
+              v-if="loggedInUser == 'ROLE_VACATION_HOME_OWNER'"
+            >
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -90,7 +105,10 @@
                 </li>
               </ul>
             </li>
-            <li class="nav-item dropdown" v-if="loggedInUser == 'administrator'">
+            <li
+              class="nav-item dropdown"
+              v-if="loggedInUser == 'administrator'"
+            >
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -105,7 +123,11 @@
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <li><a class="dropdown-item" href="/registrationRequests">Registration Requests</a></li>
+                <li>
+                  <a class="dropdown-item" href="/registrationRequests"
+                    >Registration Requests</a
+                  >
+                </li>
                 <li><a class="dropdown-item" href="/users">All Users</a></li>
               </ul>
             </li>
@@ -125,7 +147,7 @@
             <button
               type="button"
               class="btn btn-outline-primary me-2"
-              v-on:click="openProfile"
+              v-on:click="logOut"
             >
               Log out
             </button>
@@ -152,7 +174,7 @@ export default {
   name: "NavBar",
   data: function () {
     return {
-      loggedInUser: undefined,
+      loggedInUser: "ROLE_VACATION_HOME_OWNER",
     };
   },
   mounted: function () {
@@ -161,6 +183,10 @@ export default {
   methods: {
     openProfile: function () {
       window.location.href = "/profile";
+    },
+    logOut: function () {
+      localStorage.clear();
+      window.location.href = "/";
     },
   },
 };

@@ -108,14 +108,7 @@
               id="street"
               type="text"
               class="login-inputs"
-              placeholder="Street"
-            />
-            <input
-              v-model="houseNumber"
-              id="number"
-              type="text"
-              class="login-inputs"
-              placeholder="Number"
+              placeholder="House number and street"
             />
             <input
               v-model="city"
@@ -347,7 +340,6 @@ export default {
       cottageDescription: "",
       images: [],
       street: "",
-      houseNumber: "",
       city: "",
       country: "",
       rooms: [],
@@ -359,13 +351,25 @@ export default {
   mounted: function () {
     var element = document.getElementById("logIn-btn");
     element.classList.add("active");
+    let imagePreviewContainer = document.getElementById("imagePreview");
+    let previewImage = imagePreviewContainer.querySelector(
+      ".image-preview__image"
+    );
+    let previewDefaultText = imagePreviewContainer.querySelector(
+      ".image-preview__default-text"
+    );
     if (this.cottage) {
+      previewDefaultText.style.display = "none";
+      previewImage.style.display = "block";
+      previewImage.setAttribute("src", "/img/" + this.cottage.images[0].path);
+
+      previewImage.setAttribute("src", "/img/" + this.cottage.images[0].path);
       this.cottageName = this.cottage.name;
       this.cottageDescription = this.cottage.description;
-      this.images = this.cottage.image;
-      this.street = this.cottage.street;
-      this.city = this.cottage.city;
-      this.country = this.cottage.country;
+      this.images = this.cottage.images;
+      this.street = this.cottage.location.address.street;
+      this.city = this.cottage.location.address.city;
+      this.country = this.cottage.location.address.country;
       this.rooms = this.cottage.rooms;
       this.rules = this.cottage.rules;
       this.priceList = this.cottage.additionalServices;
@@ -383,7 +387,7 @@ export default {
           document.getElementById("cottageImagesErr").innerHTML = "";
         }
       } else if (this.mode == "2") {
-        if (!this.street || !this.houseNumber || !this.city || !this.country) {
+        if (!this.street || !this.city || !this.country) {
           document.getElementById("secondErr").style = "color: red";
         } else {
           this.mode = "3";
@@ -412,7 +416,7 @@ export default {
       this.cottageName = "";
       this.cottageDescription = "";
       this.images = [];
-      (this.street = ""), (this.houseNumber = "");
+      this.street = "";
       this.city = "";
       this.country = "";
       this.rooms = [];

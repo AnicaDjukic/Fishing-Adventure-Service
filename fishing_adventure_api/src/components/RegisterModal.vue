@@ -231,12 +231,14 @@
             "
             class="btn btn-outline-primary"
             v-on:click="backClick"
+            id="back-btn"
           >
             <i class="fas fa-chevron-left fa-xs"></i> Back
           </button>
           <button
             v-on:click="registerUser"
             type="button"
+            id="create-btn"
             v-if="mode == 'registerCustomer' || mode == 'registerAdvertiser'"
             class="btn btn-outline-primary"
           >
@@ -250,6 +252,7 @@
           >
             Next <i class="fas fa-chevron-right fa-xs"></i>
           </button>
+          <p id="msg"></p>
         </div>
       </div>
     </div>
@@ -296,6 +299,7 @@ export default {
       element.classList.add("active");
       element = document.getElementById("register-btn");
       element.classList.remove("active");
+      document.getElementById("msg").innerHTML = "";
     },
     nextClick: function () {
       let elements = document.getElementsByName("btnradio");
@@ -339,6 +343,9 @@ export default {
       element.classList.add("active");
       element = document.getElementById("register-btn");
       element.classList.remove("active");
+      document.getElementById("create-btn").style.visibility = "visible";
+      document.getElementById("back-btn").style.visibility = "visible";
+      document.getElementById("msg").innerHTML = "";
     },
     loginUser: function () {
       let user = {
@@ -353,6 +360,7 @@ export default {
           },
         })
         .then((res) => {
+          window.location.reload();
           localStorage.setItem("jwt", res.data.accessToken);
           localStorage.setItem("email", res.data.email);
           localStorage.setItem("role", res.data.roles[0]);
@@ -391,13 +399,21 @@ export default {
           path = "http://localhost:8080/auth/signup/fishingInstructor";
           break;
       }
+
       axios
         .post(path, user, {
           headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
           },
         })
-        .then();
+        .then((res) => {
+          if (res != null) {
+            document.getElementById("msg").innerHTML =
+              "Varification mail is sent to your email address.";
+            document.getElementById("create-btn").style.visibility = "hidden";
+            document.getElementById("back-btn").style.visibility = "hidden";
+          }
+        });
     },
   },
 };

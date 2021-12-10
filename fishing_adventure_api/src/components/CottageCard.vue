@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            :src="'/img/' + entitie.imagePath"
+            :src="'/img/' + entitie.images[0].path"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -64,6 +64,7 @@
                     :enableTimePicker="true"
                     minutesIncrement="15"
                     :minDate="new Date()"
+                    v-on:click="preventPropagation"
                   ></Datepicker>
                   <Datepicker
                     v-if="path != 'mycottages'"
@@ -102,8 +103,22 @@
               </p>
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
-              <p class="shadow-none" style="margin: 0">
-                {{ entitie.street }} {{ entitie.city }}
+              <p
+                class="shadow-none"
+                style="margin: 0"
+                v-if="path == 'mycottages'"
+              >
+                {{ entitie.location.address.street }},
+                {{ entitie.location.address.city }},
+                {{ entitie.location.address.country }}
+              </p>
+              <p
+                class="shadow-none"
+                style="margin: 0"
+                v-if="path == 'searchcottages'"
+              >
+                {{ entitie.street }}
+                {{ entitie.city }}
                 {{ entitie.country }}
               </p>
               <p
@@ -121,20 +136,25 @@
       </div>
     </div>
   </div>
+  <NewCottageModal
+    :cottage="entitie"
+    :id="'entitie' + entitie.id"
+  ></NewCottageModal>
 </template>
 
 <script>
 import { ref, onMounted } from "vue";
+import NewCottageModal from "@/components/NewCottageModal.vue";
 import axios from "axios";
 
 export default {
-  components: {},
+  components: { NewCottageModal },
   props: ["entitie"],
   setup(props) {
     const date = ref();
     onMounted(() => {
-      const startDate = new Date(Date.parse(props.entitie.availabilityStart));
-      const endDate = new Date(Date.parse(props.entitie.availabilityEnd));
+      const startDate = new Date(props.entitie.availabilityStart);
+      const endDate = new Date(props.entitie.availabilityEnd);
       startDate.setHours(startDate.getHours() - 1);
       endDate.setHours(endDate.getHours() - 1);
       date.value = [startDate, endDate];

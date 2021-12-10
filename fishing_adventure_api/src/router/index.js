@@ -8,7 +8,14 @@ const routes = [{
     path: '/profile',
     name: 'profile',
     component: () =>
-        import ('../views/Profile.vue')
+        import ('../views/Profile.vue'),
+    beforeEnter: (to, from, next) => {
+        if (localStorage.role == "ROLE_VACATION_HOME_OWNER") {
+            next();
+        } else {
+            next('/');
+        }
+    }
 }, {
     path: '/search',
     name: 'Search',
@@ -41,7 +48,6 @@ const routes = [{
     component: () =>
         import ('../views/MyCottages.vue'),
     beforeEnter: (to, from, next) => {
-        console.log("DA")
         if (localStorage.role == "ROLE_VACATION_HOME_OWNER") {
             next();
         } else {
@@ -52,17 +58,38 @@ const routes = [{
     path: '/reservations',
     name: 'HomeOwnerReservations',
     component: () =>
-        import ('../views/HomeOwnerReservations.vue')
+        import ('../views/HomeOwnerReservations.vue'),
+    beforeEnter: (to, from, next) => {
+        if (localStorage.role == "ROLE_VACATION_HOME_OWNER") {
+            next();
+        } else {
+            next('/');
+        }
+    }
 }, {
     path: '/specialOffers',
     name: 'HomeOwnerSpecialOffers',
     component: () =>
-        import ('../views/HomeOwnerSpecialOffers.vue')
+        import ('../views/HomeOwnerSpecialOffers.vue'),
+    beforeEnter: (to, from, next) => {
+        if (localStorage.role == "ROLE_VACATION_HOME_OWNER") {
+            next();
+        } else {
+            next('/');
+        }
+    }
 }, {
     path: '/calendar',
     name: 'HomeOwnerCalendar',
     component: () =>
-        import ('../views/HomeOwnerCalendar.vue')
+        import ('../views/HomeOwnerCalendar.vue'),
+    beforeEnter: (to, from, next) => {
+        if (localStorage.role == "ROLE_VACATION_HOME_OWNER") {
+            next();
+        } else {
+            next('/');
+        }
+    }
 }, {
     path: '/fishingAdventure',
     name: 'FishingAdventure',

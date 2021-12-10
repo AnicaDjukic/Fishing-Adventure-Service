@@ -141,7 +141,6 @@
                     </p>
                     <input
                       type="text"
-                      name="account"
                       v-model="account"
                       disabled
                       class="shadow-none login-inputs col-md-8 mb-2"
@@ -325,7 +324,7 @@ export default {
         city: this.address.split(", ")[1],
         country: this.address.split(", ")[2],
       };
-      if (localStorage.role != "ROLE_FISHINGINSTRUCTOR") {
+      if (localStorage.role != "ROLE_FISHING_INSTRUCTOR") {
         axios
           .put("http://localhost:8080/users/update", user, {
             headers: {
