@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isa.FishingAdventure.dto.VacationHomeDto;
-import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.model.VacationHome;
 import isa.FishingAdventure.service.VacationHomeService;
 
@@ -26,9 +25,8 @@ public class VacationHomeController{
 	private VacationHomeService  homeService;
 
 	@GetMapping(value = "/all")
-	@PreAuthorize("hasRole('CLIENT')")
+	//@PreAuthorize("hasRole('CLIENT')")
 	public ResponseEntity<List<VacationHomeDto>> getAllVacationHomes() {
-		System.out.println("DA");
 		List<VacationHome> vacationHomes = homeService.findAll();
 
 		List<VacationHomeDto> VacationHomeDto = new ArrayList<>();

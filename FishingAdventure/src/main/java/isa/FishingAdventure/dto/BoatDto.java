@@ -47,10 +47,8 @@ public class BoatDto {
 		this.country = boat.getLocation().getAddress().getCountry();
 		for(Image img : boat.getImages()) {
 			this.imagePath = img.getPath();
-			System.out.println(img.getPath());
 			break;
 		}
-		//this.imagePath = "";
 		this.boatOwner = boat.getBoatOwner();
 	}
 

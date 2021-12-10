@@ -367,10 +367,9 @@ export default {
       this.cottageName = this.cottage.name;
       this.cottageDescription = this.cottage.description;
       this.images = this.cottage.image;
-      this.street = this.cottage.location.street;
-      this.houseNumber = this.cottage.location.houseNumber;
-      this.city = this.cottage.location.city;
-      this.country = this.cottage.location.country;
+      this.street = this.cottage.street;
+      this.city = this.cottage.city;
+      this.country = this.cottage.country;
       this.rooms = this.cottage.rooms;
       this.rules = this.cottage.rules;
       this.priceList = this.cottage.additionalServices;

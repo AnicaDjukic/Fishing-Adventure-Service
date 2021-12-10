@@ -2,7 +2,7 @@ package isa.FishingAdventure.dto;
 
 import java.util.Date;
 
-import isa.FishingAdventure.model.Location;
+import isa.FishingAdventure.model.Image;
 import isa.FishingAdventure.model.VacationHome;
 import isa.FishingAdventure.model.VacationHomeOwner;
 
@@ -16,7 +16,13 @@ public class VacationHomeDto {
 	
 	private double rating;
 	
-	public Location location;
+	public String street;
+	
+	public String city;
+	
+	public String country;
+	
+	public String imagePath;
 	
 	private Date availabilityStart;
 	
@@ -24,14 +30,18 @@ public class VacationHomeDto {
 	
 	public VacationHomeOwner vocationHomeOwner;
 	
-	public VacationHomeDto(int id, String name, String description, double rating, Location location,
-			Date availabilityStart, Date availabilityEnd, VacationHomeOwner vocationHomeOwner) {
+	public VacationHomeDto(int id, String name, String description, double rating, String street, String city,
+			String country, String imagePath, Date availabilityStart, Date availabilityEnd,
+			VacationHomeOwner vocationHomeOwner) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.rating = rating;
-		this.location = location;
+		this.street = street;
+		this.city = city;
+		this.country = country;
+		this.imagePath = imagePath;
 		this.availabilityStart = availabilityStart;
 		this.availabilityEnd = availabilityEnd;
 		this.vocationHomeOwner = vocationHomeOwner;
@@ -42,7 +52,13 @@ public class VacationHomeDto {
 		this.name = home.getName();
 		this.description = home.getDescription();
 		this.rating = home.getRating();
-		this.location = home.getLocation();
+		this.street = home.getLocation().getAddress().getStreet();
+		this.city = home.getLocation().getAddress().getCity();
+		this.country = home.getLocation().getAddress().getCountry();
+		for(Image img : home.getImages()) {
+			this.imagePath = img.getPath();
+			break;
+		}
 		this.availabilityStart = home.getAvailabilityStart();
 		this.availabilityEnd = home.getAvailabilityEnd();
 		this.vocationHomeOwner = home.getVocationHomeOwner();
@@ -85,12 +101,36 @@ public class VacationHomeDto {
 		this.rating = rating;
 	}
 
-	public Location getLocation() {
-		return location;
+	public String getStreet() {
+		return street;
 	}
 
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	public Date getAvailabilityStart() {
