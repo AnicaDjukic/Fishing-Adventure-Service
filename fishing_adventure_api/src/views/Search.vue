@@ -75,8 +75,8 @@
         :key="boatEntitie.id"
         v-bind:boatEntitie="boatEntitie"></BoatCard>
     </div>
-    <div v-if="searching == 'adventures'" style="margin-top: 5%">
-      <AdventureCard v-for="index in 10" :key="index"></AdventureCard>
+    <div v-if="searching == 'fishingInstructors'" style="margin-top: 5%">
+      <InstructorCard v-for="index in 10" :key="index"></InstructorCard>
     </div>
   </div>
 </template>
@@ -87,10 +87,10 @@ import "vue3-date-time-picker/dist/main.css";
 import { ref, onMounted } from "vue";
 import CottageCard from "@/components/CottageCard.vue";
 import BoatCard from "@/components/BoatCard.vue";
-import AdventureCard from "@/components/AdventureCard.vue";
+import InstructorCard from "@/components/InstructorCard.vue";
 import axios from "axios"
 export default {
-  components: { Datepicker, CottageCard, BoatCard, AdventureCard },
+  components: { Datepicker, CottageCard, BoatCard, InstructorCard },
   setup() {
     const date = ref();
     // For demo purposes assign range from the current date
@@ -162,26 +162,15 @@ export default {
           vacationHomeOwner: "nikkiMorrison",
         },
       ],
-      boatEntities:[
-        { id: "1",
-          name: "James' Boat",
-          description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-          cancellationRule: "",
-          rating: "4.85",
-          location: "",
-          image: "b10.jpg",
-          boatOwner: "jamesDean",
-        }
-      ],
-      addresses:[]
+      boatEntities:[],
+      fishingInstructor:[]
     };
   },
   mounted: function () {
     if (window.location.href.includes("/search/cottages")) {
       this.searching = "cottages";
-    } else if (window.location.href.includes("/search/adventures")) {
-      this.searching = "adventures";
+    } else if (window.location.href.includes("/search/fishingInstructors")) {
+      this.searching = "fishingInstructors";
     } else if (window.location.href.includes("/search/boats")) {
       this.searching = "boats";
     }
@@ -197,6 +186,18 @@ export default {
             for(let boat of this.boatEntities){
               boat.rating = (Number(boat.rating)).toFixed(2);
             }
+          }
+        );
+
+    axios
+        .get("http://localhost:8080/fishingInstructor/all", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080"
+          },
+        })
+        .then(
+          (res) => {
+            this.fishingInstructor = res.data
           }
         );
   },

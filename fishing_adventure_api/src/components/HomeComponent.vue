@@ -81,7 +81,7 @@ export default {
       window.location.href = "/search/cottages";
     },
     searchAdventures: function () {
-      window.location.href = "/search/adventures";
+      window.location.href = "/search/fishingInstructors";
     },
   },
 };

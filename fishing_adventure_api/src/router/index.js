@@ -30,8 +30,8 @@ const routes = [{
         component: () =>
             import ('../views/Search.vue')
     }, {
-        path: 'adventures',
-        name: 'SearchAdventures',
+        path: 'fishingInstructors',
+        name: 'SearchInstuctors',
         component: () =>
             import ('../views/Search.vue')
     }]

@@ -46,4 +46,8 @@ public class FishingInstructorService{
 		
 		return this.fishingInstructorRepository.save(u);
 	}
+
+	public List<isa.FishingAdventure.model.User> findAll() {
+		return fishingInstructorRepository.findAll();
+	}
 }
