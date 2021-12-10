@@ -30,15 +30,27 @@
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
+                v-if="loggedInUser != 'administrator'"
               >
                 Explore
+              </a>
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarScrollingDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                v-else
+              >
+                Services
               </a>
               <ul
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <li><a class="dropdown-item" href="/search">All</a></li>
-                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="/search" v-if="loggedInUser != 'administrator'">All</a></li>
+                <li><hr class="dropdown-divider"  v-if="loggedInUser != 'administrator'" /></li>
                 <li><a class="dropdown-item" href="/search/boats">Boats</a></li>
                 <li>
                   <a class="dropdown-item" href="/search/cottages">Cottages</a>
@@ -76,6 +88,25 @@
                 <li>
                   <a class="dropdown-item" href="/reservations">Reservations</a>
                 </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown" v-if="loggedInUser == 'administrator'">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarScrollingDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Users
+              </a>
+              <ul
+                class="dropdown-menu text-center dropdown-menu-dark"
+                aria-labelledby="navbarScrollingDropdown"
+              >
+                <li><a class="dropdown-item" href="/registrationRequests">Registration Requests</a></li>
+                <li><a class="dropdown-item" href="/users">All Users</a></li>
               </ul>
             </li>
           </ul>
@@ -121,7 +152,7 @@ export default {
   name: "NavBar",
   data: function () {
     return {
-      loggedInUser: "homeOwner",
+      loggedInUser: "administrator",
     };
   },
   methods: {

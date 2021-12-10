@@ -18,7 +18,7 @@
         >
         and
         <a href="https://github.com/leakalmar"
-          ><i class="fa fa-github">Lea</i></a
+          ><i class="fa fa-github"> Lea</i></a
         >
       </p>
       <p>

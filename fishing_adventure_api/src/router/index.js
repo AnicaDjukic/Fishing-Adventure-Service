@@ -65,6 +65,16 @@ const routes = [{
     name: 'CottageProfile',
     component: () =>
         import ('../views/CottageProfile.vue')
+}, {
+    path: '/admin/profile',
+    name: 'AdminProfile',
+    component: () =>
+        import ('../views/AdminProfile.vue')
+}, {
+    path: '/users',
+    name: 'AllUsers',
+    component: () =>
+        import ('../views/AllUsers.vue')
 }]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
