@@ -31,7 +31,7 @@ public class TokenUtils {
 	public String SECRET;
 
 	// Period vazenja tokena - 30 minuta
-	@Value("1800000")
+	@Value("60000")
 	private int EXPIRES_IN;
 
 	// Naziv headera kroz koji ce se prosledjivati JWT u komunikaciji server-klijent
@@ -61,14 +61,14 @@ public class TokenUtils {
 	 * @param username Korisničko ime korisnika kojem se token izdaje
 	 * @return JWT token
 	 */
-	public String generateToken(String username, String role) {
+	public String generateToken(String username, String role, Boolean isRefreshToken) {
 		return Jwts.builder()
 				.setIssuer(APP_NAME)
 				.setSubject(username)
 				.claim("role", role)
 				.setAudience(generateAudience())
 				.setIssuedAt(new Date())
-				.setExpiration(generateExpirationDate())
+				.setExpiration(generateExpirationDate(isRefreshToken))
 				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 
 		// moguce je postavljanje proizvoljnih podataka u telo JWT tokena pozivom
@@ -103,8 +103,14 @@ public class TokenUtils {
 	 * 
 	 * @return Datum do kojeg je JWT validan.
 	 */
-	private Date generateExpirationDate() {
-		return new Date(new Date().getTime() + EXPIRES_IN);
+	private Date generateExpirationDate(Boolean isRefreshToken) {
+		Date date;
+		if(isRefreshToken){
+			date = new Date(new Date().getTime() + 120000);
+		}else{
+			date = new Date(new Date().getTime() + EXPIRES_IN);
+		}
+		return date;
 	}
 
 	// =================================================================

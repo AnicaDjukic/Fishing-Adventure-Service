@@ -6,20 +6,18 @@ import java.util.List;
 public class UserTokenState {
 	
     private String accessToken;
-    private Long expiresIn;
-    private String email;
-    private List<String> roles;
+	private String refreshToken;
+	private List<String> roles;
     
     
 	public UserTokenState() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public UserTokenState(String accessToken, Long expiresIn, String email, List<String> roles) {
+	public UserTokenState(String accessToken, String refreshToken, List<String> roles) {
 		super();
 		this.accessToken = accessToken;
-		this.expiresIn = expiresIn;
-		this.email = email;
+		this.refreshToken = refreshToken;
 		this.roles = roles;
 	}
 	public String getAccessToken() {
@@ -28,25 +26,20 @@ public class UserTokenState {
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
 	}
-	public Long getExpiresIn() {
-		return expiresIn;
+
+	public String getRefreshToken() {
+		return refreshToken;
 	}
-	public void setExpiresIn(Long expiresIn) {
-		this.expiresIn = expiresIn;
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+
 	public List<String> getRoles() {
 		return roles;
 	}
+
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-
-  
-    
 }

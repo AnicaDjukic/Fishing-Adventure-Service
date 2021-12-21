@@ -362,9 +362,7 @@ export default {
         .then((res) => {
           window.location.reload();
           localStorage.setItem("jwt", res.data.accessToken);
-          localStorage.setItem("email", res.data.email);
-          localStorage.setItem("role", res.data.roles[0]);
-          localStorage.setItem("email", res.data.email);
+          localStorage.setItem("refreshToken", res.data.refreshToken);
         });
     },
     registerUser: function () {

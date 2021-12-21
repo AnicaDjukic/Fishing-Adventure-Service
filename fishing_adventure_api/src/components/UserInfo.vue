@@ -8,6 +8,7 @@
       <div class="row g-0">
         <div class="col-md-4 shadow-none">
           <img
+            v-if="role != 'ROLE_CLIENT' && role != 'ROLE_ADMIN'"
             width="100"
             height="225"
             style="
@@ -17,6 +18,32 @@
               padding-top: 10px;
             "
             src="@/assets/advertiser.png"
+            class="img-fluid rounded-start shadow-none overlay"
+          />
+          <img
+            v-if="role == 'ROLE_CLIENT'"
+            width="100"
+            height="225"
+            style="
+              width: 100%;
+              object-fit: cover;
+              position: relative;
+              padding-top: 10px;
+            "
+            src="@/assets/client-male.png"
+            class="img-fluid rounded-start shadow-none overlay"
+          />
+          <img
+            v-if="role == 'ROLE_ADMIN'"
+            width="100"
+            height="225"
+            style="
+              width: 100%;
+              object-fit: cover;
+              position: relative;
+              padding-top: 10px;
+            "
+            src="@/assets/admin.png"
             class="img-fluid rounded-start shadow-none overlay"
           />
         </div>
@@ -224,6 +251,19 @@
 import axios from "axios";
 export default {
   mounted: function () {
+    if (localStorage.jwt) {
+      axios
+        .get("http://localhost:8080/users/getRole", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          this.role = res.data;
+        });
+    }
+
     let element = document.getElementById("btnradio1");
     element.checked = true;
     this.readioChecked = "1";
@@ -231,7 +271,7 @@ export default {
       .get("http://localhost:8080/users/get", {
         headers: {
           "Access-Control-Allow-Origin": "http://localhost:8080",
-          Authorization: "Bearer " + localStorage.jwt,
+          Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
       .then((res) => {
@@ -245,7 +285,7 @@ export default {
   },
   data: function () {
     return {
-      role: localStorage.role,
+      role: undefined,
       password1: "",
       password2: "",
       readioChecked: "",
@@ -331,7 +371,7 @@ export default {
         country: this.address.split(", ")[2],
         biography: this.biography,
       };
-      if (localStorage.role != undefined) {
+      if (this.role != undefined) {
         axios
           .put("http://localhost:8080/users/update", user, {
             headers: {

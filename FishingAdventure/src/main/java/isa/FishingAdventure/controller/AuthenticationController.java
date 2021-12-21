@@ -16,12 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import isa.FishingAdventure.dto.JwtAuthenticationRequest;
@@ -65,8 +60,6 @@ public class AuthenticationController {
 	public ResponseEntity<UserTokenState> createAuthenticationToken(
 			@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
 
-		System.out.println(authenticationRequest.getPassword());
-		System.out.println(authenticationRequest.getEmail());
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 				authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 
@@ -76,15 +69,30 @@ public class AuthenticationController {
 		if(!user.isActivated()) {
 			return ResponseEntity.ok(null);
 		}
-		String jwt = tokenUtils.generateToken(user.getEmail(), user.getUserType().getName());
-		int expiresIn = tokenUtils.getExpiredIn();
-		String email = tokenUtils.getEmailFromToken(jwt);
-		
+		String jwt = tokenUtils.generateToken(user.getEmail(), user.getUserType().getName(), false);
+		String refreshToken = tokenUtils.generateToken(user.getEmail(), user.getUserType().getName(), true);
+
 		List<String> roles = user.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(new UserTokenState(jwt, (long) expiresIn, email, roles));
+		return ResponseEntity.ok(new UserTokenState(jwt, refreshToken, roles));
+	}
+
+	@GetMapping("/refreshToken")
+	public ResponseEntity<UserTokenState> refreshToken(@RequestHeader("Authorization") String token) {
+		String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+		User user = userService.findByEmail(email);
+
+		String jwt = tokenUtils.generateToken(user.getEmail(), user.getUserType().getName(), false);
+		String refreshToken = tokenUtils.generateToken(user.getEmail(), user.getUserType().getName(), true);
+
+		List<String> roles = user.getAuthorities().stream()
+				.map(item -> item.getAuthority())
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(new UserTokenState(jwt, refreshToken, roles));
+
 	}
 
 	@PostMapping("/signup")
@@ -113,7 +121,7 @@ public class AuthenticationController {
 	private String generateRegistrationToken(String email) {
 		ConfirmationToken confirmationToken = new ConfirmationToken();
 		confirmationToken.setEmail(email);
-		confirmationToken.setToken(tokenUtils.generateToken(email, "ROLE_CLIENT"));
+		confirmationToken.setToken(tokenUtils.generateToken(email, "ROLE_CLIENT", false));
 		confirmationTokenService.save(confirmationToken);
 
 		return confirmationToken.getToken();

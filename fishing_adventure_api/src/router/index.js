@@ -1,24 +1,33 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import axios from 'axios'
 const routes = [{
     path: '/',
     name: 'Home',
     component: () =>
-        import ('../views/Home.vue')
+        import ('../views/Home.vue'),
+    beforeEnter: () => {
+        checkAuthentification();
+    }
 }, {
     path: '/profile',
     name: 'profile',
     component: () =>
         import ('../views/Profile.vue'),
     beforeEnter: (to, from, next) => {
-        if (localStorage.role != undefined) {
-            next();
-        } else {
-            next('/');
-        }
+        checkAuthentification().then(response => {
+            if (response == undefined) {
+                next("/")
+            } else {
+                next();
+            }
+        })
     }
 }, {
     path: '/search',
     name: 'Search',
+    beforeEnter: () => {
+        checkAuthentification();
+    },
     component: () =>
         import ('../views/Search.vue'),
     children: [{
@@ -48,11 +57,13 @@ const routes = [{
     component: () =>
         import ('../views/MyCottages.vue'),
     beforeEnter: (to, from, next) => {
-        if (localStorage.role == "ROLE_VACATION_HOME_OWNER") {
-            next();
-        } else {
-            next('/');
-        }
+        checkAuthentification().then(response => {
+            if (response != "ROLE_VACATION_HOME_OWNER") {
+                next("/")
+            } else {
+                next();
+            }
+        })
     }
 }, {
     path: '/reservations',
@@ -85,11 +96,13 @@ const routes = [{
     component: () =>
         import ('../views/HomeOwnerCalendar.vue'),
     beforeEnter: (to, from, next) => {
-        if (localStorage.role == "ROLE_VACATION_HOME_OWNER") {
-            next();
-        } else {
-            next('/');
-        }
+        checkAuthentification().then(response => {
+            if (response != "ROLE_VACATION_HOME_OWNER") {
+                next("/")
+            } else {
+                next();
+            }
+        })
     }
 }, {
     path: '/fishingAdventure',
@@ -136,4 +149,53 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
+async function checkAuthentification() {
+    let retVal = undefined;
+    await checkRole().then(response => {
+        if (response.data != undefined && response.data != "") {
+            retVal = response.data;
+        } else {
+            retVal = undefined;
+        }
+    }).catch(() => {
+        refreshToken().then(response => {
+            if (response.data != undefined && response.data != "") {
+                localStorage.clear();
+                localStorage.setItem("jwt", response.data.accessToken);
+                localStorage.setItem("refreshToken", response.data.refreshToken);
+                retVal = response.data.roles[0];
+            } else {
+                retVal = undefined;
+            }
+        }).catch(() => {
+            localStorage.clear();
+            retVal = undefined;
+        })
+    })
+    return retVal;
+}
 export default router
+async function checkRole() {
+    try {
+        return await axios.get("http://localhost:8080/users/getRole", {
+            headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.jwt,
+            },
+        })
+    } catch (err) {
+        console.log("Token expired...");
+    }
+}
+async function refreshToken() {
+    try {
+        return await axios.get("http://localhost:8080/auth/refreshToken", {
+            headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+            },
+        })
+    } catch {
+        console.log("Refreshing token failed.")
+    }
+}
