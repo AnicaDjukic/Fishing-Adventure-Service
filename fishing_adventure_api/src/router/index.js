@@ -165,10 +165,10 @@ async function checkAuthentification() {
                 localStorage.setItem("refreshToken", response.data.refreshToken);
                 retVal = response.data.roles[0];
             } else {
+                localStorage.clear();
                 retVal = undefined;
             }
         }).catch(() => {
-            localStorage.clear();
             retVal = undefined;
         })
     })
@@ -196,6 +196,7 @@ async function refreshToken() {
             },
         })
     } catch {
+        localStorage.clear();
         console.log("Refreshing token failed.")
     }
 }
