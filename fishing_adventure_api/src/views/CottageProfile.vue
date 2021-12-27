@@ -45,85 +45,49 @@
       <div class="menu-body-fa">
         <div class="menu-about-fa" style="text-align: justify">
           <div class="ma-top-part">
-            <h3>Villa Madam</h3>
+            <h3>{{ entity.name }}</h3>
             <h5>For up to 3 people</h5>
           </div>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur.
-          </p>
+          <p>{{ entity.description }}</p>
         </div>
 
         <div class="menu-ex-info-fa" style="display: none">
           <div class="ei-bonus">
-            <h4>With every reservation you will get:</h4>
-            <ul>
-              <li>
-                <i
-                  class="fas fa-circle"
-                  style="
-                    color: rgb(22, 82, 161);
-                    font-size: 0.5em;
-                    margin-right: 2%;
-                  "
-                ></i>
-                Towels
-              </li>
+            <h4>Rooms:</h4>
+            <table class="table table-striped">
+              <tbody>
+                <tr v-for="(room, index) in entity.rooms" :key="room.id">
+                  <td class="as-title" style="color: white">
+                    Room {{ index }}
+                  </td>
+                  <td>
+                    <span class="as-price"
+                      >{{ room.bedNumber }} <i class="fas fa-bed"></i
+                    ></span>
+                  </td>
+                </tr>
+              </tbody>
 
-              <li>
-                <i
-                  class="fas fa-circle"
-                  style="
-                    color: rgb(22, 82, 161);
-                    font-size: 0.5em;
-                    margin-right: 2%;
-                  "
-                ></i>
-                Bed sheets
-              </li>
-              <li>
-                <i
-                  class="fas fa-circle"
-                  style="
-                    color: rgb(22, 82, 161);
-                    font-size: 0.5em;
-                    margin-right: 2%;
-                  "
-                ></i>
-                Small kitchen set
-              </li>
-            </ul>
+              <tbody></tbody>
+            </table>
           </div>
 
           <div class="ei-rules">
             <h4>Rulebook:</h4>
             <ul>
-              <li>
+              <li v-for="rule in entity.rules" :key="rule.id">
                 <i
+                  v-if="rule.isEnforced == true"
                   class="far fa-check-circle"
                   style="color: green; margin-right: 2%"
                 ></i>
-                Pets
-              </li>
 
-              <li>
                 <i
+                  v-if="rule.isEnforced == false"
                   class="far fa-times-circle"
                   style="color: red; margin-right: 2%"
                 ></i>
-                No smoking
-              </li>
-
-              <li>
-                <i
-                  class="far fa-times-circle"
-                  style="color: red; margin-right: 2%"
-                ></i>
-                No littering
+                {{ rule.content }}
               </li>
             </ul>
           </div>
@@ -131,31 +95,52 @@
 
         <div class="menu-loc-fa" style="display: none">
           <div class="loc-info">
-            <h5>Bulevar Evrope 20</h5>
-            <h5>Novi Sad</h5>
-            <h5>45.246117, 19.816604</h5>
+            <h5>{{ address.street }}</h5>
+            <h5>{{ address.city }}</h5>
+            <h5>{{ location.latitude }}, {{ location.longitude }}</h5>
           </div>
 
-          <div class="map-fa"></div>
+          <div class="map-fa">
+            <GMapMap
+              :center="center"
+              :zoom="13"
+              :options="{
+                zoomControl: true,
+                mapTypeControl: false,
+                scaleControl: true,
+                streetViewControl: false,
+                rotateControl: true,
+                fullscreenControl: true,
+              }"
+              map-type-id="terrain"
+              style="width: 100%; height: 150px"
+            >
+              <GMapCluster>
+                <GMapMarker
+                  :key="index"
+                  v-for="(m, index) in markers"
+                  :position="m.position"
+                  :clickable="false"
+                  :draggable="false"
+                  @click="center = m.position"
+                />
+              </GMapCluster>
+            </GMapMap>
+          </div>
         </div>
 
         <div class="menu-pl-fa" style="display: none">
           <h5>Additional services:</h5>
           <table class="table table-striped">
             <tbody>
-              <tr>
-                <td class="as-title">TV kable</td>
-                <td><span class="as-price">$2</span></td>
-              </tr>
-
-              <tr>
-                <td class="as-title">Air conditioner</td>
-                <td><span class="as-price">$5</span></td>
-              </tr>
-
-              <tr>
-                <td class="as-title">Parking</td>
-                <td><span class="as-price">$2</span></td>
+              <tr
+                v-for="service in entity.additionalServices"
+                :key="service.id"
+              >
+                <td class="as-title">{{ service.name }}</td>
+                <td>
+                  <span class="as-price">${{ service.price }}</span>
+                </td>
               </tr>
             </tbody>
 
@@ -167,7 +152,7 @@
 
     <div class="bottom-part-fa">
       <div class="pa-title-fa">
-        <h2>Previous adventures</h2>
+        <h2>Interior and exterior</h2>
       </div>
       <div
         id="carouselExampleIndicators"
@@ -183,74 +168,25 @@
       >
         <div class="carousel-indicators">
           <button
+            v-for="(image, index) in entity.images"
+            :key="image.id"
+            :class="{ active: index === counter }"
             type="button"
             data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="0"
-            class="active"
+            :data-bs-slide-to="index"
             aria-current="true"
-            aria-label="Slide 1"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="1"
-            aria-label="Slide 2"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="2"
-            aria-label="Slide 3"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="3"
-            aria-label="Slide 4"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="4"
-            aria-label="Slide 5"
+            :aria-label="'Slide ' + index"
           ></button>
         </div>
         <div class="carousel-inner">
-          <div class="carousel-item active">
+          <div
+            class="carousel-item"
+            :class="{ active: index === counter }"
+            v-for="(image, index) in entity.images"
+            :key="image.id"
+          >
             <img
-              src="@/assets/c16.jpg"
-              class="d-block w-100"
-              alt="..."
-              style="object-fit: contain; height: 450px"
-            />
-          </div>
-          <div class="carousel-item">
-            <img
-              src="@/assets/c16-2.jpg"
-              class="d-block w-100"
-              alt="..."
-              style="object-fit: contain; height: 450px"
-            />
-          </div>
-          <div class="carousel-item">
-            <img
-              src="@/assets/c16-3.jpg"
-              class="d-block w-100"
-              alt="..."
-              style="object-fit: contain; height: 450px"
-            />
-          </div>
-          <div class="carousel-item">
-            <img
-              src="@/assets/c16-4.jpg"
-              class="d-block w-100"
-              alt="..."
-              style="object-fit: contain; height: 450px"
-            />
-          </div>
-          <div class="carousel-item">
-            <img
-              src="@/assets/c16-5.jpg"
+              :src="require('@/assets/' + image.path)"
               class="d-block w-100"
               alt="..."
               style="object-fit: contain; height: 450px"
@@ -326,18 +262,45 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data: function () {
     return {
       entity: "",
+      address: "",
+      location: "",
+      counter: 0,
+      center: { lat: 0, lng: 0 },
+      markers: [
+        {
+          position: {
+            lat: 0,
+            lng: 0,
+          },
+        },
+      ],
     };
   },
   mounted() {
     window.scrollTo(0, 0);
-    // axios.get("/cottage/" + this.$route.query.id).then((response) => {
-    //   this.entity = response.data;
-
-    // });
+    console.log(this.$route.query.id);
+    axios
+      .get("http://localhost:8080/vacationHome/" + this.$route.query.id, {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.jwt,
+        },
+      })
+      .then((response) => {
+        this.entity = response.data;
+        this.address = response.data.location.address;
+        this.location = response.data.location;
+        (this.center.lat = response.data.location.latitude),
+          (this.center.lng = response.data.location.longitude),
+          (this.markers[0].position.lat = response.data.location.latitude);
+        this.markers[0].position.lng = response.data.location.longitude;
+        console.log(response.data);
+      });
   },
   name: "FishingAdventure",
   methods: {
