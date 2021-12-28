@@ -1,22 +1,31 @@
 <template>
   <div>
     <div class="title">
-      <h1>Find your perfect vacation</h1>
-      <i
+      <h1 v-if="searching == '' || searching == 'cottages'">
+        Find your perfect vacation
+      </h1>
+      <img
         v-if="searching == '' || searching == 'cottages'"
-        class="far fa-home fa-3x"
-        style="font-family: 'Font Awesome 5 Pro'"
-      ></i
-      ><i
+        style="height: 10rem"
+        src="@/assets/house4.png"
+      />
+      <h1
+        v-if="
+          searching == '' || searching == 'boats' || searching == 'adventures'
+        "
+      >
+        Find your perfect adventure
+      </h1>
+      <img
         v-if="searching == '' || searching == 'boats'"
-        class="far fa-anchor fa-3x"
-        style="font-family: 'Font Awesome 5 Pro'"
-      ></i>
-      <i
+        style="height: 10rem"
+        src="@/assets/yatch.png"
+      />
+      <img
         v-if="searching == '' || searching == 'adventures'"
-        class="far fa-fish fa-3x"
-        style="font-family: 'Font Awesome 5 Pro'"
-      ></i>
+        style="height: 10rem"
+        src="@/assets/fishing1.png"
+      />
     </div>
     <div
       style="
@@ -26,10 +35,10 @@
       "
     >
       <div
-        class="container w-100 row row-cols-1 row-cols-sm-1 row-cols-md-4"
+        class="container w-100 row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4"
         style="justify-content: space-evenly; align-items: center"
       >
-        <div class="col-md-2">
+        <div class="col-md-5">
           <input
             class="form-control me-2"
             type="search"
@@ -37,7 +46,11 @@
             aria-label="Search"
           />
         </div>
-        <div v-if="searching == 'cottages'" class="col-md-5">
+        <div
+          v-if="searching == 'cottages'"
+          class="col-md-5"
+          style="min-width: 17rem"
+        >
           <Datepicker
             style="
               width: 100%;
@@ -54,7 +67,7 @@
         </div>
         <div class="col-md-5">
           <div class="input-group">
-            <span class="input-group-text">Number of persons</span>
+            <span class="input-group-text">Persons</span>
             <input
               type="number"
               min="1"
@@ -62,6 +75,29 @@
               v-model="numberOfPersons"
               class="form-control"
             />
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div style="display: flex">
+            <span class="input-group-text">Rating</span>
+            <div
+              class="rating-div form-control"
+              style="min-width: 135px; padding: 0"
+              v-on:click="searchCottage"
+            >
+              <div class="rating" style="height: 0">
+                <input type="radio" name="star" id="star1" value="5" />
+                <label for="star1"></label>
+                <input type="radio" name="star" id="star2" value="4" />
+                <label for="star2"></label>
+                <input type="radio" name="star" id="star3" value="3" />
+                <label for="star3"></label>
+                <input type="radio" name="star" id="star4" value="2" />
+                <label for="star4"></label>
+                <input type="radio" name="star" id="star5" value="1" />
+                <label for="star5"></label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -185,11 +221,17 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  margin: 5%;
+  padding: 2% 0;
+  background-image: linear-gradient(rgb(33 37 41), rgba(4, 9, 30, 0.527)),
+    url(/img/lake1.08d1171f.jpg);
 }
 
 h1 {
   color: white !important;
+  font-size: 4rem;
+  font-style: italic;
+  font-family: "Font Awesome 5 Brands";
+  font-weight: bold;
 }
 .form-control {
   background-color: #393c3f73;
@@ -211,5 +253,57 @@ h1 {
 .input-group-text {
   background-color: #393c3f73;
   color: gray;
+}
+.rating {
+  display: inline-flex;
+  justify-content: center;
+  width: fit-content;
+  transform: rotateY(180deg);
+}
+
+.rating label {
+  display: block;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.rating label::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f005";
+  position: relative;
+  display: block;
+  color: white;
+  font-size: 3vh;
+}
+
+.rating label::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f005";
+  position: absolute;
+  display: block;
+  color: rgb(255, 217, 0);
+  opacity: 0;
+  font-size: 3vh;
+  top: 0vh;
+  transition: 0.5s;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.rating label:hover:after,
+.rating label:hover ~ label:after,
+.rating input:checked ~ label:after {
+  opacity: 1;
+}
+
+.rating-div label {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 2%;
+}
+
+input[type="radio"] {
+  display: none;
 }
 </style>
