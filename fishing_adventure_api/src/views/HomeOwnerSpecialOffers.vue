@@ -2,10 +2,7 @@
   <div>
     <div class="title">
       <h1>My special offers</h1>
-      <i
-        class="fas fa-tags fa-3x"
-        style="font-family: 'Font Awesome 5 Pro'"
-      ></i>
+      <img style="height: 10rem" src="@/assets/price-tag.png" />
     </div>
     <div
       style="

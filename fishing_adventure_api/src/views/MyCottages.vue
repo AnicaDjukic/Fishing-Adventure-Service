@@ -2,10 +2,7 @@
   <div>
     <div class="title">
       <h1>My cottages</h1>
-      <i
-        class="far fa-home fa-3x"
-        style="font-family: 'Font Awesome 5 Pro'"
-      ></i>
+      <img style="height: 10rem" src="@/assets/house4.png" />
     </div>
     <div
       style="

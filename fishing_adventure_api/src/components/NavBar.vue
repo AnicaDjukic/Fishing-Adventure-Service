@@ -49,20 +49,6 @@
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="/search"
-                    v-if="loggedInRole != 'ROLE_ADMIN'"
-                    >All</a
-                  >
-                </li>
-                <li>
-                  <hr
-                    class="dropdown-divider"
-                    v-if="loggedInRole != 'ROLE_ADMIN'"
-                  />
-                </li>
                 <li><a class="dropdown-item" href="/search/boats">Boats</a></li>
                 <li>
                   <a class="dropdown-item" href="/search/cottages">Cottages</a>

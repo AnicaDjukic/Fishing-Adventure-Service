@@ -2,10 +2,7 @@
   <div>
     <div class="title">
       <h1>My reservations</h1>
-      <i
-        class="fas fa-id-card fa-3x"
-        style="font-family: 'Font Awesome 5 Pro'"
-      ></i>
+      <img style="height: 10rem" src="@/assets/reserved.png" />
     </div>
     <div style="background-color: #212529; padding: 15px">
       <div class="container w-100" style="flex-direction: column">
