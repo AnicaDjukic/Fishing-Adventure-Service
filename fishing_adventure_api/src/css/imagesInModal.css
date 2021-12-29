@@ -1,0 +1,45 @@
+input[type="file"] {
+    display: none;
+}
+
+label[id="inputLabel"] {
+    display: block;
+    position: relative;
+    color: white;
+    text-align-last: center;
+    border: 1px solid white;
+    border-radius: 5px;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+label[id="inputLabel"]:hover {
+    background-color: white;
+    color: #1e2021;
+    transition: 5ms;
+}
+
+#num-of-files {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+#images {
+    position: relative;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+    flex-wrap: wrap;
+    overflow: auto;
+    max-height: 15rem;
+}
+
+.modal-body h6 {
+    margin: 0;
+    text-align: center;
+}
+
+.modal-body p {
+    text-align: center;
+}

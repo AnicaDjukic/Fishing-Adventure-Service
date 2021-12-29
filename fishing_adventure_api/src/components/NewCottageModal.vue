@@ -5,30 +5,22 @@
     tabindex="-1"
     aria-labelledby="NewCottageModalLabel"
     aria-hidden="true"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    v-on:show="closeModal"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h3
-            v-if="mode == '1'"
-            style="
-              color: white;
-              font-weight: bold;
-              font-size: 20px;
-              margin-left: auto;
-            "
-          >
-            NEW COTTAGE
-          </h3>
+          <h3 v-if="mode == '1' && cottageName == ''">New cottage</h3>
           <h3
             v-if="
-              (mode == '2') | (mode === '3') | (mode === '4') | (mode === '5')
-            "
-            style="
-              color: white;
-              font-weight: bold;
-              font-size: 20px;
-              margin-left: auto;
+              (mode == '1' && cottageName != '') |
+                (mode == '2') |
+                (mode === '3') |
+                (mode === '4') |
+                (mode === '5') |
+                (mode === '6')
             "
           >
             {{ cottageName }}
@@ -38,259 +30,91 @@
             class="btn-close"
             data-bs-dismiss="modal"
             v-on:click="closeModal"
-          ></button>
+          >
+            <i class="fas fa-times fa-lg"></i>
+          </button>
         </div>
         <div class="modal-body" v-if="mode == '1'">
           <h6 style="color: white">Please enter information:</h6>
-          <form>
-            <input
-              v-model="cottageName"
-              type="text"
-              class="login-inputs"
-              placeholder="Cottage name"
-            />
+          <input
+            v-model="cottageName"
+            type="text"
+            class="login-inputs"
+            placeholder="Cottage name"
+          />
 
-            <textarea
-              class="login-inputs"
-              placeholder="Cottage description"
-              style="resize: none"
-              v-model="cottageDescription"
-            />
-
-            <label
-              style="
-                color: white;
-                display: block;
-                margin: 15px 0 0 0;
-                font-weight: bold;
-              "
-              >Images:</label
-            >
-            <input
-              type="file"
-              class="login-inputs"
-              style="margin: 2px auto 2px"
-              id="inpFile"
-              multiple
-              v-on:change="fileUploaded"
-            />
-
-            <div class="image-preview" id="imagePreview">
-              <img
-                style="max-width: 60%; max-height: 110px"
-                src=""
-                alt="Image Preview"
-                class="image-preview__image"
-              />
-              <span class="image-preview__default-text">Image Preview</span>
-            </div>
-          </form>
+          <textarea
+            class="login-inputs-textarea"
+            placeholder="Cottage description"
+            v-model="cottageDescription"
+          />
+          <label class="error" :id="'cottageNameErr' + cottageId" name="labels">
+          </label>
+        </div>
+        <div class="modal-body" v-if="mode == '2'">
+          <new-cottage-modal-images
+            v-on:uploaded="uploaded"
+            :files="files"
+            :images="images"
+          ></new-cottage-modal-images>
           <label
             class="error"
-            id="cottageImagesErr"
+            :id="'cottageImagesErr' + cottageId"
             name="labels"
-            display="hidden"
           >
           </label>
         </div>
-        <div class="modal-body" v-if="mode === '2'">
+        <div class="modal-body" v-if="mode === '3'">
           <div class="login-title">
-            <p id="secondErr">
+            <p :id="'secondErr' + cottageId">
               It is necessary to determine the location of the cottage by
               filling in
               <b><em>all</em></b> the fields listed. Fields can also be filled
               by clicking on the desired location on the map.
             </p>
           </div>
-          <form>
-            <input
-              v-model="street"
-              id="street"
-              type="text"
-              class="login-inputs"
-              placeholder="House number and street"
-            />
-            <input
-              v-model="city"
-              id="city"
-              type="text"
-              class="login-inputs"
-              placeholder="City"
-            />
-            <input
-              v-model="country"
-              id="country"
-              type="text"
-              class="login-inputs"
-              placeholder="Country"
-            />
-
-            <div id="map"></div>
-          </form>
-        </div>
-        <div class="modal-body" v-if="mode === '3'">
-          <h6>(Additional)</h6>
-          <h6>Plase fill extra information about your cottage:</h6>
-
-          <div style="margin-top: 5%">
-            <div class="input-header">
-              <h6>Rooms</h6>
-              <i class="far fa-plus-square" v-on:click="addRoom"></i>
-            </div>
-            <table class="table">
-              <thead>
-                <th>Room</th>
-                <th>Number of beds</th>
-                <th>Delete</th>
-              </thead>
-              <tbody>
-                <tr v-for="room in rooms" :key="room.id">
-                  <td>
-                    <input
-                      placeholder="Name"
-                      type="text"
-                      class="login-inputs"
-                      style="border: 0; margin: 0"
-                      v-model="room.name"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      placeholder="Beds"
-                      type="text"
-                      class="login-inputs"
-                      style="border: 0; margin: 0"
-                      v-model="room.beds"
-                    />
-                  </td>
-                  <td>
-                    <i
-                      class="far fa-trash-alt"
-                      v-on:click="removeRoom(room.id)"
-                    ></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <new-cottage-modal-map
+            :st="street"
+            :ci="city"
+            :co="country"
+            v-on:change-address="changeAddress"
+          ></new-cottage-modal-map>
         </div>
         <div class="modal-body" v-if="mode === '4'">
-          <h6>(Additional)</h6>
-          <h6>Plase fill extra information about your cottage:</h6>
-
-          <div style="margin-top: 5%">
-            <div class="input-header">
-              <h6>Rule book</h6>
-              <i class="far fa-check-circle" v-on:click="addPositiveRule"></i>
-              <i class="far fa-times-circle" v-on:click="addNegativeRule"></i>
-            </div>
-            <table class="table">
-              <thead>
-                <th>Type</th>
-                <th>Rule</th>
-                <th>Delete</th>
-              </thead>
-              <tbody>
-                <tr v-for="rule in rules" :key="rule.content">
-                  <td>
-                    <i class="far fa-check-circle" v-if="rule.type == true"></i>
-                    <i
-                      class="far fa-times-circle"
-                      v-if="rule.type == false"
-                    ></i>
-                  </td>
-                  <td>
-                    <input
-                      placeholder="Description"
-                      type="text"
-                      class="login-inputs"
-                      style="border: 0; margin: 0"
-                      v-model="rule.content"
-                    />
-                  </td>
-                  <td>
-                    <i
-                      class="far fa-trash-alt"
-                      v-on:click="removeRule(rule.content)"
-                    ></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <new-cottage-modal-rooms
+            :rooms="rooms"
+            v-on:roomupdated="roomsUpdated"
+          ></new-cottage-modal-rooms>
+          <label class="error" :id="'roomErr' + cottageId" name="labels">
+          </label>
         </div>
         <div class="modal-body" v-if="mode === '5'">
-          <h6>(Additional)</h6>
-          <h6>Plase fill extra information about your cottage:</h6>
-
-          <div style="margin-top: 5%">
-            <div class="input-header">
-              <h6>Price list</h6>
-              <i class="far fa-plus-square" v-on:click="addPriceListItem"></i>
-            </div>
-            <table class="table">
-              <thead>
-                <th>Additional service</th>
-                <th>
-                  Price
-                  <i class="fas fa-dollar-sign" style="margin-right: 20px"></i>
-                </th>
-                <th>Delete</th>
-              </thead>
-              <tbody>
-                <tr v-for="priceItem in priceList" :key="priceItem.name">
-                  <td>
-                    <input
-                      placeholder="Description"
-                      type="text"
-                      class="login-inputs"
-                      style="border: 0; margin: 0"
-                      v-model="priceItem.name"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      placeholder="Price"
-                      type="number"
-                      class="login-inputs"
-                      style="border: 0; margin: 0"
-                      v-model="priceItem.price"
-                    />
-                  </td>
-                  <td>
-                    <i
-                      class="far fa-trash-alt"
-                      v-on:click="removePriceItem(priceItem.name)"
-                    ></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <new-cottage-modal-rules
+            :rules="rules"
+            v-on:ruleupdated="rulesUpdated"
+          ></new-cottage-modal-rules>
+          <label class="error" :id="'ruleErr' + cottageId" name="labels">
+          </label>
         </div>
-        <div class="modal-body" v-if="mode === 'advertiserInfo'">
-          <h5>Please inform us about reasons for joining our site</h5>
-          <div class="form-floating">
-            <textarea
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="registerReasons"
-            ></textarea>
-            <label for="floatingTextarea">Reasons for joining</label>
-          </div>
+        <div class="modal-body" v-if="mode === '6'">
+          <new-cottage-modal-price-list
+            :priceList="priceList"
+            v-on:pricelistupdated="priceListUpdated"
+          ></new-cottage-modal-price-list>
+          <label class="error" :id="'priceListErr' + cottageId" name="labels">
+          </label>
         </div>
         <div class="modal-footer steps-div">
           <button
             v-on:click="backClick"
             type="button"
-            id="back-btn"
+            :id="'back-btn' + cottageId"
             style="visibility: hidden"
             class="btn btn-outline-primary"
           >
             <i class="fas fa-chevron-left fa-xs"></i> Back
           </button>
-          <div style="color: white; width: 100px" v-if="parseInt(mode) != 5">
+          <div style="color: white; width: 115px" v-if="parseInt(mode) != 7">
             <i
               class="fa fa-square"
               aria-hidden="true"
@@ -302,13 +126,13 @@
               class="fa fa-square-o"
               aria-hidden="true"
               style="margin: 2%"
-              v-for="index in 5 - parseInt(mode)"
+              v-for="index in 6 - parseInt(mode)"
               :key="index"
             ></i>
           </div>
           <button
             type="button"
-            v-if="parseInt(mode) < 5"
+            v-if="parseInt(mode) < 6"
             class="btn btn-outline-primary"
             v-on:click="nextClick"
           >
@@ -316,11 +140,19 @@
           </button>
           <button
             type="button"
-            v-if="mode == '5'"
             class="btn btn-outline-primary"
             v-on:click="createCottage"
+            v-if="mode == '6' && cottage == undefined"
           >
             Create
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            v-on:click="createCottage"
+            v-if="mode == '6' && cottage != undefined"
+          >
+            Save
           </button>
         </div>
       </div>
@@ -330,7 +162,19 @@
 
 <script>
 import axios from "axios";
+import NewCottageModalImages from "./NewCottageModalImages.vue";
+import NewCottageModalMap from "./NewCottageModalMap.vue";
+import NewCottageModalRooms from "./NewCottageModalRooms.vue";
+import NewCottageModalRules from "./NewCottageModalRules.vue";
+import NewCottageModalPriceList from "./NewCottageModalPriceList.vue";
 export default {
+  components: {
+    NewCottageModalImages,
+    NewCottageModalMap,
+    NewCottageModalRooms,
+    NewCottageModalRules,
+    NewCottageModalPriceList,
+  },
   props: ["cottage"],
   name: "RegisterModal",
   data: function () {
@@ -345,25 +189,18 @@ export default {
       rooms: [],
       rules: [],
       priceList: [],
-      roomsId: 0,
+      files: "",
+      flagRules: true,
+      flagRooms: true,
+      flagPriceList: true,
+      cottageId: undefined,
     };
   },
   mounted: function () {
     var element = document.getElementById("logIn-btn");
     element.classList.add("active");
-    let imagePreviewContainer = document.getElementById("imagePreview");
-    let previewImage = imagePreviewContainer.querySelector(
-      ".image-preview__image"
-    );
-    let previewDefaultText = imagePreviewContainer.querySelector(
-      ".image-preview__default-text"
-    );
     if (this.cottage) {
-      previewDefaultText.style.display = "none";
-      previewImage.style.display = "block";
-      previewImage.setAttribute("src", "/img/" + this.cottage.images[0].path);
-
-      previewImage.setAttribute("src", "/img/" + this.cottage.images[0].path);
+      this.cottageId = this.cottage.id;
       this.cottageName = this.cottage.name;
       this.cottageDescription = this.cottage.description;
       this.images = this.cottage.images;
@@ -378,175 +215,159 @@ export default {
   methods: {
     nextClick: function () {
       if (this.mode == "1") {
-        if (!this.cottageName || !this.cottageDescription || !this.images) {
-          document.getElementById("cottageImagesErr").innerHTML =
+        if (!this.cottageName || !this.cottageDescription) {
+          document.getElementById("cottageNameErr" + this.cottageId).innerHTML =
             "All fields must be filled.";
         } else {
           this.mode = "2";
-          document.getElementById("back-btn").style.visibility = "visible";
-          document.getElementById("cottageImagesErr").innerHTML = "";
+          document.getElementById(
+            "back-btn" + this.cottageId
+          ).style.visibility = "visible";
+          document.getElementById("cottageNameErr" + this.cottageId).innerHTML =
+            "";
         }
       } else if (this.mode == "2") {
-        if (!this.street || !this.city || !this.country) {
-          document.getElementById("secondErr").style = "color: red";
+        console.log(this.images);
+        console.log(this.files);
+        if (!this.images && !this.files) {
+          document.getElementById(
+            "cottageImagesErr" + this.cottageId
+          ).innerHTML = "Minimum one image is required.";
         } else {
           this.mode = "3";
-          document.getElementById("secondErr").style = "color: white";
+          document.getElementById(
+            "cottageImagesErr" + this.cottageId
+          ).innerHTML = "";
         }
       } else if (this.mode == "3") {
-        this.mode = "4";
+        if (!this.street || !this.city || !this.country) {
+          document.getElementById("secondErr" + this.cottageId).style =
+            "color: red";
+        } else {
+          this.mode = "4";
+          document.getElementById("secondErr" + this.cottageId).style =
+            "color: white";
+        }
       } else if (this.mode == "4") {
-        this.mode = "5";
+        if (this.flagRooms) {
+          document.getElementById("roomErr" + this.cottageId).innerHTML = "";
+          this.mode = "5";
+        } else {
+          document.getElementById("roomErr" + this.cottageId).innerHTML =
+            "All fields must be filled.";
+        }
+      } else if (this.mode == "5") {
+        if (this.flagRules) {
+          document.getElementById("ruleErr" + this.cottageId).innerHTML = "";
+          this.mode = "6";
+        } else {
+          document.getElementById("ruleErr" + this.cottageId).innerHTML =
+            "All fields must be filled.";
+        }
       }
     },
     backClick: function () {
       if (this.mode == "2") {
         this.mode = "1";
-        document.getElementById("back-btn").style.visibility = "hidden";
+        document.getElementById("back-btn" + this.cottageId).style.visibility =
+          "hidden";
       } else if (this.mode == "3") {
         this.mode = "2";
       } else if (this.mode == "4") {
         this.mode = "3";
       } else if (this.mode == "5") {
         this.mode = "4";
+      } else if (this.mode == "6") {
+        this.mode = "5";
       }
     },
     closeModal: function () {
-      this.mode = "1";
-      this.cottageName = "";
-      this.cottageDescription = "";
-      this.images = [];
-      this.street = "";
-      this.city = "";
-      this.country = "";
-      this.rooms = [];
-      this.rules = [];
-      this.priceList = [];
-      this.roomsId = 0;
-    },
-    fileUploaded: function () {
-      let inpFile = document.getElementById("inpFile");
-      let imagePreviewContainer = document.getElementById("imagePreview");
-      let previewImage = imagePreviewContainer.querySelector(
-        ".image-preview__image"
-      );
-      let previewDefaultText = imagePreviewContainer.querySelector(
-        ".image-preview__default-text"
-      );
-
-      let file = inpFile.files[0];
-
-      if (file) {
-        let reader = new FileReader();
-
-        previewDefaultText.style.display = "none";
-        previewImage.style.display = "block";
-
-        let ref = this;
-        reader.addEventListener("load", function () {
-          previewImage.setAttribute("src", this.result);
-          ref.images.push(this.result);
-        });
-
-        reader.readAsDataURL(file);
-      } else {
-        previewDefaultText.style.display = null;
-        previewImage.style.display = null;
-        previewImage.setAttribute("src", "");
+      if (!this.cottage) {
+        this.mode = "1";
+        this.cottageName = "";
+        this.cottageDescription = "";
+        this.images = [];
+        this.street = "";
+        this.city = "";
+        this.country = "";
+        this.rooms = [];
+        this.rules = [];
+        this.priceList = [];
       }
     },
-    addRoom: function () {
-      let newRoom = {
-        id: this.roomsId,
-        name: "",
-        beds: "",
-      };
-      this.roomsId = this.roomsId + 1;
-      this.rooms.push(newRoom);
+
+    uploaded: function (files) {
+      this.files = files;
     },
-    addPositiveRule: function () {
-      let newRule = {
-        desccription: "",
-        type: true,
-      };
-      this.rules.push(newRule);
+    changeAddress: function (address) {
+      this.street = address.street;
+      this.city = address.city;
+      this.country = address.country;
     },
-    addNegativeRule: function () {
-      let newRule = {
-        desccription: "",
-        type: false,
-      };
-      this.rules.push(newRule);
-    },
-    addPriceListItem: function () {
-      let newItem = {
-        desccription: "",
-        price: "",
-      };
-      this.priceList.push(newItem);
-    },
-    removeRoom: function (id) {
-      for (var room of this.rooms) {
-        if (room.id === id) {
-          this.rooms.pop(room);
-        }
+    roomsUpdated: function (retval) {
+      this.flagRooms = retval.result;
+      if (retval.result) {
+        this.rooms = retval.newRooms;
       }
     },
-    removeRule: function (content) {
-      for (var rule of this.rules) {
-        if (rule.content === content) {
-          this.rules.pop(rule);
-        }
+    rulesUpdated: function (retVal) {
+      this.flagRules = retVal.result;
+      if (retVal.result) {
+        this.rules = retVal.newRules;
       }
     },
-    removePriceItem: function (name) {
-      for (var priceItem of this.priceList) {
-        if (priceItem.name === name) {
-          this.priceList.pop(priceItem);
-        }
+    priceListUpdated: function (retVal) {
+      this.flagPriceList = retVal.result;
+      if (retVal.result) {
+        this.priceList = retVal.newPriceList;
       }
     },
     createCottage: function () {
-      let additionalServices = [];
-      for (let service of this.priceList) {
-        additionalServices.push({ name: service.name, price: service.price });
-      }
+      if (!this.flagPriceList) {
+        document.getElementById("priceListErr" + this.cottageId).innerHTML =
+          "All fields must be filled.";
+      } else {
+        let additionalServices = [];
+        for (let service of this.priceList) {
+          additionalServices.push({ name: service.name, price: service.price });
+        }
 
-      let rulesFinal = [];
-      for (let rule of this.rules) {
-        rulesFinal.push({ content: rule.content, isEnforced: rule.type });
-      }
+        let rulesFinal = [];
+        for (let rule of this.rules) {
+          rulesFinal.push({ content: rule.content, isEnforced: rule.type });
+        }
 
-      let roomsFinal = [];
-      for (let room of this.rooms) {
-        roomsFinal.push({ bedNumber: room.beds });
-      }
-      let home = {
-        name: this.cottageName,
-        description: this.cottageDescription,
-        images: null,
-        location: {
-          longitude: 0,
-          latitude: 0,
-          address: {
-            street: this.street,
-            city: this.city,
-            country: this.country,
+        let roomsFinal = [];
+        for (let room of this.rooms) {
+          roomsFinal.push({ bedNumber: room.beds });
+        }
+        let home = {
+          name: this.cottageName,
+          description: this.cottageDescription,
+          images: null,
+          location: {
+            longitude: 0,
+            latitude: 0,
+            address: {
+              street: this.street,
+              city: this.city,
+              country: this.country,
+            },
           },
-        },
-        rooms: roomsFinal,
-        rules: rulesFinal,
-        additionalServices: additionalServices,
-      };
+          rooms: roomsFinal,
+          rules: rulesFinal,
+          additionalServices: additionalServices,
+        };
 
-      axios
-        .post("http://localhost:8080/vacationHome/newHome", home, {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
-            Authorization: "Bearer " + localStorage.jwt,
-          },
-        })
-        .then(window.location.reload());
+        axios
+          .post("http://localhost:8080/vacationHome/newHome", home, {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.jwt,
+            },
+          })
+          .then(window.location.reload());
+      }
     },
   },
 };

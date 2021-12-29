@@ -5,6 +5,7 @@
 
 .modal-dialog .modal-content {
     background: #1e2021;
+    height: 34rem;
 }
 
 .modal.dark .modal-body {
@@ -24,6 +25,10 @@
 .modal.dark .modal-header h3,
 .modal.dark .modal-header h4 {
     color: #ccc;
+    overflow-wrap: break-word;
+    text-align: center;
+    min-width: -webkit-fill-available;
+    padding: 0 30px;
 }
 
 .modal.dark .modal-footer {
@@ -32,10 +37,18 @@
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+    justify-content: center;
 }
 
 .modal h5 {
     color: white;
+}
+
+.modal-header .btn-close {
+    background: transparent;
+    color: white;
+    position: relative;
+    left: -30px;
 }
 
 .error {
@@ -56,17 +69,32 @@
     font-size: 17px;
 }
 
-.login-inputs-select {
+.login-inputs {
     display: block;
     margin: 15px auto 0 auto;
     background-color: transparent;
-    width: 58%;
+    width: 100%;
     border-width: 0;
     border-bottom-width: 1px;
     border-color: white;
+    padding: 2px 20px;
+    color: white;
+    font-size: 17px;
+}
+
+.login-inputs-textarea {
+    display: block;
+    margin: 15px auto 0 auto;
+    background-color: transparent;
     padding: 2px 16px;
     color: white;
     font-size: 17px;
+    resize: none;
+    height: 15rem;
+    border: 1px solid white;
+    border-radius: 5px;
+    margin-top: 2rem;
+    width: 100%;
 }
 
 .login-inputs-select option {
