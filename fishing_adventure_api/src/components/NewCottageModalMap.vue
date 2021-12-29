@@ -1,59 +1,76 @@
 <template>
   <div>
-    <form>
-      <input
-        v-model="street"
-        id="street"
-        type="text"
-        class="login-inputs"
-        placeholder="House number and street"
-        v-on:change="emit"
+    <GMapAutocomplete
+      placeholder="Plase enter address.."
+      @place_changed="setPlace"
+      style="z-index: 2000"
+      @focus="fixZindex"
+      class="login-inputs"
+    />
+    <GMapMap :center="center" :zoom="15" style="width: 100%; margin-top: 20px">
+      <GMapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        @click="center = m.position"
       />
-      <input
-        v-model="city"
-        id="city"
-        type="text"
-        class="login-inputs"
-        placeholder="City"
-        v-on:change="emit"
-      />
-      <input
-        v-model="country"
-        id="country"
-        type="text"
-        class="login-inputs"
-        placeholder="Country"
-        v-on:change="emit"
-      />
-
-      <div id="map"></div>
-    </form>
+    </GMapMap>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["st", "ci", "co"],
   data: function () {
     return {
-      street: "",
-      city: "",
-      country: "",
+      center: { lat: 45.508, lng: -73.587 },
+      currentPlace: null,
+      markers: [],
+      formatted_address: "",
     };
   },
   mounted() {
-    this.street = this.st;
-    this.country = this.co;
-    this.city = this.ci;
+    document.getElementsByClassName("vue-map")[0].style = "min-height:12rem";
   },
   methods: {
+    fixZindex: function () {
+      document.getElementsByClassName("pac-container")[0].style =
+        "z-index:2000";
+    },
+    setPlace(place) {
+      console.log(place);
+      this.currentPlace = place;
+      this.addMarker();
+    },
+    addMarker() {
+      this.markers = [];
+      this.formatted_address = this.currentPlace.formatted_address;
+      if (this.currentPlace) {
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng(),
+        };
+        this.markers.push({ position: marker });
+        this.center = marker;
+        this.currentPlace = null;
+      }
+      this.emit();
+    },
     emit: function () {
-      let address = {
-        street: this.street,
-        city: this.city,
-        country: this.country,
-      };
-      this.$emit("change-address", address);
+      try {
+        let parts = this.formatted_address.split(",");
+        let city = parts[1].trim().split(" ")[0];
+        let postal_code = parts[1].trim().split(" ")[1];
+        let address = {
+          street: parts[0].trim(),
+          city: city.trim(),
+          postal_code: postal_code.trim(),
+          country: parts[2].trim(),
+        };
+        console.log(address);
+        this.$emit("change-address", address);
+      } catch (err) {
+        this.$emit("change-address", undefined);
+      }
     },
   },
 };
@@ -71,24 +88,7 @@ export default {
   padding: 2px 20px;
   color: white;
   font-size: 17px;
-}
-
-.login-inputs-select {
-  display: block;
-  margin: 15px auto 0 auto;
-  background-color: transparent;
-  width: 58%;
-  border-width: 0;
-  border-bottom-width: 1px;
-  border-color: white;
-  padding: 2px 16px;
-  color: white;
-  font-size: 17px;
-}
-
-.login-inputs-select option {
-  background-color: rgba(44, 53, 63, 1);
-  color: white;
+  margin-bottom: 2rem;
 }
 
 .login-inputs-select:focus {

@@ -2,7 +2,6 @@
   <div
     class="modal fade dark"
     id="NewCottageModal"
-    tabindex="-1"
     aria-labelledby="NewCottageModalLabel"
     aria-hidden="true"
     data-bs-backdrop="static"
@@ -68,15 +67,11 @@
           <div class="login-title">
             <p :id="'secondErr' + cottageId">
               It is necessary to determine the location of the cottage by
-              filling in
-              <b><em>all</em></b> the fields listed. Fields can also be filled
-              by clicking on the desired location on the map.
+              filling field below. Field must contain street, house number, city
+              and coutry.
             </p>
           </div>
           <new-cottage-modal-map
-            :st="street"
-            :ci="city"
-            :co="country"
             v-on:change-address="changeAddress"
           ></new-cottage-modal-map>
         </div>
@@ -149,7 +144,7 @@
           <button
             type="button"
             class="btn btn-outline-primary"
-            v-on:click="createCottage"
+            v-on:click="updateCottage"
             v-if="mode == '6' && cottage != undefined"
           >
             Save
@@ -186,6 +181,7 @@ export default {
       street: "",
       city: "",
       country: "",
+      postal_code: "",
       rooms: [],
       rules: [],
       priceList: [],
@@ -300,9 +296,17 @@ export default {
       this.files = files;
     },
     changeAddress: function (address) {
-      this.street = address.street;
-      this.city = address.city;
-      this.country = address.country;
+      if (address == undefined) {
+        document.getElementById("secondErr" + this.cottageId).style =
+          "color: red;";
+      } else {
+        document.getElementById("secondErr" + this.cottageId).style =
+          "color: white;";
+        this.street = address.street;
+        this.city = address.city;
+        this.postal_code = address.postal_code;
+        this.country = address.country;
+      }
     },
     roomsUpdated: function (retval) {
       this.flagRooms = retval.result;
@@ -320,6 +324,53 @@ export default {
       this.flagPriceList = retVal.result;
       if (retVal.result) {
         this.priceList = retVal.newPriceList;
+      }
+    },
+    updateCottage: function () {
+      if (!this.flagPriceList) {
+        document.getElementById("priceListErr" + this.cottageId).innerHTML =
+          "All fields must be filled.";
+      } else {
+        let additionalServices = [];
+        for (let service of this.priceList) {
+          additionalServices.push({ name: service.name, price: service.price });
+        }
+
+        let rulesFinal = [];
+        for (let rule of this.rules) {
+          rulesFinal.push({ content: rule.content, isEnforced: rule.type });
+        }
+
+        let roomsFinal = [];
+        for (let room of this.rooms) {
+          roomsFinal.push({ bedNumber: room.beds });
+        }
+        let home = {
+          name: this.cottageName,
+          description: this.cottageDescription,
+          images: null,
+          location: {
+            longitude: 0,
+            latitude: 0,
+            address: {
+              street: this.street,
+              city: this.city,
+              country: this.country,
+            },
+          },
+          rooms: roomsFinal,
+          rules: rulesFinal,
+          additionalServices: additionalServices,
+        };
+
+        axios
+          .post("http://localhost:8080/vacationHome/newHome", home, {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.jwt,
+            },
+          })
+          .then(window.location.reload());
       }
     },
     createCottage: function () {
