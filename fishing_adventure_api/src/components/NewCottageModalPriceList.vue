@@ -42,6 +42,7 @@
             <td>
               <i
                 class="far fa-trash-alt"
+                style="color: #832626; cursor: pointer"
                 v-on:click="removePriceItem(priceItem.name)"
               ></i>
             </td>

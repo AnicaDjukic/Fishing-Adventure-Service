@@ -37,6 +37,7 @@
             <td>
               <i
                 class="far fa-trash-alt"
+                style="color: #832626; cursor: pointer"
                 v-on:click="removeRoom(room.roomId)"
               ></i>
             </td>

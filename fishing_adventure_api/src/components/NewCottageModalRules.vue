@@ -18,9 +18,14 @@
         <tbody>
           <tr v-for="rule in rules" :key="rule.content">
             <td>
-              <i class="far fa-check-circle" v-if="rule.isEnforced == true"></i>
+              <i
+                class="far fa-check-circle"
+                style="color: green"
+                v-if="rule.isEnforced == true"
+              ></i>
               <i
                 class="far fa-times-circle"
+                style="color: red"
                 v-if="rule.isEnforced == false"
               ></i>
             </td>
@@ -37,6 +42,7 @@
             <td>
               <i
                 class="far fa-trash-alt"
+                style="color: #832626; cursor: pointer"
                 v-on:click="removeRule(rule.content)"
               ></i>
             </td>

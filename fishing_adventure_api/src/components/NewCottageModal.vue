@@ -72,6 +72,8 @@
             </p>
           </div>
           <new-cottage-modal-map
+            :lat="lat"
+            :lng="lng"
             v-on:change-address="changeAddress"
           ></new-cottage-modal-map>
         </div>
@@ -190,6 +192,8 @@ export default {
       flagRooms: true,
       flagPriceList: true,
       cottageId: undefined,
+      lat: "",
+      lng: "",
     };
   },
   mounted: function () {
@@ -206,6 +210,8 @@ export default {
       this.rooms = this.cottage.rooms;
       this.rules = this.cottage.rules;
       this.priceList = this.cottage.additionalServices;
+      this.lat = this.cottage.location.latitude;
+      this.lng = this.cottage.location.longitude;
     }
   },
   methods: {
@@ -278,8 +284,8 @@ export default {
       }
     },
     closeModal: function () {
+      this.mode = "1";
       if (!this.cottage) {
-        this.mode = "1";
         this.cottageName = "";
         this.cottageDescription = "";
         this.images = [];
@@ -289,6 +295,10 @@ export default {
         this.rooms = [];
         this.rules = [];
         this.priceList = [];
+      }
+      let container = document.getElementsByClassName("pac-container")[0];
+      if (container) {
+        container.remove();
       }
     },
 
@@ -306,6 +316,8 @@ export default {
         this.city = address.city;
         this.postal_code = address.postal_code;
         this.country = address.country;
+        this.lng = address.lng;
+        this.lat = address.lat;
       }
     },
     roomsUpdated: function (retval) {

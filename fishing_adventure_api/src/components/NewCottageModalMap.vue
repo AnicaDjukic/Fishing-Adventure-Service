@@ -3,11 +3,20 @@
     <GMapAutocomplete
       placeholder="Plase enter address.."
       @place_changed="setPlace"
-      style="z-index: 2000"
+      style="z-index: 2000; display: none"
       @focus="fixZindex"
       class="login-inputs"
+      id="autocompleteInput"
     />
-    <GMapMap :center="center" :zoom="15" style="width: 100%; margin-top: 20px">
+    <input
+      placeholder="Plase enter address.."
+      type="text"
+      class="login-inputs"
+      :value="formatted_address"
+      id="disabledInput"
+      @click="changeAddress"
+    />
+    <GMapMap :center="center" :zoom="15">
       <GMapMarker
         :key="index"
         v-for="(m, index) in markers"
@@ -19,30 +28,71 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
+  props: ["lng", "lat"],
   data: function () {
     return {
       center: { lat: 45.508, lng: -73.587 },
       currentPlace: null,
       markers: [],
       formatted_address: "",
+      selected_place: "",
+      street_number: "",
+      street: "",
+      country: "",
+      postal_code: "",
+      city: "",
     };
   },
   mounted() {
     document.getElementsByClassName("vue-map")[0].style = "min-height:12rem";
+    if (this.lng != undefined && this.lat != undefined) {
+      const marker = {
+        lat: this.lat,
+        lng: this.lng,
+      };
+      this.markers.push({ position: marker });
+      this.center = marker;
+    }
+    this.getStreetAddressFrom(this.lat, this.lng);
   },
   methods: {
+    changeAddress: function () {
+      document.getElementById("disabledInput").style = "display: none";
+      document.getElementById("autocompleteInput").style = "display: block";
+      document.getElementById("autocompleteInput").focus();
+    },
+    async getStreetAddressFrom(lat, long) {
+      try {
+        var { data } = await axios.get(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+            lat +
+            "," +
+            long +
+            "&key=AIzaSyDS-rs0HVP_awX2aP1u49VhJzJcL_K3lko" +
+            "&language=en"
+        );
+        if (data.error_message) {
+          console.log(data.error_message);
+        } else {
+          this.formatted_address = data.results[0].formatted_address;
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
     fixZindex: function () {
       document.getElementsByClassName("pac-container")[0].style =
         "z-index:2000";
     },
     setPlace(place) {
-      console.log(place);
       this.currentPlace = place;
       this.addMarker();
     },
     addMarker() {
       this.markers = [];
+      this.selected_place = this.currentPlace;
       this.formatted_address = this.currentPlace.formatted_address;
       if (this.currentPlace) {
         const marker = {
@@ -57,17 +107,29 @@ export default {
     },
     emit: function () {
       try {
-        let parts = this.formatted_address.split(",");
-        let city = parts[1].trim().split(" ")[0];
-        let postal_code = parts[1].trim().split(" ")[1];
-        let address = {
-          street: parts[0].trim(),
-          city: city.trim(),
-          postal_code: postal_code.trim(),
-          country: parts[2].trim(),
-        };
-        console.log(address);
-        this.$emit("change-address", address);
+        for (let component of this.selected_place.address_components) {
+          if (component.types[0] == "street_number") {
+            this.street_number = component.long_name;
+          } else if (component.types[0] == "route") {
+            this.street = component.long_name;
+          } else if (component.types[0] == "locality") {
+            this.city = component.long_name;
+          } else if (component.types[0] == "country") {
+            this.country = component.long_name;
+          } else if (component.types[0] == "postal_code") {
+            this.postal_code = component.long_name;
+          }
+
+          let address = {
+            street: this.street + this.street_number,
+            city: this.city,
+            postal_code: this.postal_code,
+            country: this.country,
+            lat: this.selected_place.geometry.location.lat(),
+            lng: this.selected_place.geometry.location.lng(),
+          };
+          this.$emit("change-address", address);
+        }
       } catch (err) {
         this.$emit("change-address", undefined);
       }
@@ -89,6 +151,7 @@ export default {
   color: white;
   font-size: 17px;
   margin-bottom: 2rem;
+  cursor: pointer;
 }
 
 .login-inputs-select:focus {
