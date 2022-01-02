@@ -7,9 +7,7 @@ import isa.FishingAdventure.model.Image;
 import isa.FishingAdventure.model.VacationHome;
 import isa.FishingAdventure.model.VacationHomeOwner;
 import isa.FishingAdventure.security.util.TokenUtils;
-import isa.FishingAdventure.service.ServiceProfileService;
-import isa.FishingAdventure.service.VacationHomeOwnerService;
-import isa.FishingAdventure.service.VacationHomeService;
+import isa.FishingAdventure.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
@@ -26,6 +24,7 @@ import java.util.List;
 
 @RestController
 @Configurable
+@CrossOrigin
 @RequestMapping(value = "/vacationHome", produces = MediaType.APPLICATION_JSON_VALUE)
 public class VacationHomeController {
 
@@ -37,6 +36,12 @@ public class VacationHomeController {
 
     @Autowired
     private VacationHomeOwnerService homeOwnerService;
+
+    @Autowired
+    private LocationService locationService;
+
+    @Autowired
+    private AddressService addressService;
 
     @Autowired
     private TokenUtils tokenUtils;
@@ -73,25 +78,51 @@ public class VacationHomeController {
     public ResponseEntity<NewHomeDto> saveNewCottage(@RequestHeader("Authorization") String token, @RequestBody NewHomeDto dto) {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         VacationHomeOwner owner = homeOwnerService.findByEmail(email);
-        homeService.save(createHome(dto, owner));
+        VacationHome newHome = new VacationHome();
+        homeService.save(createHome(newHome, dto, owner));
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    private VacationHome createHome(NewHomeDto dto, VacationHomeOwner owner) {
-        VacationHome home = new VacationHome();
-        home.setAvailabilityEnd(new Date());
-        home.setAvailabilityStart(new Date());
-        home.setDescription(dto.getDescription());
-        home.setLocation(dto.getLocation());
-        home.setAdditionalServices(dto.getAdditionalServices());
-        home.setAppointments(new HashSet<Appointment>());
-        home.setCancellationRule(dto.getCancellationRule());
-        home.setImages(new HashSet<Image>());
+    @PutMapping(value = "/update/{id}")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    @Transactional
+    public ResponseEntity<NewHomeDto> updateCottage(@PathVariable String id, @RequestHeader("Authorization") String token, @RequestBody NewHomeDto dto) {
+        VacationHome oldHome = homeService.getById(Integer.parseInt(id));
+        homeService.save(updateHome(oldHome, dto));
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    private VacationHome updateHome(VacationHome home, NewHomeDto dto) {
         home.setName(dto.getName());
-        home.setRating(0.0);
+        home.setDescription(dto.getDescription());
+        home.setCancellationRule(dto.getCancellationRule());
+        home.setAdditionalServices(dto.getAdditionalServices());
         home.setRooms(dto.getRooms());
         home.setRules(dto.getRules());
+        home.setPersons(dto.getPersons());
+
+        locationService.save(home.getLocation(), dto.getLocation());
+        addressService.save(home.getLocation().getAddress(), dto.getLocation().getAddress());
+
+        return home;
+    }
+
+    private VacationHome createHome(VacationHome home, NewHomeDto dto, VacationHomeOwner owner) {
+        home.setAvailabilityEnd(new Date());
+        home.setAvailabilityStart(new Date());
+        home.setAppointments(new HashSet<Appointment>());
+        home.setImages(new HashSet<Image>());
+        home.setRating(0.0);
+        home.setLocation(dto.getLocation());
+        home.setAdditionalServices(dto.getAdditionalServices());
+        home.setCancellationRule(dto.getCancellationRule());
+        home.setRooms(dto.getRooms());
+        home.setRules(dto.getRules());
+        home.setName(dto.getName());
+        home.setDescription(dto.getDescription());
         home.setVacationHomeOwner(owner);
+        home.setDeleted(false);
+        home.setPersons(dto.getPersons());
         return home;
     }
 
@@ -109,6 +140,19 @@ public class VacationHomeController {
         NewHomeDto dto = new NewHomeDto(home);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+
+    @PutMapping(value = "/updatePriceAndDates/{id}")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    @Transactional
+    public ResponseEntity<NewHomeDto> updatePriceAndDates(@PathVariable String id, @RequestHeader("Authorization") String token, @RequestBody NewHomeDto dto) {
+        VacationHome oldHome = homeService.getById(Integer.parseInt(id));
+        oldHome.setPricePerDay(dto.getPricePerDay());
+        oldHome.setAvailabilityStart(dto.getAvailabilityStart());
+        oldHome.setAvailabilityEnd(dto.getAvailabilityEnd());
+        homeService.save(oldHome);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
 }
 
 	

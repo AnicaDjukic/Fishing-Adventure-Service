@@ -1,27 +1,14 @@
 package isa.FishingAdventure.dto;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-
 import isa.FishingAdventure.model.*;
+
+import java.util.Date;
+import java.util.Set;
 
 
 public class NewHomeDto {
 
-	private Integer id;
+    private Integer id;
 
     private String name;
 
@@ -31,178 +18,199 @@ public class NewHomeDto {
 
     private double rating;
 
-    public Location location;
+    private Location location;
 
     private Set<Rule> rules;
 
     private Set<AdditionalService> additionalServices;
-    
-    public Set<Image> images;
-    
-    public Set<Room> rooms;
 
-	private Date availabilityStart;
+    private Set<Image> images;
 
-	private Date availabilityEnd;
+    private Set<Room> rooms;
 
-	public VacationHomeOwner vacationHomeOwner;
+    private Date availabilityStart;
 
-	public String imagePath;
+    private Date availabilityEnd;
 
-	public Set<Room> getRooms() {
-		return rooms;
-	}
+    private VacationHomeOwner vacationHomeOwner;
 
-	public void setRooms(Set<Room> rooms) {
-		this.rooms = rooms;
-	}
+    private String imagePath;
 
-	public NewHomeDto(Integer id, String name, String description, double cancellationRule, double rating, Location location,
-			Set<Rule> rules, Set<AdditionalService> additionalServices,
-			Set<Image> images, Set<Room> rooms, Date availabilityStart, Date availabilityEnd,
-					  VacationHomeOwner vocationHomeOwner, String imagePath) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.cancellationRule = cancellationRule;
-		this.rating = rating;
-		this.location = location;
-		this.rules = rules;
-		this.additionalServices = additionalServices;
-		this.images = images;
-		this.rooms = rooms;
-		this.availabilityStart = availabilityStart;
-		this.availabilityEnd = availabilityEnd;
-		this.vacationHomeOwner = vocationHomeOwner;
-		this.imagePath = imagePath;
-	}
+    private int persons;
 
-	public Integer getId() {
-		return id;
-	}
+    private double pricePerDay;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Set<Room> getRooms() {
+        return rooms;
+    }
 
-	public String getImagePath() {
-		return imagePath;
-	}
+    public void setRooms(Set<Room> rooms) {
+        this.rooms = rooms;
+    }
 
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
-	}
+    public NewHomeDto(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, Set<Image> images, Set<Room> rooms, Date availabilityStart, Date availabilityEnd, VacationHomeOwner vacationHomeOwner, String imagePath, int persons) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.cancellationRule = cancellationRule;
+        this.rating = rating;
+        this.location = location;
+        this.rules = rules;
+        this.additionalServices = additionalServices;
+        this.images = images;
+        this.rooms = rooms;
+        this.availabilityStart = availabilityStart;
+        this.availabilityEnd = availabilityEnd;
+        this.vacationHomeOwner = vacationHomeOwner;
+        this.imagePath = imagePath;
+        this.persons = persons;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getImagePath() {
+        return imagePath;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
-	public double getCancellationRule() {
-		return cancellationRule;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setCancellationRule(double cancellationRule) {
-		this.cancellationRule = cancellationRule;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public double getRating() {
-		return rating;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setRating(double rating) {
-		this.rating = rating;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Location getLocation() {
-		return location;
-	}
+    public double getCancellationRule() {
+        return cancellationRule;
+    }
 
-	public void setLocation(Location location) {
-		this.location = location;
-	}
+    public void setCancellationRule(double cancellationRule) {
+        this.cancellationRule = cancellationRule;
+    }
 
-	public Set<Rule> getRules() {
-		return rules;
-	}
+    public double getRating() {
+        return rating;
+    }
 
-	public void setRules(Set<Rule> rules) {
-		this.rules = rules;
-	}
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
 
-	public Set<AdditionalService> getAdditionalServices() {
-		return additionalServices;
-	}
+    public Location getLocation() {
+        return location;
+    }
 
-	public void setAdditionalServices(Set<AdditionalService> additionalServices) {
-		this.additionalServices = additionalServices;
-	}
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
-	public Set<Image> getImages() {
-		return images;
-	}
+    public Set<Rule> getRules() {
+        return rules;
+    }
 
-	public void setImages(Set<Image> images) {
-		this.images = images;
-	}
+    public void setRules(Set<Rule> rules) {
+        this.rules = rules;
+    }
 
-	public Date getAvailabilityStart() {
-		return availabilityStart;
-	}
+    public Set<AdditionalService> getAdditionalServices() {
+        return additionalServices;
+    }
 
-	public void setAvailabilityStart(Date availabilityStart) {
-		this.availabilityStart = availabilityStart;
-	}
+    public void setAdditionalServices(Set<AdditionalService> additionalServices) {
+        this.additionalServices = additionalServices;
+    }
 
-	public Date getAvailabilityEnd() {
-		return availabilityEnd;
-	}
+    public Set<Image> getImages() {
+        return images;
+    }
 
-	public void setAvailabilityEnd(Date availabilityEnd) {
-		this.availabilityEnd = availabilityEnd;
-	}
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
 
-	public VacationHomeOwner getVacationHomeOwner() {
-		return vacationHomeOwner;
-	}
+    public Date getAvailabilityStart() {
+        return availabilityStart;
+    }
 
-	public void setVacationHomeOwner(VacationHomeOwner vocationHomeOwner) {
-		this.vacationHomeOwner = vocationHomeOwner;
-	}
+    public void setAvailabilityStart(Date availabilityStart) {
+        this.availabilityStart = availabilityStart;
+    }
 
-	public NewHomeDto() {
-		super();
-	}
+    public Date getAvailabilityEnd() {
+        return availabilityEnd;
+    }
 
-	public NewHomeDto(VacationHome home) {
-		this.id = home.getId();
-		this.name = home.getName();
-		this.cancellationRule = home.getCancellationRule();
-		this.location = home.getLocation();
-		this.rules = home.getRules();
-		this.additionalServices = home.getAdditionalServices();
-		this.images = home.getImages();
-		this.rooms = home.getRooms();
-		this.description = home.getDescription();
-		this.rating = home.getRating();
-		for(Image img : home.getImages()) {
-			this.imagePath = img.getPath();
-			break;
-		}
-		this.availabilityStart = home.getAvailabilityStart();
-		this.availabilityEnd = home.getAvailabilityEnd();
-		this.vacationHomeOwner = home.getVacationHomeOwner();
-	}
+    public void setAvailabilityEnd(Date availabilityEnd) {
+        this.availabilityEnd = availabilityEnd;
+    }
+
+    public VacationHomeOwner getVacationHomeOwner() {
+        return vacationHomeOwner;
+    }
+
+    public void setVacationHomeOwner(VacationHomeOwner vocationHomeOwner) {
+        this.vacationHomeOwner = vocationHomeOwner;
+    }
+
+    public NewHomeDto() {
+        super();
+    }
+
+    public NewHomeDto(VacationHome home) {
+        this.id = home.getId();
+        this.name = home.getName();
+        this.cancellationRule = home.getCancellationRule();
+        this.location = home.getLocation();
+        this.rules = home.getRules();
+        this.additionalServices = home.getAdditionalServices();
+        this.images = home.getImages();
+        this.rooms = home.getRooms();
+        this.description = home.getDescription();
+        this.rating = home.getRating();
+        for (Image img : home.getImages()) {
+            if (img.isCoverImage()) {
+                this.imagePath = img.getPath();
+                break;
+            }
+        }
+        this.persons = home.getPersons();
+        this.availabilityStart = home.getAvailabilityStart();
+        this.availabilityEnd = home.getAvailabilityEnd();
+        this.vacationHomeOwner = home.getVacationHomeOwner();
+        this.pricePerDay = home.getPricePerDay();
+    }
+
+    public int getPersons() {
+        return persons;
+    }
+
+    public void setPersons(int persons) {
+        this.persons = persons;
+    }
+
+    public double getPricePerDay() {
+        return pricePerDay;
+    }
+
+    public void setPricePerDay(double pricePerDay) {
+        this.pricePerDay = pricePerDay;
+    }
 }

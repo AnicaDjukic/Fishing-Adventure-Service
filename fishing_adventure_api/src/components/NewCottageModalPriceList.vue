@@ -42,8 +42,8 @@
             <td>
               <i
                 class="far fa-trash-alt"
-                style="color: #832626; cursor: pointer"
                 v-on:click="removePriceItem(priceItem.name)"
+                style="color: #832626; cursor: pointer"
               ></i>
             </td>
           </tr>
@@ -70,7 +70,7 @@ export default {
     emit: function () {
       let result = true;
       for (let item of this.newPriceList) {
-        if (!item.desccription || !item.price) {
+        if (!item.name || !item.price) {
           result = false;
         }
       }
@@ -84,7 +84,8 @@ export default {
     },
     addPriceListItem: function () {
       let newItem = {
-        desccription: "",
+        id: -1,
+        name: "",
         price: "",
       };
       this.newPriceList.push(newItem);

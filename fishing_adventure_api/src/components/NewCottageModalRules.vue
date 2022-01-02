@@ -62,6 +62,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.rules);
     if (this.rules) {
       this.newRules = this.rules;
     }

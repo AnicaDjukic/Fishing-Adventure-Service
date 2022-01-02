@@ -46,28 +46,6 @@
                 >
                   Available:
                   <Datepicker
-                    v-if="path == 'mycottages'"
-                    style="
-                      margin-left: 2%;
-                      margin-top: 2%;
-                      border: 1px solid white;
-                      border-radius: 5px;
-                      width: 100%;
-                      box-shadow: none !important;
-                    "
-                    dark
-                    id="picker"
-                    v-model="date"
-                    range
-                    :partialRange="false"
-                    placeholder="Select date"
-                    :enableTimePicker="true"
-                    minutesIncrement="15"
-                    :minDate="new Date()"
-                    v-on:click="preventPropagation"
-                  ></Datepicker>
-                  <Datepicker
-                    v-if="path != 'mycottages'"
                     style="
                       margin-left: 2%;
                       margin-top: 2%;
@@ -109,6 +87,7 @@
                 {{ entity.location.address.country }}
               </p>
               <p
+                v-if="path != 'mycottages'"
                 class="shadow-none"
                 style="
                   margin: 0;
@@ -116,7 +95,21 @@
                   margin-left: auto;
                   font-size: x-large;
                 "
-              ></p>
+              >
+                ${{ entity.pricePerDay }}/day
+              </p>
+              <p
+                v-if="path == 'mycottages'"
+                class="shadow-none"
+                style="
+                  margin: 0;
+                  text-align: right;
+                  margin-left: auto;
+                  font-size: x-large;
+                "
+              >
+                ${{ entity.pricePerDay }}/day
+              </p>
             </div>
           </div>
         </div>
@@ -157,6 +150,7 @@ export default {
     };
   },
   mounted: function () {
+    console.log(this.entity);
     if (window.location.href.includes("/search/cottages")) {
       this.path = "searchcottages";
     } else if (window.location.href.includes("/cottages")) {

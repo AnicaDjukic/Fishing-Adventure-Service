@@ -1,11 +1,7 @@
 package isa.FishingAdventure.model;
 
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
@@ -33,19 +29,19 @@ public abstract class ServiceProfile {
     @Column(name = "rating", nullable = false)
     private double rating;
 
-    @OneToOne(targetEntity = Location.class,cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = Location.class, cascade = CascadeType.ALL)
     public Location location;
 
-    @OneToMany(targetEntity = Appointment.class,cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Appointment.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Appointment> appointments;
 
-    @ManyToMany(targetEntity = Rule.class,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Rule.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Rule> rules;
 
-    @OneToMany(targetEntity = AdditionalService.class,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = AdditionalService.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AdditionalService> additionalServices;
-    
-    @OneToMany(targetEntity = Image.class,cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+
+    @OneToMany(targetEntity = Image.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Image> images;
 
     @Column(name = "persons", nullable = false)
@@ -72,6 +68,7 @@ public abstract class ServiceProfile {
         this.additionalServices = additionalServices;
         this.isDeleted = false;
         this.persons = persons;
+        this.pricePerDay = 0;
     }
 
     public ServiceProfile() {
@@ -141,29 +138,29 @@ public abstract class ServiceProfile {
         this.appointments = appointments;
     }
 
-	public Set<Rule> getRules() {
-		return rules;
-	}
+    public Set<Rule> getRules() {
+        return rules;
+    }
 
-	public void setRules(Set<Rule> rules) {
-		this.rules = rules;
-	}
+    public void setRules(Set<Rule> rules) {
+        this.rules = rules;
+    }
 
-	public Set<AdditionalService> getAdditionalServices() {
-		return additionalServices;
-	}
+    public Set<AdditionalService> getAdditionalServices() {
+        return additionalServices;
+    }
 
-	public void setAdditionalServices(Set<AdditionalService> additionalServices) {
-		this.additionalServices = additionalServices;
-	}
+    public void setAdditionalServices(Set<AdditionalService> additionalServices) {
+        this.additionalServices = additionalServices;
+    }
 
-	public Set<Image> getImages() {
-		return images;
-	}
+    public Set<Image> getImages() {
+        return images;
+    }
 
-	public void setImages(Set<Image> images) {
-		this.images = images;
-	}
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
 
     public int getPersons() {
         return persons;

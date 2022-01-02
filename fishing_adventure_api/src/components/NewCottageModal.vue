@@ -14,7 +14,8 @@
           <h3 v-if="mode == '1' && cottageName == ''">New cottage</h3>
           <h3
             v-if="
-              (mode == '1' && cottageName != '') |
+              (mode === '0') |
+                (mode == '1' && cottageName != '') |
                 (mode == '2') |
                 (mode === '3') |
                 (mode === '4') |
@@ -33,6 +34,52 @@
             <i class="fas fa-times fa-lg"></i>
           </button>
         </div>
+        <div class="modal-body" v-if="mode == '0'">
+          <p>Availability of your cottage:</p>
+          <Datepicker
+            style="
+              margin-left: 2%;
+              margin-top: 2%;
+              border: 1px solid white;
+              border-radius: 5px;
+              width: 100%;
+              box-shadow: none !important;
+            "
+            dark
+            id="picker"
+            v-model="date"
+            range
+            :partialRange="false"
+            placeholder="Select date"
+            :enableTimePicker="true"
+            minutesIncrement="15"
+            :minDate="new Date()"
+          ></Datepicker>
+          <p style="margin-top: 2rem">Price per day:</p>
+
+          <div class="input-group">
+            <input
+              type="number"
+              min="1"
+              v-model="pricePerDay"
+              class="form-control"
+            />
+            <span class="input-group-text">$/day</span>
+          </div>
+          <p style="margin-top: 4rem">
+            For updating all other infomation about your cottage, plase click
+            here.
+          </p>
+          <div style="text-align-last: center">
+            <button
+              class="btn btn-outline-primary"
+              style="margin: auto"
+              v-on:click="additionalInfo"
+            >
+              Additional info
+            </button>
+          </div>
+        </div>
         <div class="modal-body" v-if="mode == '1'">
           <h6 style="color: white">Please enter information:</h6>
           <input
@@ -47,6 +94,16 @@
             placeholder="Cottage description"
             v-model="cottageDescription"
           />
+
+          <div class="input-group" style="margin-top: 2rem">
+            <span class="input-group-text">Persons</span>
+            <input
+              type="number"
+              min="1"
+              v-model="persons"
+              class="form-control"
+            />
+          </div>
           <label class="error" :id="'cottageNameErr' + cottageId" name="labels">
           </label>
         </div>
@@ -106,12 +163,15 @@
             v-on:click="backClick"
             type="button"
             :id="'back-btn' + cottageId"
-            style="visibility: hidden"
+            style="display: none"
             class="btn btn-outline-primary"
           >
             <i class="fas fa-chevron-left fa-xs"></i> Back
           </button>
-          <div style="color: white; width: 115px" v-if="parseInt(mode) != 7">
+          <div
+            style="color: white; width: 115px"
+            v-if="parseInt(mode) != 7 && parseInt(mode) != 0"
+          >
             <i
               class="fa fa-square"
               aria-hidden="true"
@@ -129,7 +189,7 @@
           </div>
           <button
             type="button"
-            v-if="parseInt(mode) < 6"
+            v-if="0 < parseInt(mode) && parseInt(mode) < 6"
             class="btn btn-outline-primary"
             v-on:click="nextClick"
           >
@@ -148,6 +208,14 @@
             class="btn btn-outline-primary"
             v-on:click="updateCottage"
             v-if="mode == '6' && cottage != undefined"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            v-on:click="updatePriceAndDates"
+            v-if="mode == '0'"
           >
             Save
           </button>
@@ -194,12 +262,16 @@ export default {
       cottageId: undefined,
       lat: "",
       lng: "",
+      persons: "",
+      pricePerDay: "",
+      date: "",
     };
   },
   mounted: function () {
     var element = document.getElementById("logIn-btn");
     element.classList.add("active");
     if (this.cottage) {
+      this.mode = "0";
       this.cottageId = this.cottage.id;
       this.cottageName = this.cottage.name;
       this.cottageDescription = this.cottage.description;
@@ -207,11 +279,19 @@ export default {
       this.street = this.cottage.location.address.street;
       this.city = this.cottage.location.address.city;
       this.country = this.cottage.location.address.country;
+      this.postal_code = this.cottage.location.address.zipCode;
       this.rooms = this.cottage.rooms;
       this.rules = this.cottage.rules;
       this.priceList = this.cottage.additionalServices;
       this.lat = this.cottage.location.latitude;
       this.lng = this.cottage.location.longitude;
+      this.persons = this.cottage.persons;
+      this.pricePerDay = this.cottage.pricePerDay;
+      const startDate = new Date(this.cottage.availabilityStart);
+      const endDate = new Date(this.cottage.availabilityEnd);
+      startDate.setHours(startDate.getHours() - 1);
+      endDate.setHours(endDate.getHours() - 1);
+      this.date = [startDate, endDate];
     }
   },
   methods: {
@@ -222,9 +302,8 @@ export default {
             "All fields must be filled.";
         } else {
           this.mode = "2";
-          document.getElementById(
-            "back-btn" + this.cottageId
-          ).style.visibility = "visible";
+          document.getElementById("back-btn" + this.cottageId).style.display =
+            "block";
           document.getElementById("cottageNameErr" + this.cottageId).innerHTML =
             "";
         }
@@ -271,8 +350,8 @@ export default {
     backClick: function () {
       if (this.mode == "2") {
         this.mode = "1";
-        document.getElementById("back-btn" + this.cottageId).style.visibility =
-          "hidden";
+        document.getElementById("back-btn" + this.cottageId).style.display =
+          "none";
       } else if (this.mode == "3") {
         this.mode = "2";
       } else if (this.mode == "4") {
@@ -284,8 +363,9 @@ export default {
       }
     },
     closeModal: function () {
-      this.mode = "1";
+      this.mode = "0";
       if (!this.cottage) {
+        this.mode = "1";
         this.cottageName = "";
         this.cottageDescription = "";
         this.images = [];
@@ -338,6 +418,9 @@ export default {
         this.priceList = retVal.newPriceList;
       }
     },
+    additionalInfo: function () {
+      this.mode = "1";
+    },
     updateCottage: function () {
       if (!this.flagPriceList) {
         document.getElementById("priceListErr" + this.cottageId).innerHTML =
@@ -362,28 +445,55 @@ export default {
           description: this.cottageDescription,
           images: null,
           location: {
-            longitude: 0,
-            latitude: 0,
+            longitude: this.lng,
+            latitude: this.lat,
             address: {
               street: this.street,
               city: this.city,
               country: this.country,
+              zipCode: this.postal_code,
             },
           },
           rooms: roomsFinal,
           rules: rulesFinal,
           additionalServices: additionalServices,
+          persons: this.persons,
         };
 
         axios
-          .post("http://localhost:8080/vacationHome/newHome", home, {
+          .put(
+            "http://localhost:8080/vacationHome/update/" + this.cottageId,
+            home,
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.jwt,
+              },
+            }
+          )
+          .then(window.location.reload());
+      }
+    },
+    updatePriceAndDates: function () {
+      let dto = {
+        pricePerDay: this.pricePerDay,
+        availabilityStart: this.date[0],
+        availabilityEnd: this.date[1],
+      };
+
+      axios
+        .put(
+          "http://localhost:8080/vacationHome/updatePriceAndDates/" +
+            this.cottageId,
+          dto,
+          {
             headers: {
               "Access-Control-Allow-Origin": "http://localhost:8080",
               Authorization: "Bearer " + localStorage.jwt,
             },
-          })
-          .then(window.location.reload());
-      }
+          }
+        )
+        .then(window.location.reload());
     },
     createCottage: function () {
       if (!this.flagPriceList) {
@@ -409,19 +519,22 @@ export default {
           description: this.cottageDescription,
           images: null,
           location: {
-            longitude: 0,
-            latitude: 0,
+            longitude: this.lng,
+            latitude: this.lat,
             address: {
               street: this.street,
               city: this.city,
               country: this.country,
+              zipCode: this.postal_code,
             },
           },
           rooms: roomsFinal,
           rules: rulesFinal,
           additionalServices: additionalServices,
+          persons: this.persons,
         };
 
+        console.log(home);
         axios
           .post("http://localhost:8080/vacationHome/newHome", home, {
             headers: {

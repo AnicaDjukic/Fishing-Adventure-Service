@@ -107,6 +107,7 @@ export default {
     },
     emit: function () {
       try {
+        console.log(this.selected_place);
         for (let component of this.selected_place.address_components) {
           if (component.types[0] == "street_number") {
             this.street_number = component.long_name;
@@ -121,7 +122,7 @@ export default {
           }
 
           let address = {
-            street: this.street + this.street_number,
+            street: this.street_number + " " + this.street,
             city: this.city,
             postal_code: this.postal_code,
             country: this.country,

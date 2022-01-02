@@ -5,7 +5,7 @@
 
 .modal-dialog .modal-content {
     background: #1e2021;
-    height: 34rem;
+    height: 38rem;
 }
 
 .modal.dark .modal-body {
@@ -154,4 +154,22 @@
 
 .modal-body p {
     text-align: center;
+}
+
+.form-control {
+    background-color: #393c3f73;
+    color: white;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.432);
+}
+
+.form-floating>label {
+    color: gray;
+}
+
+.input-group-text {
+    background-color: #393c3f73;
+    color: gray;
 }
