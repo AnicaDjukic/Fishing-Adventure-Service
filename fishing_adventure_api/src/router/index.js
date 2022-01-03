@@ -153,7 +153,16 @@ const routes = [{
     path: '/boats',
     name: 'MyBoats',
     component: () =>
-        import ('../views/MyBoats.vue')
+        import ('../views/MyBoats.vue'),
+    beforeEnter: (to, from, next) => {
+        checkAuthentification().then(response => {
+            if (response != "ROLE_BOAT_OWNER") {
+                next("/")
+            } else {
+                next();
+            }
+        })
+    }
 }]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
