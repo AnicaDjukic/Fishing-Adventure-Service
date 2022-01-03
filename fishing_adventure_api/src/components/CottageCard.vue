@@ -40,32 +40,6 @@
                 <p class="card-text text-left shadow-none mb-1">
                   {{ entity.description }}
                 </p>
-                <p
-                  class="card-text text-left shadow-none mb-3 flex-column d-flex flex-md-row"
-                  style="align-items: center"
-                >
-                  Available:
-                  <Datepicker
-                    style="
-                      margin-left: 2%;
-                      margin-top: 2%;
-                      border: 1px solid white;
-                      border-radius: 5px;
-                      width: 100%;
-                      box-shadow: none !important;
-                    "
-                    dark
-                    id="picker"
-                    v-model="date"
-                    range
-                    :partialRange="false"
-                    placeholder="Select date"
-                    :enableTimePicker="true"
-                    minutesIncrement="15"
-                    :minDate="new Date()"
-                    disabled
-                  ></Datepicker>
-                </p>
               </div>
               <p
                 class="shadow-none"
@@ -111,7 +85,6 @@
                 ${{ entity.pricePerDay }}/day
               </p>
             </div>
-            
           </div>
         </div>
       </div>
@@ -161,7 +134,13 @@ export default {
 
   methods: {
     openCottage: function () {
-      window.location.href = "/cottage/?id=" + this.entity.id + "&date=" + this.info.date + "&persons=" + this.info.persons;
+      window.location.href =
+        "/cottage/?id=" +
+        this.entity.id +
+        "&date=" +
+        this.info.date +
+        "&persons=" +
+        this.info.persons;
     },
     preventPropagation: function (event) {
       event.preventDefault();
@@ -183,12 +162,12 @@ export default {
     getImageUrl: function (imagePath) {
       return require("@/assets/" + imagePath);
     },
-    createReservation:function(event){
+    createReservation: function (event) {
       let object = {
         entity: this.entity,
-        event: event
-      }
-      this.$emit('reservation', object);
+        event: event,
+      };
+      this.$emit("reservation", object);
       this.preventPropagation(event);
     },
   },

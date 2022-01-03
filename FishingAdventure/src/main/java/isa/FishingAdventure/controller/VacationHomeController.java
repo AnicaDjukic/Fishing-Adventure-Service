@@ -158,12 +158,14 @@ public class VacationHomeController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/updatePriceAndDates/{id}")
+    @PutMapping(value = "/smallUpdate/{id}")
     @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
     @Transactional
-    public ResponseEntity<NewHomeDto> updatePriceAndDates(@PathVariable String id, @RequestBody NewHomeDto dto) {
+    public ResponseEntity<NewHomeDto> smallUpdate(@PathVariable String id, @RequestBody NewHomeDto dto) {
         VacationHome oldHome = homeService.getById(Integer.parseInt(id));
         oldHome.setPricePerDay(dto.getPricePerDay());
+        oldHome.setName(dto.getName());
+        oldHome.setDescription(dto.getDescription());
         homeService.save(oldHome);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

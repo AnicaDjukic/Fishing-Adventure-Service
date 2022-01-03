@@ -2,7 +2,6 @@ package isa.FishingAdventure.dto;
 
 import isa.FishingAdventure.model.*;
 
-import java.util.Date;
 import java.util.Set;
 
 
@@ -28,10 +27,6 @@ public class NewHomeDto {
 
     private Set<Room> rooms;
 
-    private Date availabilityStart;
-
-    private Date availabilityEnd;
-
     private VacationHomeOwner vacationHomeOwner;
 
     private String imagePath;
@@ -48,7 +43,7 @@ public class NewHomeDto {
         this.rooms = rooms;
     }
 
-    public NewHomeDto(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, Set<Image> images, Set<Room> rooms, Date availabilityStart, Date availabilityEnd, VacationHomeOwner vacationHomeOwner, String imagePath, int persons) {
+    public NewHomeDto(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, Set<Image> images, Set<Room> rooms, VacationHomeOwner vacationHomeOwner, String imagePath, int persons) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -59,8 +54,6 @@ public class NewHomeDto {
         this.additionalServices = additionalServices;
         this.images = images;
         this.rooms = rooms;
-        this.availabilityStart = availabilityStart;
-        this.availabilityEnd = availabilityEnd;
         this.vacationHomeOwner = vacationHomeOwner;
         this.imagePath = imagePath;
         this.persons = persons;
@@ -144,22 +137,6 @@ public class NewHomeDto {
 
     public void setImages(Set<Image> images) {
         this.images = images;
-    }
-
-    public Date getAvailabilityStart() {
-        return availabilityStart;
-    }
-
-    public void setAvailabilityStart(Date availabilityStart) {
-        this.availabilityStart = availabilityStart;
-    }
-
-    public Date getAvailabilityEnd() {
-        return availabilityEnd;
-    }
-
-    public void setAvailabilityEnd(Date availabilityEnd) {
-        this.availabilityEnd = availabilityEnd;
     }
 
     public VacationHomeOwner getVacationHomeOwner() {

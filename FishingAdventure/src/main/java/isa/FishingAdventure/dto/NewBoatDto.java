@@ -2,7 +2,6 @@ package isa.FishingAdventure.dto;
 
 import isa.FishingAdventure.model.*;
 
-import java.util.Date;
 import java.util.Set;
 
 public class NewBoatDto {
@@ -28,10 +27,6 @@ public class NewBoatDto {
     private Set<FishingEquipment> fishingEquipments;
 
     private Set<NavigationEquipment> navigationEquipments;
-
-    private Date availabilityStart;
-
-    private Date availabilityEnd;
 
     private BoatOwner boatOwner;
 
@@ -83,7 +78,7 @@ public class NewBoatDto {
         this.navigationEquipments = boat.getNavigationEquipment();
     }
 
-    public NewBoatDto(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, Set<Image> images, Set<FishingEquipment> fishingEquipments, Set<NavigationEquipment> navigationEquipments, Date availabilityStart, Date availabilityEnd, BoatOwner boatOwner, String imagePath, int persons, double pricePerDay, String type, int length, int motorNumber, double motorPower, double maxSpeed) {
+    public NewBoatDto(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, Set<Image> images, Set<FishingEquipment> fishingEquipments, Set<NavigationEquipment> navigationEquipments, BoatOwner boatOwner, String imagePath, int persons, double pricePerDay, String type, int length, int motorNumber, double motorPower, double maxSpeed) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -95,8 +90,6 @@ public class NewBoatDto {
         this.images = images;
         this.fishingEquipments = fishingEquipments;
         this.navigationEquipments = navigationEquipments;
-        this.availabilityStart = availabilityStart;
-        this.availabilityEnd = availabilityEnd;
         this.boatOwner = boatOwner;
         this.imagePath = imagePath;
         this.persons = persons;
@@ -186,22 +179,6 @@ public class NewBoatDto {
 
     public void setImages(Set<Image> images) {
         this.images = images;
-    }
-
-    public Date getAvailabilityStart() {
-        return availabilityStart;
-    }
-
-    public void setAvailabilityStart(Date availabilityStart) {
-        this.availabilityStart = availabilityStart;
-    }
-
-    public Date getAvailabilityEnd() {
-        return availabilityEnd;
-    }
-
-    public void setAvailabilityEnd(Date availabilityEnd) {
-        this.availabilityEnd = availabilityEnd;
     }
 
     public BoatOwner getVacationHomeOwner() {

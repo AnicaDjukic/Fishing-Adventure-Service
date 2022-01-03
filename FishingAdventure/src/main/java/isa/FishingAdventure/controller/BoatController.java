@@ -91,7 +91,7 @@ public class BoatController {
     @PutMapping(value = "/update/{id}")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
     @Transactional
-    public ResponseEntity<NewBoatDto> updateCottage(@PathVariable String id, @RequestHeader("Authorization") String token, @RequestBody NewBoatDto dto) {
+    public ResponseEntity<NewBoatDto> updateBoat(@PathVariable String id, @RequestHeader("Authorization") String token, @RequestBody NewBoatDto dto) {
         Boat oldBoat = boatService.getById(Integer.parseInt(id));
         boatService.save(updateBoat(oldBoat, dto));
         return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -150,12 +150,14 @@ public class BoatController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/updatePriceAndDates/{id}")
+    @PutMapping(value = "/smallUpdate/{id}")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
     @Transactional
-    public ResponseEntity<NewBoatDto> updatePriceAndDates(@PathVariable String id, @RequestBody NewBoatDto dto) {
+    public ResponseEntity<NewBoatDto> smallUpdate(@PathVariable String id, @RequestBody NewBoatDto dto) {
         Boat oldBoat = boatService.getById(Integer.parseInt(id));
         oldBoat.setPricePerDay(dto.getPricePerDay());
+        oldBoat.setName(dto.getName());
+        oldBoat.setDescription(dto.getDescription());
         boatService.save(oldBoat);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

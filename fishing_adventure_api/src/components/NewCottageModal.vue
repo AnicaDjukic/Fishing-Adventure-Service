@@ -35,29 +35,21 @@
           </button>
         </div>
         <div class="modal-body" v-if="mode == '0'">
-          <p>Availability of your cottage:</p>
-          <Datepicker
-            style="
-              margin-left: 2%;
-              margin-top: 2%;
-              border: 1px solid white;
-              border-radius: 5px;
-              width: 100%;
-              box-shadow: none !important;
-            "
-            dark
-            id="picker"
-            v-model="date"
-            range
-            :partialRange="false"
-            placeholder="Select date"
-            :enableTimePicker="true"
-            minutesIncrement="15"
-            :minDate="new Date()"
-          ></Datepicker>
-          <p style="margin-top: 2rem">Price per day:</p>
+          <input
+            v-model="cottageName"
+            type="text"
+            class="login-inputs"
+            placeholder="Cottage name"
+          />
 
-          <div class="input-group">
+          <textarea
+            style="height: 11rem"
+            class="login-inputs-textarea"
+            placeholder="Cottage description"
+            v-model="cottageDescription"
+          />
+
+          <div class="input-group" style="margin-top: 1rem">
             <input
               type="number"
               min="1"
@@ -66,7 +58,7 @@
             />
             <span class="input-group-text">$/day</span>
           </div>
-          <p style="margin-top: 4rem">
+          <p style="margin-top: 1rem">
             For updating all other infomation about your cottage, plase click
             here.
           </p>
@@ -214,7 +206,7 @@
           <button
             type="button"
             class="btn btn-outline-primary"
-            v-on:click="updatePriceAndDates"
+            v-on:click="smallUpdate"
             v-if="mode == '0'"
           >
             Save
@@ -477,17 +469,16 @@ export default {
           .then(window.location.reload());
       }
     },
-    updatePriceAndDates: function () {
+    smallUpdate: function () {
       let dto = {
         pricePerDay: this.pricePerDay,
-        availabilityStart: this.date[0],
-        availabilityEnd: this.date[1],
+        name: this.cottageName,
+        description: this.cottageDescription,
       };
 
       axios
         .put(
-          "http://localhost:8080/vacationHome/updatePriceAndDates/" +
-            this.cottageId,
+          "http://localhost:8080/vacationHome/smallUpdate/" + this.cottageId,
           dto,
           {
             headers: {

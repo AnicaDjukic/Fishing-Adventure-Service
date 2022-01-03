@@ -40,32 +40,6 @@
                 <p class="card-text text-left shadow-none mb-1">
                   {{ boatEntity.description }}
                 </p>
-                <p
-                  class="card-text text-left shadow-none mb-3 flex-column d-flex flex-md-row"
-                  style="align-items: center"
-                >
-                  Available:
-                  <Datepicker
-                    style="
-                      margin-left: 2%;
-                      margin-top: 2%;
-                      border: 1px solid white;
-                      border-radius: 5px;
-                      width: 100%;
-                      box-shadow: none !important;
-                    "
-                    dark
-                    id="picker"
-                    v-model="date"
-                    range
-                    :partialRange="false"
-                    placeholder="Select date"
-                    :enableTimePicker="true"
-                    minutesIncrement="15"
-                    :minDate="new Date()"
-                    disabled
-                  ></Datepicker>
-                </p>
               </div>
               <p
                 class="shadow-none"

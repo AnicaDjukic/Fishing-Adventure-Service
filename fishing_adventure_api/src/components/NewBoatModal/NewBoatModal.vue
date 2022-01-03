@@ -36,29 +36,21 @@
           </button>
         </div>
         <div class="modal-body" v-if="mode == '0'">
-          <p>Availability of your boat:</p>
-          <Datepicker
-            style="
-              margin-left: 2%;
-              margin-top: 2%;
-              border: 1px solid white;
-              border-radius: 5px;
-              width: 100%;
-              box-shadow: none !important;
-            "
-            dark
-            id="picker"
-            v-model="date"
-            range
-            :partialRange="false"
-            placeholder="Select date"
-            :enableTimePicker="true"
-            minutesIncrement="15"
-            :minDate="new Date()"
-          ></Datepicker>
-          <p style="margin-top: 2rem">Price per day:</p>
+          <input
+            v-model="boatName"
+            type="text"
+            class="login-inputs"
+            placeholder="Boat name"
+          />
 
-          <div class="input-group">
+          <textarea
+            style="height: 11rem"
+            class="login-inputs-textarea"
+            placeholder="Boat description"
+            v-model="boatDescription"
+          />
+
+          <div class="input-group" style="margin-top: 1rem">
             <input
               type="number"
               min="1"
@@ -67,7 +59,7 @@
             />
             <span class="input-group-text">$/day</span>
           </div>
-          <p style="margin-top: 4rem">
+          <p style="margin-top: 5px">
             For updating all other infomation about your boat, plase click here.
           </p>
           <div style="text-align-last: center">
@@ -228,7 +220,7 @@
           <button
             type="button"
             class="btn btn-outline-primary"
-            v-on:click="updatePriceAndDates"
+            v-on:click="updatePrice"
             v-if="mode == '0'"
           >
             Save
@@ -564,24 +556,20 @@ export default {
           .then(window.location.reload());
       }
     },
-    updatePriceAndDates: function () {
+    updatePrice: function () {
       let dto = {
         pricePerDay: this.pricePerDay,
-        availabilityStart: this.date[0],
-        availabilityEnd: this.date[1],
+        name: this.boatName,
+        description: this.boatDescription,
       };
 
       axios
-        .put(
-          "http://localhost:8080/boat/updatePriceAndDates/" + this.boatId,
-          dto,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
-              Authorization: "Bearer " + localStorage.refreshToken,
-            },
-          }
-        )
+        .put("http://localhost:8080/boat/smallUpdate/" + this.boatId, dto, {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
         .then(window.location.reload());
     },
     createBoat: function () {
