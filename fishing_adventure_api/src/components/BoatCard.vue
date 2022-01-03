@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card mb-3 bg-dark mt-3" style="width: 65%; margin: auto">
-      <div class="row g-0">
+      <div class="row g-0" v-on:click="openBoat">
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
@@ -18,7 +18,11 @@
                 @{{ boatEntity.boatOwner.name
                 }}{{ boatEntity.boatOwner.surname }}
               </p>
-              <p v-if="path == 'myboats'" class="top-right-corner shadow-none">
+              <p
+                v-if="path == 'myboats'"
+                class="top-right-corner shadow-none"
+                v-on:click="preventPropagation"
+              >
                 <i
                   class="fas fa-edit fa-lg shadow-none me-3"
                   style="color: #293c4e"

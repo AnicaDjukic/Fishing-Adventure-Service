@@ -1,7 +1,7 @@
 <template>
   <div class="fa-page">
     <div class="main-img-fa">
-      <img src="@/assets/c16.jpg" alt="" />
+      <img src="@/assets/b3.jpg" alt="" />
       <div class="tagline-fa">
         <h2>
           Enjoy in your boat <br />
@@ -46,24 +46,30 @@
         <div class="menu-about-fa" style="text-align: justify">
           <div class="ma-top-part">
             <h3>{{ entity.name }}</h3>
-            <h5>For up to 3 people</h5>
+            <h5>For up to {{ entity.persons }} people</h5>
           </div>
           <p>{{ entity.description }}</p>
         </div>
 
         <div class="menu-ex-info-fa" style="display: none">
           <div class="ei-bonus">
-            <h4>Rooms:</h4>
+            <h4>Equipment:</h4>
             <table class="table table-striped">
               <tbody>
-                <tr v-for="(room, index) in entity.rooms" :key="room.id">
+                <tr
+                  v-for="fishingEq in entity.fishingEquipments"
+                  :key="fishingEq.id"
+                >
                   <td class="as-title" style="color: white">
-                    Room {{ index }}
+                    {{ fishingEq.name }}
                   </td>
-                  <td>
-                    <span class="as-price"
-                      >{{ room.bedNumber }} <i class="fas fa-bed"></i
-                    ></span>
+                </tr>
+                <tr
+                  v-for="navigationEq in entity.navigationEquipments"
+                  :key="navigationEq.id"
+                >
+                  <td class="as-title" style="color: white">
+                    {{ navigationEq.name }}
                   </td>
                 </tr>
               </tbody>
@@ -285,7 +291,7 @@ export default {
     window.scrollTo(0, 0);
     console.log(this.$route.query.id);
     axios
-      .get("http://localhost:8080/vacationHome/" + this.$route.query.id, {
+      .get("http://localhost:8080/boat/" + this.$route.query.id, {
         headers: {
           "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,

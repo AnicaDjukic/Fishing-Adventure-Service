@@ -46,7 +46,7 @@
         <div class="menu-about-fa" style="text-align: justify">
           <div class="ma-top-part">
             <h3>{{ entity.name }}</h3>
-            <h5>For up to 3 people</h5>
+            <h5>For up to {{ entity.persons }} people</h5>
           </div>
           <p>{{ entity.description }}</p>
         </div>

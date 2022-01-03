@@ -7,6 +7,8 @@ INSERT INTO additional_service
 VALUES (102, 'Air conditioner', 2);
 INSERT INTO additional_service
 VALUES (103, 'Parking', 2);
+INSERT INTO additional_service
+VALUES (104, 'Mini bar', 5);
 
 
 --
@@ -76,13 +78,24 @@ VALUES (110, 31.439867194681277, -97.74321707227516, 110);
 
 
 --
--- Data for Name: boat_fishing_equipment; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: fishing_equipment; Type: TABLE DATA; Schema: public; Owner: postgres
 --
+INSERT INTO fishing_equipment
+VALUES (101, 'Fishing rod');
+INSERT INTO fishing_equipment
+VALUES (102, 'Fishing net');
+INSERT INTO fishing_equipment
+VALUES (103, 'Small fishing set');
 
 
+
 --
--- Data for Name: boat_navigation_equipment; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: navigation_equipment; Type: TABLE DATA; Schema: public; Owner: postgres
 --
+INSERT INTO navigation_equipment
+VALUES (101, 'GPS');
+INSERT INTO navigation_equipment
+VALUES (102, 'Fish finder');
 
 
 --
@@ -171,6 +184,27 @@ VALUES (118, '2021-12-10 20:11:52.452', '2021-12-10 20:11:52.452', 0,
         'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here.',
         false, 'Wildcard', 2, 50.0, 3.85, 103, 10, 1000, 178685, 10, 'type', 112);
 
+--
+-- Data for Name: boat_navigation_equipment; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO boat_navigation_equipment
+VALUES (113, 101);
+INSERT INTO boat_navigation_equipment
+VALUES (113, 102);
+
+
+--
+-- Data for Name: boat_fishing_equipment; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO boat_fishing_equipment
+VALUES (113, 101);
+INSERT INTO boat_fishing_equipment
+VALUES (113, 102);
+INSERT INTO boat_fishing_equipment
+VALUES (113, 103);
+
 
 --
 -- Data for Name: client; Type: TABLE DATA; Schema: public; Owner: postgres
@@ -223,7 +257,8 @@ VALUES (107, '2021-12-10 20:11:52.452', '2021-12-10 20:11:52.452', 0,
         'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.',
         false, 'Tahoe adventure', 2, 50.0, 2.58, 108, 107);
 INSERT INTO fishing_adventure
-VALUES (108, '2021-12-10 20:11:52.452', '2021-12-10 20:11:52.452', 0, 'The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.',
+VALUES (108, '2021-12-10 20:11:52.452', '2021-12-10 20:11:52.452', 0,
+        'The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.',
         false, 'Nevada adventure', 2, 50.0, 4.58, 105, 107);
 INSERT INTO fishing_adventure
 VALUES (109, '2021-12-10 20:11:52.452', '2021-12-10 20:11:52.452', 0,
@@ -246,11 +281,6 @@ VALUES (112, '2021-12-10 20:11:52.452', '2021-12-10 20:11:52.452', 0,
 
 --
 -- Data for Name: fishing_eq_in_boat; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
---
--- Data for Name: fishing_equipment; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
@@ -313,11 +343,6 @@ VALUES (123, false, 'c16-5.jpg');
 
 
 --
--- Data for Name: navigation_equipment; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
---
 -- Data for Name: reservation; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -363,6 +388,8 @@ INSERT INTO service_profile_additional_services
 VALUES (102, 102);
 INSERT INTO service_profile_additional_services
 VALUES (102, 103);
+INSERT INTO service_profile_additional_services
+VALUES (113, 104);
 
 
 --
@@ -429,6 +456,8 @@ INSERT INTO service_profile_rules
 VALUES (102, 102);
 INSERT INTO service_profile_rules
 VALUES (102, 103);
+INSERT INTO service_profile_rules
+VALUES (113, 103);
 
 --
 -- Data for Name: subscriptions; Type: TABLE DATA; Schema: public; Owner: postgres
