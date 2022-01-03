@@ -403,19 +403,19 @@ export default {
     roomsUpdated: function (retval) {
       this.flagRooms = retval.result;
       if (retval.result) {
-        this.rooms = retval.newRooms;
+        this.rooms = retval.data;
       }
     },
     rulesUpdated: function (retVal) {
       this.flagRules = retVal.result;
       if (retVal.result) {
-        this.rules = retVal.newRules;
+        this.rules = retVal.data;
       }
     },
     priceListUpdated: function (retVal) {
       this.flagPriceList = retVal.result;
       if (retVal.result) {
-        this.priceList = retVal.newPriceList;
+        this.priceList = retVal.data;
       }
     },
     additionalInfo: function () {
@@ -433,7 +433,10 @@ export default {
 
         let rulesFinal = [];
         for (let rule of this.rules) {
-          rulesFinal.push({ content: rule.content, isEnforced: rule.type });
+          rulesFinal.push({
+            content: rule.content,
+            isEnforced: rule.isEnforced,
+          });
         }
 
         let roomsFinal = [];
@@ -467,7 +470,7 @@ export default {
             {
               headers: {
                 "Access-Control-Allow-Origin": "http://localhost:8080",
-                Authorization: "Bearer " + localStorage.jwt,
+                Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
           )
@@ -489,7 +492,7 @@ export default {
           {
             headers: {
               "Access-Control-Allow-Origin": "http://localhost:8080",
-              Authorization: "Bearer " + localStorage.jwt,
+              Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
         )
@@ -507,7 +510,10 @@ export default {
 
         let rulesFinal = [];
         for (let rule of this.rules) {
-          rulesFinal.push({ content: rule.content, isEnforced: rule.type });
+          rulesFinal.push({
+            content: rule.content,
+            isEnforced: rule.isEnforced,
+          });
         }
 
         let roomsFinal = [];
@@ -539,7 +545,7 @@ export default {
           .post("http://localhost:8080/vacationHome/newHome", home, {
             headers: {
               "Access-Control-Allow-Origin": "http://localhost:8080",
-              Authorization: "Bearer " + localStorage.jwt,
+              Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
           .then(window.location.reload());

@@ -144,7 +144,7 @@ public class VacationHomeController {
     @PutMapping(value = "/updatePriceAndDates/{id}")
     @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
     @Transactional
-    public ResponseEntity<NewHomeDto> updatePriceAndDates(@PathVariable String id, @RequestHeader("Authorization") String token, @RequestBody NewHomeDto dto) {
+    public ResponseEntity<NewHomeDto> updatePriceAndDates(@PathVariable String id, @RequestBody NewHomeDto dto) {
         VacationHome oldHome = homeService.getById(Integer.parseInt(id));
         oldHome.setPricePerDay(dto.getPricePerDay());
         oldHome.setAvailabilityStart(dto.getAvailabilityStart());

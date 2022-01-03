@@ -150,7 +150,6 @@ export default {
     };
   },
   mounted: function () {
-    console.log(this.entity);
     if (window.location.href.includes("/search/cottages")) {
       this.path = "searchcottages";
     } else if (window.location.href.includes("/cottages")) {
@@ -167,14 +166,13 @@ export default {
       event.stopPropagation();
     },
     deleteCottage: function () {
-      alert(this.entity.id);
       axios
         .get(
           "http://localhost:8080/vacationHome/deleteHome/" + this.entity.id,
           {
             headers: {
               "Access-Control-Allow-Origin": "http://localhost:8080",
-              Authorization: "Bearer " + localStorage.jwt,
+              Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
         )

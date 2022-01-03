@@ -18,17 +18,49 @@
                 @{{ boatEntity.boatOwner.name
                 }}{{ boatEntity.boatOwner.surname }}
               </p>
-              <p
-                v-if="path == 'mycottages'"
-                class="top-right-corner shadow-none"
-              >
-                <i class="fas fa-minus-square fa-lg shadow-none"></i>
+              <p v-if="path == 'myboats'" class="top-right-corner shadow-none">
+                <i
+                  class="fas fa-edit fa-lg shadow-none me-3"
+                  style="color: #293c4e"
+                  data-bs-toggle="modal"
+                  :data-bs-target="'#boatEntity' + boatEntity.id"
+                ></i>
+                <i
+                  class="fas fa-minus-square fa-lg shadow-none"
+                  v-on:click="deleteBoat"
+                ></i>
               </p>
             </div>
             <div class="card-text shadow-none" style="display: flex">
               <div class="shadow-none">
                 <p class="card-text text-left shadow-none mb-1">
                   {{ boatEntity.description }}
+                </p>
+                <p
+                  class="card-text text-left shadow-none mb-3 flex-column d-flex flex-md-row"
+                  style="align-items: center"
+                >
+                  Available:
+                  <Datepicker
+                    style="
+                      margin-left: 2%;
+                      margin-top: 2%;
+                      border: 1px solid white;
+                      border-radius: 5px;
+                      width: 100%;
+                      box-shadow: none !important;
+                    "
+                    dark
+                    id="picker"
+                    v-model="date"
+                    range
+                    :partialRange="false"
+                    placeholder="Select date"
+                    :enableTimePicker="true"
+                    minutesIncrement="15"
+                    :minDate="new Date()"
+                    disabled
+                  ></Datepicker>
                 </p>
               </div>
               <p
@@ -46,10 +78,12 @@
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
               <p class="shadow-none" style="margin: 0">
-                {{ boatEntity.street }} {{ boatEntity.city }}
-                {{ boatEntity.country }}
+                {{ boatEntity.location.address.street }},
+                {{ boatEntity.location.address.city }},
+                {{ boatEntity.location.address.country }}
               </p>
               <p
+                v-if="path != 'myboats'"
                 class="shadow-none"
                 style="
                   margin: 0;
@@ -57,23 +91,51 @@
                   margin-left: auto;
                   font-size: x-large;
                 "
-              ></p>
+              >
+                ${{ boatEntity.pricePerDay }}/day
+              </p>
+              <p
+                v-if="path == 'myboats'"
+                class="shadow-none"
+                style="
+                  margin: 0;
+                  text-align: right;
+                  margin-left: auto;
+                  font-size: x-large;
+                "
+              >
+                ${{ boatEntity.pricePerDay }}/day
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <NewBoatModal
+    v-if="path == 'myboats'"
+    :boat="boatEntity"
+    :id="'boatEntity' + boatEntity.id"
+  ></NewBoatModal>
 </template>
 
 <script>
 import { ref, onMounted } from "vue";
+import axios from "axios";
+import NewBoatModal from "./NewBoatModal/NewBoatModal.vue";
 
 export default {
+  components: { NewBoatModal },
   props: ["boatEntity"],
-  setup() {
+  setup(props) {
     const date = ref();
-    onMounted(() => {});
+    onMounted(() => {
+      const startDate = new Date(props.boatEntity.availabilityStart);
+      const endDate = new Date(props.boatEntity.availabilityEnd);
+      startDate.setHours(startDate.getHours() - 1);
+      endDate.setHours(endDate.getHours() - 1);
+      date.value = [startDate, endDate];
+    });
     return {
       date,
     };
@@ -89,6 +151,25 @@ export default {
     } else if (window.location.href.includes("/boats")) {
       this.path = "myboats";
     }
+  },
+  methods: {
+    openBoat: function () {
+      window.location.href = "/boat/?id=" + this.boatEntity.id;
+    },
+    preventPropagation: function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    deleteBoat: function () {
+      axios
+        .get("http://localhost:8080/boat/deleteBoat/" + this.boatEntity.id, {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then(window.location.reload());
+    },
   },
 };
 </script>

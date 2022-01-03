@@ -4,10 +4,10 @@
       <img src="@/assets/c16.jpg" alt="" />
       <div class="tagline-fa">
         <h2>
-          Enjoy in your cottage <br />
+          Enjoy in your boat <br />
           today!
         </h2>
-        <button class="book-btn">Book a cottage</button>
+        <button class="book-btn">Book a boat</button>
       </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-info">

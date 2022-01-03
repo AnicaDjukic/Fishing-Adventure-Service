@@ -1,11 +1,8 @@
 <template>
   <div>
     <div class="title">
-      <h1>My adventures</h1>
-      <i
-        class="far fa-fish fa-3x"
-        style="font-family: 'Font Awesome 5 Pro'"
-      ></i>
+      <h1>My boats</h1>
+      <img style="height: 10rem" src="@/assets/yatch.png" />
     </div>
     <div
       style="
@@ -22,8 +19,10 @@
           <button
             type="button"
             class="btn btn-outline-primary text-nowrap me-2"
+            data-bs-toggle="modal"
+            data-bs-target="#NewBoatModal"
           >
-            New adventure
+            New boat
           </button>
         </div>
         <div class="col-md-4">
@@ -33,8 +32,8 @@
             placeholder="Search"
             aria-label="Search"
             v-model="searchText"
-            v-on:keyup="searchAdventures"
-            v-on:click="searchAdventures"
+            v-on:keyup="searchCottage"
+            v-on:click="searchCottage"
           />
         </div>
         <div class="col-md-4">
@@ -43,7 +42,7 @@
             <div
               class="rating-div form-control"
               style="min-width: 135px"
-              v-on:click="searchAdventures"
+              v-on:click="searchCottage"
             >
               <div class="rating">
                 <input type="radio" name="star" id="star1" value="5" />
@@ -63,23 +62,25 @@
       </div>
     </div>
     <div style="margin-top: 5%">
-      <AdventureCard
+      <BoatCard
         v-for="entity in searchResults"
         :key="entity.id"
-        v-bind:adventureEntity="entity"
-      ></AdventureCard>
+        v-bind:boatEntity="entity"
+      ></BoatCard>
     </div>
   </div>
+  <NewBoatModal></NewBoatModal>
 </template>
 
 <script>
-import AdventureCard from "@/components/AdventureCard.vue";
+import BoatCard from "@/components/BoatCard.vue";
 import axios from "axios";
+import NewBoatModal from "@/components/NewBoatModal/NewBoatModal.vue";
 export default {
-  components: { AdventureCard },
+  components: { BoatCard, NewBoatModal },
   data: function () {
     return {
-      clickedAdventureCardForEdit: "",
+      clickedCottageForEdit: "",
       numberOfPersons: "",
       searchText: "",
       searchResults: [],
@@ -88,23 +89,19 @@ export default {
   },
   mounted: function () {
     axios
-      .get(
-        "http://localhost:8080/fishingAdventure/all/" +
-          localStorage.refreshToken,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
-            Authorization: "Bearer " + localStorage.refreshToken,
-          },
-        }
-      )
+      .get("http://localhost:8080/boat/allByUser", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
       .then((res) => {
         this.searchResults = res.data;
         this.entities = res.data;
       });
   },
   methods: {
-    searchAdventures: function () {
+    searchCottage: function () {
       if (this.searchText != "" && this.searchText.trim().lenght != 0) {
         let searchParts = this.searchText.trim().split(" ");
 
@@ -112,14 +109,17 @@ export default {
         for (let entity of this.entities) {
           let matches = true;
           for (let i = 0; i < searchParts.length; i++) {
+            let address = entity.location.address;
+            let owner = entity.boatOwner;
+            let string =
+              entity.name +
+              address.streat +
+              address.city +
+              address.country +
+              owner.name +
+              owner.surname;
             if (
-              !entity.name
-                .toLocaleLowerCase()
-                .includes(searchParts[i].toLocaleLowerCase()) &&
-              !entity.location
-                .toLocaleLowerCase()
-                .includes(searchParts[i].toLocaleLowerCase()) &&
-              !entity.vacationHomeOwner
+              !string
                 .toLocaleLowerCase()
                 .includes(searchParts[i].toLocaleLowerCase())
             ) {
@@ -162,8 +162,10 @@ export default {
         this.searchResults = newResults;
       }
     },
-    editAdventure: function (event) {
+    editCottage: function (event) {
       console.log(event);
+      // this.$("#NewCottageModal").modal({ show: false });
+      // this.$("#NewCottageModal").modal("show");
     },
   },
 };

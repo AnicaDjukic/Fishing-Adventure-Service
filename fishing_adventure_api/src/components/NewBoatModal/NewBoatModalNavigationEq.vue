@@ -5,37 +5,23 @@
 
     <div style="margin-top: 5%">
       <div class="input-header">
-        <h6>Rule book</h6>
-        <i class="far fa-check-circle" v-on:click="addPositiveRule"></i>
-        <i class="far fa-times-circle" v-on:click="addNegativeRule"></i>
+        <h6>Navigation equipment</h6>
+        <i class="far fa-plus-square" v-on:click="addEquipment"></i>
       </div>
       <table class="table">
         <thead>
-          <th>Type</th>
-          <th>Rule</th>
+          <th>Name</th>
           <th>Delete</th>
         </thead>
         <tbody>
-          <tr v-for="rule in rules" :key="rule.content">
-            <td>
-              <i
-                class="far fa-check-circle"
-                style="color: green"
-                v-if="rule.isEnforced == true"
-              ></i>
-              <i
-                class="far fa-times-circle"
-                style="color: red"
-                v-if="rule.isEnforced == false"
-              ></i>
-            </td>
+          <tr v-for="equip in newEquipment" :key="equip.id">
             <td>
               <input
-                placeholder="Description"
+                placeholder="Equipment name"
                 type="text"
                 class="login-inputs"
                 style="border: 0; margin: 0"
-                v-model="rule.content"
+                v-model="equip.name"
                 v-on:change="emit"
               />
             </td>
@@ -43,7 +29,7 @@
               <i
                 class="far fa-trash-alt"
                 style="color: #832626; cursor: pointer"
-                v-on:click="removeRule(rule.content)"
+                v-on:click="removeEquipment(equip.id)"
               ></i>
             </td>
           </tr>
@@ -55,52 +41,57 @@
 
 <script>
 export default {
-  props: ["rules"],
+  props: ["navEquipment"],
+  name: "NewBoatModalFishingEq",
   data: function () {
     return {
-      newRules: [],
+      newEquipment: [],
+      equipId: 0,
     };
   },
   mounted() {
-    if (this.rules) {
-      this.newRules = this.rules;
+    if (this.navEquipment) {
+      this.newEquipment = this.navEquipment;
+
+      let maxId = 0;
+      for (let equip of this.navEquipment) {
+        if (parseInt(equip.id) > maxId) {
+          maxId = parseInt(equip.id);
+        }
+      }
+      this.equipId = maxId + 1;
     }
   },
   methods: {
     emit: function () {
       let result = true;
-      for (let rule of this.newRules) {
-        if (!rule.content) {
+      for (let equip of this.newEquipment) {
+        if (!equip.name) {
           result = false;
         }
       }
+      console.log(result);
 
       let retVal = {
-        data: this.newRules,
+        data: this.newEquipment,
         result: result,
       };
-      this.$emit("ruleupdated", retVal);
+      this.$emit("navequipupdated", retVal);
     },
-    addPositiveRule: function () {
-      let newRule = {
-        content: "",
-        isEnforced: true,
+    addEquipment: function () {
+      let newEquip = {
+        equipId: this.equipId,
+        name: "",
       };
-      this.newRules.push(newRule);
+      this.equipId = this.equipId + 1;
+      this.newEquipment.push(newEquip);
       this.emit();
     },
-    addNegativeRule: function () {
-      let newRule = {
-        content: "",
-        isEnforced: false,
-      };
-      this.newRules.push(newRule);
-      this.emit();
-    },
-    removeRule: function (content) {
-      for (var rule of this.rules) {
-        if (rule.content === content) {
-          this.newRules.pop(rule);
+    removeEquipment: function (id) {
+      for (let equip of this.newEquipment) {
+        if (equip.id === id) {
+          this.newEquipment.pop(equip);
+          break;
         }
       }
       this.emit();

@@ -1,7 +1,6 @@
 package isa.FishingAdventure.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,14 +21,14 @@ public class Boat extends ServiceProfile {
     @Column(name = "maxSpeed", nullable = false)
     private double maxSpeed;
 
-    @ManyToOne(targetEntity = BoatOwner.class,cascade = CascadeType.MERGE)
+    @ManyToOne(targetEntity = BoatOwner.class, cascade = CascadeType.MERGE)
     public BoatOwner boatOwner;
 
-    @ManyToMany(targetEntity = NavigationEquipment.class,cascade = CascadeType.MERGE)
-    public Set<NavigationEquipment> navigationEquipment = new HashSet<NavigationEquipment>();
+    @ManyToMany(targetEntity = NavigationEquipment.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    public Set<NavigationEquipment> navigationEquipment;
 
-    @ManyToMany(targetEntity = FishingEquipment.class,cascade = CascadeType.MERGE)
-    public Set<FishingEquipment> fishingEquipment = new HashSet<FishingEquipment>();
+    @ManyToMany(targetEntity = FishingEquipment.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    public Set<FishingEquipment> fishingEquipment;
 
     public Boat(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Appointment> appointments, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons) {
         super(id, name, description, cancellationRule, rating, location, appointments, rules, additionalServices, persons);
@@ -80,32 +79,32 @@ public class Boat extends ServiceProfile {
         this.maxSpeed = maxSpeed;
     }
 
-	public BoatOwner getBoatOwner() {
-		return boatOwner;
-	}
+    public BoatOwner getBoatOwner() {
+        return boatOwner;
+    }
 
 
-	public void setBoatOwner(BoatOwner boatOwner) {
-		this.boatOwner = boatOwner;
-	}
+    public void setBoatOwner(BoatOwner boatOwner) {
+        this.boatOwner = boatOwner;
+    }
 
 
-	public Set<NavigationEquipment> getNavigationEquipment() {
-		return navigationEquipment;
-	}
+    public Set<NavigationEquipment> getNavigationEquipment() {
+        return navigationEquipment;
+    }
 
 
-	public void setNavigationEquipment(Set<NavigationEquipment> navigationEquipment) {
-		this.navigationEquipment = navigationEquipment;
-	}
+    public void setNavigationEquipment(Set<NavigationEquipment> navigationEquipment) {
+        this.navigationEquipment = navigationEquipment;
+    }
 
 
-	public Set<FishingEquipment> getFishingEquipment() {
-		return fishingEquipment;
-	}
+    public Set<FishingEquipment> getFishingEquipment() {
+        return fishingEquipment;
+    }
 
 
-	public void setFishingEquipment(Set<FishingEquipment> fishingEquipment) {
-		this.fishingEquipment = fishingEquipment;
-	}
+    public void setFishingEquipment(Set<FishingEquipment> fishingEquipment) {
+        this.fishingEquipment = fishingEquipment;
+    }
 }

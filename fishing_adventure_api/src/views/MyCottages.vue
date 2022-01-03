@@ -92,7 +92,7 @@ export default {
       .get("http://localhost:8080/vacationHome/allByUser", {
         headers: {
           "Access-Control-Allow-Origin": "http://localhost:8080",
-          Authorization: "Bearer " + localStorage.jwt,
+          Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
       .then((res) => {

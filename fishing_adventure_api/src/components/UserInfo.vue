@@ -327,7 +327,7 @@ export default {
         axios.put("http://localhost:8080/users/changePassword", dto, {
           headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
-            Authorization: "Bearer " + localStorage.jwt,
+            Authorization: "Bearer " + localStorage.refreshToken,
           },
         });
       }

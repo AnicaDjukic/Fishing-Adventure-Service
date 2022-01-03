@@ -1,7 +1,7 @@
 <template>
   <div>
     <h6>(Optional)</h6>
-    <h6>Plase fill extra information about your cottage:</h6>
+    <h6>Plase fill extra information:</h6>
 
     <div style="margin-top: 5%">
       <div class="input-header">
