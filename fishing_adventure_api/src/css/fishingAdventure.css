@@ -220,10 +220,11 @@
     height: 180px;
 }
 
+
 /* Menu - Pricelist */
 
-.menu-pl-fa table td{
-   color: white;
+.menu-pl-fa table td {
+    color: white;
 }
 
 .menu-pl-fa h5 {
@@ -369,4 +370,12 @@
     align-content: center;
     align-items: center;
     justify-content: center;
+}
+
+.boatInfo {
+    background: #0d0f10ab;
+    border-radius: 5px;
+    padding: 7px;
+    margin: 5px;
+    text-align: center;
 }

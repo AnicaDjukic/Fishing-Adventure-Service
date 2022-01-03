@@ -49,6 +49,13 @@
             <h5>For up to {{ entity.persons }} people</h5>
           </div>
           <p>{{ entity.description }}</p>
+          <div style="display: flex; justify-content: center">
+            <div class="boatInfo">Type: {{ entity.type }}</div>
+            <div class="boatInfo">Length: {{ entity.length }}</div>
+            <div class="boatInfo">Max speed: {{ entity.maxSpeed }}</div>
+            <div class="boatInfo">Motor number: {{ entity.motorNumber }}</div>
+            <div class="boatInfo">Motor power: {{ entity.motorPower }}</div>
+          </div>
         </div>
 
         <div class="menu-ex-info-fa" style="display: none">
@@ -61,6 +68,9 @@
                   :key="fishingEq.id"
                 >
                   <td class="as-title" style="color: white">
+                    <i class="fas fa-fish" style="color: white"></i>
+                  </td>
+                  <td class="as-title" style="color: white">
                     {{ fishingEq.name }}
                   </td>
                 </tr>
@@ -68,6 +78,9 @@
                   v-for="navigationEq in entity.navigationEquipments"
                   :key="navigationEq.id"
                 >
+                  <td class="as-title" style="color: white">
+                    <i class="fas fa-compass" style="color: white"></i>
+                  </td>
                   <td class="as-title" style="color: white">
                     {{ navigationEq.name }}
                   </td>
