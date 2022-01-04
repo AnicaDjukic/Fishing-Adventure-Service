@@ -1,6 +1,7 @@
 package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.NewHomeDto;
+import isa.FishingAdventure.dto.ServiceNameDto;
 import isa.FishingAdventure.dto.VacationHomeDto;
 import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.Image;
@@ -87,6 +88,20 @@ public class VacationHomeController {
         List<NewHomeDto> vacationHomes = new ArrayList<NewHomeDto>();
         for (VacationHome home : homeService.findByVacationHomeOwner(owner)) {
             vacationHomes.add(new NewHomeDto(home));
+        }
+
+        return new ResponseEntity<>(vacationHomes, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getNamesByUser")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    public ResponseEntity<List<ServiceNameDto>> getNamesByUser(@RequestHeader("Authorization") String token) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        VacationHomeOwner owner = homeOwnerService.findByEmail(email);
+
+        List<ServiceNameDto> vacationHomes = new ArrayList<ServiceNameDto>();
+        for (VacationHome home : homeService.findByVacationHomeOwner(owner)) {
+            vacationHomes.add(new ServiceNameDto(home));
         }
 
         return new ResponseEntity<>(vacationHomes, HttpStatus.OK);

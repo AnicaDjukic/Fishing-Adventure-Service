@@ -2,6 +2,7 @@ package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.BoatDto;
 import isa.FishingAdventure.dto.NewBoatDto;
+import isa.FishingAdventure.dto.ServiceNameDto;
 import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.Boat;
 import isa.FishingAdventure.model.BoatOwner;
@@ -65,6 +66,20 @@ public class BoatController {
         List<NewBoatDto> boats = new ArrayList<NewBoatDto>();
         for (Boat boat : boatService.findByBoatOwner(owner)) {
             boats.add(new NewBoatDto(boat));
+        }
+
+        return new ResponseEntity<>(boats, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getNamesByUser")
+    @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
+    public ResponseEntity<List<ServiceNameDto>> getNamesByUser(@RequestHeader("Authorization") String token) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        BoatOwner owner = boatOwnerService.findByEmail(email);
+
+        List<ServiceNameDto> boats = new ArrayList<ServiceNameDto>();
+        for (Boat boat : boatService.findByBoatOwner(owner)) {
+            boats.add(new ServiceNameDto(boat));
         }
 
         return new ResponseEntity<>(boats, HttpStatus.OK);
