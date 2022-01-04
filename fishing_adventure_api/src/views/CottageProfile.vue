@@ -261,7 +261,7 @@
       </div>
     </div>
   </div>
-  <ReservationModal :id="'cottage'" v-bind:date="date" v-bind:persons="persons" v-bind:additionalServices="entity.additionalServices" v-bind:price="entity.pricePerDay"></ReservationModal>
+  <ReservationModal :id="'cottage'" v-bind:cottageId="entity.id" v-bind:date="date" v-bind:persons="persons" v-bind:additionalServices="entity.additionalServices" v-bind:price="entity.pricePerDay"></ReservationModal>
 </template>
 
 <script>

@@ -31,7 +31,7 @@ public abstract class ServiceProfile {
     @OneToOne(targetEntity = Location.class, cascade = CascadeType.ALL)
     public Location location;
 
-    @OneToMany(targetEntity = Appointment.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Appointment.class, cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Set<Appointment> appointments;
 
     @ManyToMany(targetEntity = Rule.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)

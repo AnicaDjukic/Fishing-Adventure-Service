@@ -16,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.text.ParseException;
 import java.util.*;
 
@@ -80,6 +79,21 @@ public class VacationHomeController {
             additionalServiceDtos.add(dto);
         }
         return new ResponseEntity<>(additionalServiceDtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/available/persons")
+    public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer id, @RequestParam("number") int persons) throws ParseException {
+
+        boolean availability = homeService.isCottageAvailableForPersons(id, persons);
+        return new ResponseEntity(availability, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/available/dateRange")
+    public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer id,@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+                                                                       @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
+
+        boolean availability = homeService.isCottageAvailableForDateRange(id, start, end);
+        return new ResponseEntity(availability, HttpStatus.OK);
     }
 
     @GetMapping(value = "/allByUser")
