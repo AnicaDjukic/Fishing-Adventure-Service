@@ -169,6 +169,28 @@ export default {
             })
             .then((res) => {
               this.selectData = res.data;
+              for (let data of this.selectData) {
+                axios
+                  .get(
+                    "http://localhost:8080/availabilityDate/getByServiceProfile/" +
+                      data.code,
+                    {
+                      headers: {
+                        "Access-Control-Allow-Origin": "http://localhost:8080",
+                        Authorization: "Bearer " + localStorage.refreshToken,
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    for (let newData of res.data) {
+                      newData.title = data.label;
+                      newData.url = "neki";
+                      newData.startDate = new Date(newData.start);
+                      newData.endDate = new Date(newData.end);
+                      this.calendarOptions.events.push(newData);
+                    }
+                  });
+              }
             });
         } else {
           window.location.href = "/";
@@ -184,7 +206,6 @@ export default {
       document.getElementsByTagName("select")[0].value = "";
       this.startDate = "";
       this.endDate = "";
-      this.currentEvent = "";
 
       for (let ev of this.calendarOptions.events) {
         if (ev.id == this.currentEvent.id) {
@@ -192,6 +213,8 @@ export default {
           break;
         }
       }
+
+      this.currentEvent = "";
     },
     event: function (info) {
       info.jsEvent.preventDefault(); // don't let the browser navigate
@@ -283,7 +306,6 @@ export default {
         )
         .then(() => {
           for (let ev of this.calendarOptions.events) {
-            console.log(ev);
             if (ev.id == this.currentEvent.id) {
               this.calendarOptions.events.pop(ev);
               break;

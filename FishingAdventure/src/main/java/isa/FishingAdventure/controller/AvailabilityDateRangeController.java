@@ -26,7 +26,7 @@ public class AvailabilityDateRangeController {
     private ServiceProfileService serviceProfileService;
 
     @GetMapping(value = "/getByServiceProfile/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
     public ResponseEntity<List<AvailableDateRangeDto>> getNamesByUser(@PathVariable String id) {
         List<AvailabilityDateRange> dates = availabilityDateRangeService.getAllByServiceProfileId(Integer.parseInt(id));
 
@@ -39,7 +39,7 @@ public class AvailabilityDateRangeController {
     }
 
     @PutMapping(value = "/update/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
     @Transactional
     public ResponseEntity<AvailableDateRangeDto> update(@PathVariable String id, @RequestBody AvailableDateRangeDto dto) {
         AvailabilityDateRange date = availabilityDateRangeService.getById(Integer.parseInt(id));
@@ -51,7 +51,7 @@ public class AvailabilityDateRangeController {
     }
 
     @PostMapping(value = "/save/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
     @Transactional
     public ResponseEntity<AvailableDateRangeDto> save(@PathVariable String id, @RequestBody AvailableDateRangeDto dto) {
         AvailabilityDateRange date = new AvailabilityDateRange();
@@ -64,7 +64,7 @@ public class AvailabilityDateRangeController {
     }
 
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
     @Transactional
     public ResponseEntity<String> save(@PathVariable String id) {
         availabilityDateRangeService.delete(Integer.parseInt(id));
