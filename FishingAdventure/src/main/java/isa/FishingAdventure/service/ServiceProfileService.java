@@ -19,4 +19,8 @@ public class ServiceProfileService {
         profileRepository.save(profile.get());
     }
 
+    public ServiceProfile getById(int id) {
+        return profileRepository.getById(id);
+    }
+
 }

@@ -25,6 +25,7 @@ public class AvailableDateRangeDto {
     }
 
     public AvailableDateRangeDto(AvailabilityDateRange dateRange) {
+        this.id = dateRange.getId();
         this.start = dateRange.getStartDate();
         this.end = dateRange.getEndDate();
     }

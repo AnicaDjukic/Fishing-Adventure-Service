@@ -7,7 +7,7 @@
         <div style="margin: 2rem 0">
           <div class="element">
             <h4>Select {{ entityType }}</h4>
-            <select>
+            <select id="selectEl">
               <option value=""></option>
               <option
                 v-for="data of selectData"
@@ -51,10 +51,18 @@
               justify-content: space-evenly;
             "
           >
-            <button class="btn btn-outline-primary" v-on:click="saveDate">
+            <button class="btn btn-outline-primary save" v-on:click="saveDate">
               Save
             </button>
-            <button class="btn btn-outline-primary delete-btn">Delete</button>
+            <button
+              class="btn btn-outline-primary delete-btn"
+              v-on:click="deleteDate"
+            >
+              Delete
+            </button>
+            <button class="btn btn-outline-primary" v-on:click="clearAll">
+              Clear all
+            </button>
           </div>
         </div>
       </div>
@@ -85,9 +93,9 @@ export default {
   },
   data() {
     return {
+      currentEvent: "",
       selectData: [],
       entityType: "",
-      maxId: 0,
       calendarOptions: {
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
         initialDate: new Date(),
@@ -140,14 +148,13 @@ export default {
                     }
                   )
                   .then((res) => {
-                    res.data[0].title = data.label;
-                    res.data[0].id = this.maxId;
-                    res.data[0].url = "neki";
-                    res.data[0].startDate = new Date(res.data[0].startDate);
-                    res.data[0].endDate = new Date(res.data[0].endDate);
-                    this.maxId = this.maxId + 1;
-                    console.log(res.data);
-                    this.calendarOptions.events.push(res.data[0]);
+                    for (let newData of res.data) {
+                      newData.title = data.label;
+                      newData.url = "neki";
+                      newData.startDate = new Date(newData.start);
+                      newData.endDate = new Date(newData.end);
+                      this.calendarOptions.events.push(newData);
+                    }
                   });
               }
             });
@@ -173,14 +180,116 @@ export default {
       });
   },
   methods: {
+    clearAll: function () {
+      document.getElementsByTagName("select")[0].value = "";
+      this.startDate = "";
+      this.endDate = "";
+      this.currentEvent = "";
+
+      for (let ev of this.calendarOptions.events) {
+        if (ev.id == this.currentEvent.id) {
+          ev.color = "";
+          break;
+        }
+      }
+    },
     event: function (info) {
       info.jsEvent.preventDefault(); // don't let the browser navigate
       document.getElementsByTagName("select")[0].value = info.event.title;
       this.startDate = info.event.start;
       this.endDate = info.event.end;
+      this.currentEvent = info.event;
+
+      for (let ev of this.calendarOptions.events) {
+        if (ev.id == this.currentEvent.id) {
+          ev.color = "#434c54";
+        } else {
+          ev.color = "";
+        }
+      }
     },
     saveDate: function () {
-      console.log("SAVE: " + this.startDate);
+      let newAvailabilityDate;
+      if (this.currentEvent) {
+        newAvailabilityDate = {
+          id: this.currentEvent.id,
+          start: this.startDate,
+          end: this.endDate,
+          title: this.currentEvent.title,
+        };
+
+        axios
+          .put(
+            "http://localhost:8080/availabilityDate/update/" +
+              this.currentEvent.id,
+            newAvailabilityDate,
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            }
+          )
+          .then(() => {
+            for (let ev of this.calendarOptions.events) {
+              if (ev.id == this.currentEvent.id) {
+                ev.start = this.startDate;
+                ev.end = this.endDate;
+                break;
+              }
+            }
+          });
+      } else {
+        newAvailabilityDate = {
+          start: this.startDate,
+          end: this.endDate,
+          title: this.currentEvent.title,
+        };
+
+        let profileLabel = document.getElementsByTagName("select")[0].value;
+        let profileId;
+        for (let data of this.selectData) {
+          if (data.label == profileLabel) {
+            profileId = data.code;
+          }
+        }
+        axios
+          .post(
+            "http://localhost:8080/availabilityDate/save/" + profileId,
+            newAvailabilityDate,
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            }
+          )
+          .then((res) => {
+            res.data.title = profileLabel;
+            this.calendarOptions.events.push(res.data);
+          });
+      }
+    },
+    deleteDate: function () {
+      axios
+        .delete(
+          "http://localhost:8080/availabilityDate/" + this.currentEvent.id,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then(() => {
+          for (let ev of this.calendarOptions.events) {
+            console.log(ev);
+            if (ev.id == this.currentEvent.id) {
+              this.calendarOptions.events.pop(ev);
+              break;
+            }
+          }
+        });
     },
   },
 };
@@ -189,10 +298,10 @@ export default {
 .element {
   margin-bottom: 2rem;
 }
-.btn {
+.save {
   background-color: #1a252f;
 }
-.btn-outline-primary:hover {
+.save:hover {
   background-color: #2c3e50 !important;
   color: white !important;
   border: 1px solid white !important;
