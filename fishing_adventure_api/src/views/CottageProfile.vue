@@ -261,7 +261,7 @@
       </div>
     </div>
   </div>
-  <ReservationModal :id="'cottage'" v-bind:date="date" v-bind:persons="persons"></ReservationModal>
+  <ReservationModal :id="'cottage'" v-bind:date="date" v-bind:persons="persons" v-bind:additionalServices="entity.additionalServices" v-bind:price="entity.pricePerDay"></ReservationModal>
 </template>
 
 <script>
@@ -290,11 +290,9 @@ export default {
   },
   mounted() {
     window.scrollTo(0, 0);
-
-    console.log(this.$route.query.id);
     this.date = this.$route.query.date;
     this.persons = this.$route.query.persons;
-
+    
     axios
       .get("http://localhost:8080/vacationHome/" + this.$route.query.id, {
         headers: {

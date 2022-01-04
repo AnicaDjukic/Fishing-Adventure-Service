@@ -1,11 +1,9 @@
 package isa.FishingAdventure.controller;
 
+import isa.FishingAdventure.dto.AdditionalServiceDto;
 import isa.FishingAdventure.dto.NewHomeDto;
 import isa.FishingAdventure.dto.VacationHomeDto;
-import isa.FishingAdventure.model.Appointment;
-import isa.FishingAdventure.model.Image;
-import isa.FishingAdventure.model.VacationHome;
-import isa.FishingAdventure.model.VacationHomeOwner;
+import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @Configurable
@@ -66,16 +62,24 @@ public class VacationHomeController {
     public ResponseEntity<List<VacationHomeDto>> getSearchedVacationHomes(@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
                                                                           @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end, @RequestParam("persons") int persons) throws ParseException {
         List<VacationHome> vacationHomes = homeService.findAllAvailableVacationHomes(start, end, persons);
-        System.out.println(vacationHomes.size());
-        System.out.println(start);
-        System.out.println(end);
-        List<VacationHomeDto> VacationHomeDto = new ArrayList<>();
+        List<VacationHomeDto> vacationHomeDtos = new ArrayList<VacationHomeDto>();
         for (VacationHome h : vacationHomes) {
             VacationHomeDto dto = new VacationHomeDto(h);
-            VacationHomeDto.add(dto);
+            vacationHomeDtos.add(dto);
         }
 
-        return new ResponseEntity<>(VacationHomeDto, HttpStatus.OK);
+        return new ResponseEntity<>(vacationHomeDtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/additionalServices/{id}")
+    public ResponseEntity<List<AdditionalServiceDto>> getAdditionalServices(@PathVariable Integer id) throws ParseException {
+        List<AdditionalService> additionalServices = homeService.findAdditionalServicesByVacationHomeId(id);
+        List<AdditionalServiceDto> additionalServiceDtos = new ArrayList<AdditionalServiceDto>();
+        for(AdditionalService as : additionalServices){
+            AdditionalServiceDto dto = new AdditionalServiceDto(as);
+            additionalServiceDtos.add(dto);
+        }
+        return new ResponseEntity<>(additionalServiceDtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/allByUser")
