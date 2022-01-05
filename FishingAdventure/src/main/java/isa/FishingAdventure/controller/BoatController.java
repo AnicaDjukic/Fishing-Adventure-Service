@@ -187,19 +187,32 @@ public class BoatController {
 
         List<AppointmentDto> appointmentDtos = new ArrayList<>();
         for (Boat boat : boatService.findByBoatOwner(owner)) {
-            for (Appointment appointment : boat.getAppointments()) {
-                AppointmentDto dto = new AppointmentDto(appointment);
-                dto.setServiceProfileName(boat.getName());
-                dto.setServiceProfileId(boat.getId());
-                for (Image img : boat.getImages()) {
-                    if (img.isCoverImage()) {
-                        dto.setCoverImage(img.getPath());
-                        break;
-                    }
-                }
-                appointmentDtos.add(dto);
-            }
+            appointmentDtos.addAll(getAppointmentDtos(boat));
         }
         return new ResponseEntity<>(appointmentDtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getServiceOffersById/{id}")
+    @Transactional
+    public ResponseEntity<List<AppointmentDto>> getServiceOffersById(@PathVariable String id) {
+        Boat boat = boatService.getById(Integer.parseInt(id));
+        return new ResponseEntity<>(getAppointmentDtos(boat), HttpStatus.OK);
+    }
+
+    private List<AppointmentDto> getAppointmentDtos(Boat boat) {
+        List<AppointmentDto> appointmentDtos = new ArrayList<>();
+        for (Appointment appointment : boat.getAppointments()) {
+            AppointmentDto dto = new AppointmentDto(appointment);
+            dto.setServiceProfileName(boat.getName());
+            dto.setServiceProfileId(boat.getId());
+            for (Image img : boat.getImages()) {
+                if (img.isCoverImage()) {
+                    dto.setCoverImage(img.getPath());
+                    break;
+                }
+            }
+            appointmentDtos.add(dto);
+        }
+        return appointmentDtos;
     }
 }

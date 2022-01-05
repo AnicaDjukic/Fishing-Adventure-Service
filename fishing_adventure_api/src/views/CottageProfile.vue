@@ -232,9 +232,15 @@
 
       <div class="special-offers-fa">
         <div class="so-title-fa">
-          <h2>Special Offers</h2>
+          <h2 style="margin-top: 2rem">Special Offers</h2>
         </div>
       </div>
+
+      <SpecialOffersCardNoImage
+        v-for="offer of offers"
+        :key="offer.offerId"
+        :offer="offer"
+      ></SpecialOffersCardNoImage>
 
       <div class="special-offers-fa">
         <div class="so-title-fa">
@@ -288,10 +294,12 @@
 <script>
 import axios from "axios";
 import ReservationModal from "@/components/ReservationModal.vue";
+import SpecialOffersCardNoImage from "@/components/SpecialOffersCardNoImage.vue";
 export default {
-  components: { ReservationModal },
+  components: { ReservationModal, SpecialOffersCardNoImage },
   data: function () {
     return {
+      offers: "",
       subscribed: false,
       loggedInRole: "",
       date: [],
@@ -345,6 +353,21 @@ export default {
           (this.markers[0].position.lat = response.data.location.latitude);
         this.markers[0].position.lng = response.data.location.longitude;
         console.log(response.data);
+      });
+
+    axios
+      .get(
+        "http://localhost:8080/vacationHome/getServiceOffersById/" +
+          this.$route.query.id,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        }
+      )
+      .then((response) => {
+        this.offers = response.data;
       });
   },
   name: "FishingAdventure",

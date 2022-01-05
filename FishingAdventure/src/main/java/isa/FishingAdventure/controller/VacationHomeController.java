@@ -212,20 +212,33 @@ public class VacationHomeController {
 
         List<AppointmentDto> appointmentDtos = new ArrayList<>();
         for (VacationHome home : homeService.findByVacationHomeOwner(owner)) {
-            for (Appointment appointment : home.getAppointments()) {
-                AppointmentDto dto = new AppointmentDto(appointment);
-                dto.setServiceProfileName(home.getName());
-                dto.setServiceProfileId(home.getId());
-                for (Image img : home.getImages()) {
-                    if (img.isCoverImage()) {
-                        dto.setCoverImage(img.getPath());
-                        break;
-                    }
-                }
-                appointmentDtos.add(dto);
-            }
+            appointmentDtos.addAll(getAppointmentDtos(home));
         }
         return new ResponseEntity<>(appointmentDtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getServiceOffersById/{id}")
+    @Transactional
+    public ResponseEntity<List<AppointmentDto>> getServiceOffersById(@PathVariable String id) {
+        VacationHome home = homeService.getById(Integer.parseInt(id));
+        return new ResponseEntity<>(getAppointmentDtos(home), HttpStatus.OK);
+    }
+
+    private List<AppointmentDto> getAppointmentDtos(VacationHome home) {
+        List<AppointmentDto> appointmentDtos = new ArrayList<>();
+        for (Appointment appointment : home.getAppointments()) {
+            AppointmentDto dto = new AppointmentDto(appointment);
+            dto.setServiceProfileName(home.getName());
+            dto.setServiceProfileId(home.getId());
+            for (Image img : home.getImages()) {
+                if (img.isCoverImage()) {
+                    dto.setCoverImage(img.getPath());
+                    break;
+                }
+            }
+            appointmentDtos.add(dto);
+        }
+        return appointmentDtos;
     }
 }
 
