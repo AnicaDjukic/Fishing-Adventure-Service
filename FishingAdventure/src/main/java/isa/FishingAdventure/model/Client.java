@@ -11,7 +11,7 @@ public class Client extends User {
     @Column(name = "penalties", nullable = false)
     private Integer penalties;
 
-    @ManyToMany(targetEntity = ServiceProfile.class,cascade = CascadeType.MERGE)
+    @ManyToMany(targetEntity = ServiceProfile.class,cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     public Set<ServiceProfile> subscriptions;
 
     public Client(Integer userId, String email, String password, String name, String surname, String phoneNumber,

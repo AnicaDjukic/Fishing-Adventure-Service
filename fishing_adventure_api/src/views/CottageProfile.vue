@@ -16,10 +16,10 @@
         </button>
       </div>
       <div class="tagline-subscribe-fa" v-if="loggedInRole == 'ROLE_CLIENT'">
-        <button class="subscribe-btn" v-if="!subscribed">
+        <button class="subscribe-btn" v-if="!subscribed" v-on:click="subscribe">
           <i class="fas fa-bell" style="margin-right: 2rem"></i> Subscribe
         </button>
-        <button class="unsubscribe-btn" v-if="subscribed">
+        <button class="unsubscribe-btn" v-if="subscribed" v-on:click="unsubscribe">
           <i class="far fa-bell-slash" style="margin-right: 2rem"></i>
           Unsubscribe
         </button>
@@ -315,21 +315,6 @@ export default {
     window.scrollTo(0, 0);
 
     axios
-      .get("http://localhost:8080/users/getRole", {
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
-          Authorization: "Bearer " + localStorage.refreshToken,
-        },
-      })
-      .then((res) => {
-        this.loggedInRole = res.data;
-      });
-
-    console.log(this.$route.query.id);
-    this.date = this.$route.query.date;
-    this.persons = this.$route.query.persons;
-
-    axios
       .get("http://localhost:8080/vacationHome/" + this.$route.query.id, {
         headers: {
           "Access-Control-Allow-Origin": "http://localhost:8080",
@@ -345,10 +330,44 @@ export default {
           (this.markers[0].position.lat = response.data.location.latitude);
         this.markers[0].position.lng = response.data.location.longitude;
         console.log(response.data);
+      })
+      .finally(() => {
+        this.isSubscribed();
       });
+
+    console.log(this.$route.query.id);
+    this.date = this.$route.query.date;
+    this.persons = this.$route.query.persons;      
   },
   name: "FishingAdventure",
   methods: {
+    isSubscribed: function() {
+      axios
+      .get("http://localhost:8080/users/getRole", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.loggedInRole = res.data;
+      })
+      .finally(() => {
+          if(this.loggedInRole == 'ROLE_CLIENT') {
+            axios
+            .get("http://localhost:8080/client/isSubscribed/" + this.entity.id, 
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            })
+            .then((res) => {
+              this.subscribed = res.data;
+            });
+          }
+      });
+    },
     changeMenuDisplay: function (event) {
       let elID = event.currentTarget.id;
       document.getElementById("about-fa").style.borderBottom = "0px";
@@ -384,6 +403,38 @@ export default {
         document.querySelector(".menu-loc-fa").style.display = "none";
         document.querySelector(".menu-pl-fa").style.display = "none";
       }
+    },
+    subscribe: function() {
+      axios
+        .get(
+          "http://localhost:8080/client/subscribe/" + this.entity.id,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then((res) => {
+          if(res.data == true)
+            this.subscribed = true;
+        });
+    },
+    unsubscribe: function() {
+      axios
+        .get(
+          "http://localhost:8080/client/unsubscribe/" + this.entity.id,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then((res) => {
+          if(res.data == true)
+            this.subscribed = false;
+        });
     },
   },
 };

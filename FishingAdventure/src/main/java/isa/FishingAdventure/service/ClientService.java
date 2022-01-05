@@ -2,6 +2,7 @@ package isa.FishingAdventure.service;
 
 import java.util.List;
 
+import isa.FishingAdventure.model.ServiceProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class ClientService{
 
 	@Autowired
 	private UserTypeService userTypeService;
+
+	@Autowired
+	private ServiceProfileService serviceProfileService;
 
 	public Client findByEmail(String email) {
 		return (Client) clientRepository.findByEmail(email);
@@ -53,5 +57,36 @@ public class ClientService{
 	
 	public Client save(Client client) {
 		return this.clientRepository.save(client);
+	}
+
+	public boolean subscribe(Client client, Integer id) {
+		ServiceProfile serviceProfile = serviceProfileService.getById(id);
+		if(isSubscribed(client, id))
+			return false;
+		client.getSubscriptions().add(serviceProfile);
+		clientRepository.save(client);
+		return true;
+	}
+
+    public boolean isSubscribed(Client client, Integer id) {
+		for(ServiceProfile s :client.getSubscriptions()){
+			if(s.getId().equals(id))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean unsubscribe(Client client, Integer id) {
+		ServiceProfile serviceProfile = serviceProfileService.getById(id);
+		if(!isSubscribed(client, id))
+			return true;
+		for(ServiceProfile s :client.getSubscriptions()){
+			if(s.getId().equals(id)) {
+				client.getSubscriptions().remove(s);
+				clientRepository.save(client);
+				return true;
+			}
+		}
+		return false;
 	}
 }
