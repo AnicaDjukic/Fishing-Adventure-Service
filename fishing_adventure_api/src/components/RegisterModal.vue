@@ -379,7 +379,9 @@ export default {
           street: this.user.street,
           city: this.user.city,
           country: this.user.country,
+          zipCode: 0
         },
+        biography: ''
       };
 
       let path;

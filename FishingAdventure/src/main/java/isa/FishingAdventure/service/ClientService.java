@@ -51,6 +51,7 @@ public class ClientService{
 		u.setUserType(roles.get(0));
 		u.setPoints(0.0);
 		u.setPenalties(0);
+		u.setDeleted(false);
 		
 		return this.clientRepository.save(u);
 	}
@@ -77,7 +78,6 @@ public class ClientService{
 	}
 
 	public boolean unsubscribe(Client client, Integer id) {
-		ServiceProfile serviceProfile = serviceProfileService.getById(id);
 		if(!isSubscribed(client, id))
 			return true;
 		for(ServiceProfile s :client.getSubscriptions()){

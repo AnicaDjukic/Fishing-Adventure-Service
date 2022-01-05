@@ -5,7 +5,7 @@ import isa.FishingAdventure.model.AdditionalService;
 import java.util.Date;
 import java.util.List;
 
-public class NewAppointmentDto {
+public class NewReservationDto {
 
     private Integer cottageId;
 
@@ -19,7 +19,7 @@ public class NewAppointmentDto {
 
     private double price;
 
-    public NewAppointmentDto(Integer cottageId, Date startDate, Date endDate, int persons, List<AdditionalService> chosenServices, double price) {
+    public NewReservationDto(Integer cottageId, Date startDate, Date endDate, int persons, List<AdditionalService> chosenServices, double price) {
         this.cottageId = cottageId;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -28,7 +28,7 @@ public class NewAppointmentDto {
         this.price = price;
     }
 
-    public NewAppointmentDto() {
+    public NewReservationDto() {
 
     }
 

@@ -317,7 +317,7 @@ export default {
         console.log(reservation);
 
         axios
-          .post("http://localhost:8080/appointment/new", reservation, {
+          .post("http://localhost:8080/reservation/new", reservation, {
             headers: {
               "Access-Control-Allow-Origin": "http://localhost:8080",
               Authorization: "Bearer " + localStorage.refreshToken,
