@@ -253,6 +253,7 @@
         v-for="offer of offers"
         :key="offer.offerId"
         :offer="offer"
+        :loggedInRole="loggedInRole"
       ></SpecialOffersCardNoImage>
 
       <div class="special-offers-fa">

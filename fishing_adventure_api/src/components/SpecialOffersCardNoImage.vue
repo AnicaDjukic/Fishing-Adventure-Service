@@ -63,6 +63,7 @@
 
               <div class="manageReservation shadow-none">
                 <button
+                  v-if="loggedInRole == 'ROLE_CLIENT'"
                   class="btn btn-outline-primary shadow-none mb-2"
                   style="width: 8rem"
                 >
@@ -80,7 +81,7 @@
 <script>
 import moment from "moment";
 export default {
-  props: ["offer"],
+  props: ["offer", "loggedInRole"],
   name: "SpecialOffersCardNoImage",
   data: function () {
     return {
