@@ -23,4 +23,7 @@ public class ServiceProfileService {
         return profileRepository.getById(id);
     }
 
+    public ServiceProfile getByName(String name) {
+        return profileRepository.getByName(name);
+    }
 }

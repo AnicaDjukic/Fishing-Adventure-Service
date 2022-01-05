@@ -31,6 +31,10 @@
     padding: 0 30px;
 }
 
+.modal.dark .modal-header h3 {
+    margin: 0;
+}
+
 .modal.dark .modal-footer {
     background: #1e2021;
     border-top: 1px solid #44474b;
@@ -176,16 +180,49 @@
 
 #table-wrapper {
     position: relative;
-  }
-  #table-scroll {
+}
+
+#table-scroll {
     height: 150px;
     overflow: auto;
     margin-top: 20px;
-  }
-  #table-wrapper table {
+}
+
+#table-wrapper table {
     width: 100%;
-  }
-  #table-wrapper table * {
+}
+
+#table-wrapper table * {
     background: #393c3f73;
     color: black;
-  }
+}
+
+.discountStatus {
+    margin: auto 0px auto auto;
+    text-align: right;
+    padding: 0 10px;
+    background-color: #b1090966;
+    width: 35%;
+    text-align: center;
+    color: white;
+    border-radius: 5px 0px 0px 5px;
+    text-decoration: bold;
+    left: 4rem;
+    position: relative;
+}
+
+.element {
+    margin-bottom: 2rem;
+}
+
+select {
+    background: transparent;
+    color: white;
+    border: 0;
+    border-bottom: 1px solid white;
+    width: 100%;
+}
+
+option {
+    background: #212529;
+}

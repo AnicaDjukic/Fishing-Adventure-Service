@@ -19,6 +19,8 @@
           <button
             type="button"
             class="btn btn-outline-primary text-nowrap me-2"
+            data-bs-toggle="modal"
+            data-bs-target="#OfferModal"
           >
             New offer
           </button>
@@ -57,12 +59,14 @@
       ></CottageSpecialOffersCard>
     </div>
   </div>
+  <OfferModal id="OfferModal"></OfferModal>
 </template>
 
 <script>
 import CottageSpecialOffersCard from "@/components/CottageSpecialOffersCard.vue";
+import OfferModal from "@/components/OfferModal.vue";
 export default {
-  components: { CottageSpecialOffersCard },
+  components: { CottageSpecialOffersCard, OfferModal },
   data: function () {
     return {
       numberOfPersons: "",
