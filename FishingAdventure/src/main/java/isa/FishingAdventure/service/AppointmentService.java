@@ -17,8 +17,8 @@ public class AppointmentService {
     @Autowired
     private ServiceProfileService serviceProfileService;
 
-    public void save(Appointment newAppointment) {
-        appointmentRepository.save(newAppointment);
+    public Appointment save(Appointment newAppointment) {
+        return appointmentRepository.save(newAppointment);
     }
 
     public void addAppointmentToVacationHome(Integer id, Appointment newAppointment) {

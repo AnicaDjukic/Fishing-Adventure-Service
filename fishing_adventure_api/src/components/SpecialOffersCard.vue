@@ -8,7 +8,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            src="@/assets/c2.jpg"
+            :src="require('@/assets/' + offer.coverImage)"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -16,9 +16,11 @@
         <div class="col-md-8 shadow-none" name="main-col">
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
-              <h5 class="card-title shadow-none">Villa Madam</h5>
+              <h5 class="card-title shadow-none">
+                {{ offer.serviceProfileName }}
+              </h5>
               <p class="discountStatus shadow-none">
-                <b class="shadow-none"> {{ discount }}% OFF</b>
+                <b class="shadow-none"> {{ offer.discount }}% OFF</b>
               </p>
             </div>
             <div
@@ -28,44 +30,57 @@
               <div class="shadow-none" style="width: 100%">
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">
-                    Offer duration:
+                    Starts:
                   </p>
                   <p class="card-text text-left shadow-none col-md-8">
-                    {{ duration }}
+                    {{ starts }}
+                  </p>
+                </div>
+                <div class="row shadow-none">
+                  <p class="card-text text-left shadow-none col-md-4">Ends:</p>
+                  <p class="card-text text-left shadow-none col-md-8">
+                    {{ ends }}
+                  </p>
+                </div>
+                <div class="row shadow-none">
+                  <p class="card-text text-left shadow-none col-md-4">
+                    Duration:
+                  </p>
+                  <p class="card-text text-left shadow-none col-md-8">
+                    {{ durationString }}
                   </p>
                 </div>
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">Price:</p>
                   <p class="card-text text-left shadow-none col-md-8">
-                    50 <i class="fas fa-dollar-sign"></i>
+                    {{ offer.price }} <i class="fas fa-dollar-sign"></i>/day
                   </p>
                 </div>
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">
                     Persons:
                   </p>
-                  <p class="card-text text-left shadow-none col-md-8">2</p>
+                  <p class="card-text text-left shadow-none col-md-8">
+                    {{ offer.maxPersons }}
+                  </p>
                 </div>
                 <p class="card-text text-left shadow-none">
                   Additional services:
                 </p>
 
                 <div class="row shadow-none" style="margin-left: 1%">
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-wifi fa-xs shadow-none"></i> WiFi
+                  <p
+                    class="additionalServices shadow-none"
+                    v-if="offer.chosenServices.length == 0"
+                  >
+                    Not included
                   </p>
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-tv fa-xs shadow-none"></i> TV
-                  </p>
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-fan fa-xs shadow-none"></i> Air Conditioner
-                  </p>
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-parking fa-xs shadow-none"></i> Private
-                    parking
-                  </p>
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-glass-martini-alt"></i> Bar
+                  <p
+                    class="additionalServices shadow-none"
+                    v-for="service of offer.chosenServices"
+                    :key="service.id"
+                  >
+                    {{ service.name }}
                   </p>
                 </div>
               </div>
@@ -84,13 +99,32 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
+  props: ["offer"],
   data: function () {
     return {
       date: "12/20/2021 - 12/25/2021",
       discount: "50",
-      duration: "24 hours",
+      duration: "",
+      ends: "",
+      starts: "",
+      durationString: "",
     };
+  },
+  mounted() {
+    this.ends = new Date(this.offer.endDate);
+    this.starts = new Date(this.offer.startDate);
+    this.duration = this.ends - this.starts;
+    this.ends = moment(this.ends).format("MM/DD/yyyy HH:mm");
+    this.starts = moment(this.starts).format("MM/DD/yyyy HH:mm");
+    let days = this.duration / (1000 * 3600 * 24);
+    days = parseInt(days, 10);
+    let hours = this.duration / (1000 * 3600) - 24 * days;
+    hours = parseInt(hours, 10);
+    let minutes = this.duration / (1000 * 60) - days * 24 * 60 - hours * 60;
+    minutes = parseInt(minutes, 10);
+    this.durationString = days + "d " + hours + "h " + minutes + "m";
   },
 };
 </script>

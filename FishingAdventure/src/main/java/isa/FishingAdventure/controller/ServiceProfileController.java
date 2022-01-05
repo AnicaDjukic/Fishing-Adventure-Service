@@ -1,8 +1,10 @@
 package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.AdditionalServiceDto;
+import isa.FishingAdventure.dto.AppointmentDto;
 import isa.FishingAdventure.dto.OfferDto;
 import isa.FishingAdventure.model.AdditionalService;
+import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.service.ServiceProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +42,19 @@ public class ServiceProfileController {
         ServiceProfile profile = serviceProfileService.getByName(name);
         OfferDto dto = new OfferDto(profile);
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAppointments/{id}")
+    @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER')")
+    public ResponseEntity<List<AppointmentDto>> getAppointmentsByServiceId(@PathVariable String id) {
+        ServiceProfile profile = serviceProfileService.getById(Integer.parseInt(id));
+
+        List<AppointmentDto> dtos = new ArrayList<>();
+        for (Appointment appointment : profile.getAppointments()) {
+            AppointmentDto dto = new AppointmentDto(appointment);
+            dto.setServiceProfileId(Integer.parseInt(id));
+            dtos.add(dto);
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 }

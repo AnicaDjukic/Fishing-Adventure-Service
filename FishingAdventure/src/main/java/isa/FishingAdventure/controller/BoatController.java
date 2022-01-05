@@ -1,5 +1,6 @@
 package isa.FishingAdventure.controller;
 
+import isa.FishingAdventure.dto.AppointmentDto;
 import isa.FishingAdventure.dto.BoatDto;
 import isa.FishingAdventure.dto.NewBoatDto;
 import isa.FishingAdventure.dto.ServiceNameDto;
@@ -175,5 +176,30 @@ public class BoatController {
         oldBoat.setDescription(dto.getDescription());
         boatService.save(oldBoat);
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getServiceOffersByUser")
+    @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
+    @Transactional
+    public ResponseEntity<List<AppointmentDto>> getServiceOffersByUser(@RequestHeader("Authorization") String token) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        BoatOwner owner = boatOwnerService.findByEmail(email);
+
+        List<AppointmentDto> appointmentDtos = new ArrayList<>();
+        for (Boat boat : boatService.findByBoatOwner(owner)) {
+            for (Appointment appointment : boat.getAppointments()) {
+                AppointmentDto dto = new AppointmentDto(appointment);
+                dto.setServiceProfileName(boat.getName());
+                dto.setServiceProfileId(boat.getId());
+                for (Image img : boat.getImages()) {
+                    if (img.isCoverImage()) {
+                        dto.setCoverImage(img.getPath());
+                        break;
+                    }
+                }
+                appointmentDtos.add(dto);
+            }
+        }
+        return new ResponseEntity<>(appointmentDtos, HttpStatus.OK);
     }
 }

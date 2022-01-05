@@ -55,9 +55,9 @@ public class AppointmentController {
     @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
     @Transactional
     public ResponseEntity<AppointmentDto> create(@RequestBody AppointmentDto dto) {
-        Appointment newAppointment = createAppointment(dto);
-        appointmentService.save(newAppointment);
-        appointmentService.addAppointmentToServiceProfile(dto.getServiceProfileId(), newAppointment);
+        Appointment savedAppointment = appointmentService.save(createAppointment(dto));
+        dto.setOfferId(savedAppointment.getAppointmentId());
+        appointmentService.addAppointmentToServiceProfile(dto.getServiceProfileId(), savedAppointment);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -83,4 +83,5 @@ public class AppointmentController {
 
         return newAppointment;
     }
+
 }

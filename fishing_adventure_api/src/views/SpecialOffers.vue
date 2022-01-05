@@ -53,25 +53,70 @@
     </div>
 
     <div style="margin-top: 5%">
-      <CottageSpecialOffersCard
-        v-for="index in 10"
-        :key="index"
-      ></CottageSpecialOffersCard>
+      <SpecialOffersCard
+        v-for="offer of offers"
+        :key="offer.offerId"
+        :offer="offer"
+      ></SpecialOffersCard>
     </div>
   </div>
   <OfferModal id="OfferModal"></OfferModal>
 </template>
 
 <script>
-import CottageSpecialOffersCard from "@/components/CottageSpecialOffersCard.vue";
+import SpecialOffersCard from "@/components/SpecialOffersCard.vue";
 import OfferModal from "@/components/OfferModal.vue";
+import axios from "axios";
 export default {
-  components: { CottageSpecialOffersCard, OfferModal },
+  components: { SpecialOffersCard, OfferModal },
   data: function () {
     return {
       numberOfPersons: "",
       date: "",
+      offers: "",
     };
+  },
+  mounted() {
+    axios
+      .get("http://localhost:8080/users/getRole", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        let loggedInRole = res.data;
+
+        if (loggedInRole == "ROLE_VACATION_HOME_OWNER") {
+          this.entityType = "cottage";
+          axios
+            .get("http://localhost:8080/vacationHome/getServiceOffersByUser", {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            })
+            .then((res) => {
+              this.offers = res.data;
+            });
+        } else if (loggedInRole == "ROLE_BOAT_OWNER") {
+          this.entityType = "boat";
+          axios
+            .get("http://localhost:8080/boat/getServiceOffersByUser", {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            })
+            .then((res) => {
+              this.offers = res.data;
+            });
+        } else {
+          window.location.href = "/";
+        }
+        // else if(loggedInRole == "ROLE_FISHING_INSTRUCTOR"){
+        // }
+      });
   },
   methods: {},
 };

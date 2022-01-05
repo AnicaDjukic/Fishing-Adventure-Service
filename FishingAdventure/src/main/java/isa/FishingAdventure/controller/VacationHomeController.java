@@ -1,9 +1,6 @@
 package isa.FishingAdventure.controller;
 
-import isa.FishingAdventure.dto.AdditionalServiceDto;
-import isa.FishingAdventure.dto.NewHomeDto;
-import isa.FishingAdventure.dto.ServiceNameDto;
-import isa.FishingAdventure.dto.VacationHomeDto;
+import isa.FishingAdventure.dto.*;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.*;
@@ -18,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 @RestController
 @Configurable
@@ -75,7 +75,7 @@ public class VacationHomeController {
     public ResponseEntity<List<AdditionalServiceDto>> getAdditionalServices(@PathVariable Integer id) throws ParseException {
         List<AdditionalService> additionalServices = homeService.findAdditionalServicesByVacationHomeId(id);
         List<AdditionalServiceDto> additionalServiceDtos = new ArrayList<AdditionalServiceDto>();
-        for(AdditionalService as : additionalServices){
+        for (AdditionalService as : additionalServices) {
             AdditionalServiceDto dto = new AdditionalServiceDto(as);
             additionalServiceDtos.add(dto);
         }
@@ -90,8 +90,8 @@ public class VacationHomeController {
     }
 
     @GetMapping(value = "/available/dateRange")
-    public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer id,@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-                                                                       @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
+    public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer id, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+                                                @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
 
         boolean availability = homeService.isCottageAvailableForDateRange(id, start, end);
         return new ResponseEntity(availability, HttpStatus.OK);
@@ -138,7 +138,7 @@ public class VacationHomeController {
     @PutMapping(value = "/update/{id}")
     @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
     @Transactional
-    public ResponseEntity<NewHomeDto> updateCottage(@PathVariable String id, @RequestHeader("Authorization") String token, @RequestBody NewHomeDto dto) {
+    public ResponseEntity<NewHomeDto> updateCottage(@PathVariable String id, @RequestBody NewHomeDto dto) {
         VacationHome oldHome = homeService.getById(Integer.parseInt(id));
         homeService.save(updateHome(oldHome, dto));
         return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -203,6 +203,30 @@ public class VacationHomeController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/getServiceOffersByUser")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    @Transactional
+    public ResponseEntity<List<AppointmentDto>> getServiceOffersByUser(@RequestHeader("Authorization") String token) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        VacationHomeOwner owner = homeOwnerService.findByEmail(email);
+
+        List<AppointmentDto> appointmentDtos = new ArrayList<>();
+        for (VacationHome home : homeService.findByVacationHomeOwner(owner)) {
+            for (Appointment appointment : home.getAppointments()) {
+                AppointmentDto dto = new AppointmentDto(appointment);
+                dto.setServiceProfileName(home.getName());
+                dto.setServiceProfileId(home.getId());
+                for (Image img : home.getImages()) {
+                    if (img.isCoverImage()) {
+                        dto.setCoverImage(img.getPath());
+                        break;
+                    }
+                }
+                appointmentDtos.add(dto);
+            }
+        }
+        return new ResponseEntity<>(appointmentDtos, HttpStatus.OK);
+    }
 }
 
 	

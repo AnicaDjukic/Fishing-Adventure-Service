@@ -32,7 +32,7 @@ public class Appointment {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @ManyToMany(targetEntity = AdditionalService.class,cascade = CascadeType.DETACH)
+    @ManyToMany(targetEntity = AdditionalService.class, cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     public Set<AdditionalService> chosenServices;
 
     public Appointment(Integer appointmentId, double discount, boolean isReserved, Date startDate, Date endDate, Duration duration, int maxPersons, double price, Set<AdditionalService> chosenServices) {

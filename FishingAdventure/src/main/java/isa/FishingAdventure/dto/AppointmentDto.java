@@ -1,13 +1,21 @@
 package isa.FishingAdventure.dto;
 
 import isa.FishingAdventure.model.AdditionalService;
+import isa.FishingAdventure.model.Appointment;
 
 import java.util.Date;
 import java.util.Set;
 
 public class AppointmentDto {
 
+
+    private Integer offerId;
+
     private Integer serviceProfileId;
+
+    private String serviceProfileName;
+
+    private String coverImage;
 
     private double discount;
 
@@ -32,6 +40,24 @@ public class AppointmentDto {
     }
 
     public AppointmentDto() {
+    }
+
+    public AppointmentDto(Appointment appointment) {
+        this.offerId = appointment.getAppointmentId();
+        this.discount = appointment.getDiscount();
+        this.startDate = appointment.getStartDate();
+        this.endDate = appointment.getEndDate();
+        this.maxPersons = appointment.getMaxPersons();
+        this.price = appointment.getPrice();
+        this.chosenServices = appointment.getChosenServices();
+    }
+
+    public Integer getOfferId() {
+        return offerId;
+    }
+
+    public void setOfferId(Integer offerId) {
+        this.offerId = offerId;
     }
 
     public Integer getServiceProfileId() {
@@ -88,5 +114,21 @@ public class AppointmentDto {
 
     public void setChosenServices(Set<AdditionalService> chosenServices) {
         this.chosenServices = chosenServices;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public String getServiceProfileName() {
+        return serviceProfileName;
+    }
+
+    public void setServiceProfileName(String serviceProfileName) {
+        this.serviceProfileName = serviceProfileName;
     }
 }
