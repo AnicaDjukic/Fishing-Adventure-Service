@@ -87,14 +87,23 @@ const routes = [{
         import ('../views/ClientSubscriptions.vue')
 }, {
     path: '/specialOffers',
-    name: 'HomeOwnerSpecialOffers',
+    name: 'SpecialOffers',
     component: () =>
-        import ('../views/HomeOwnerSpecialOffers.vue')
+        import ('../views/SpecialOffers.vue'),
+    beforeEnter: (to, from, next) => {
+        checkAuthentification().then(response => {
+            if (response != "ROLE_VACATION_HOME_OWNER" && response != "ROLE_BOAT_OWNER") {
+                next("/")
+            } else {
+                next();
+            }
+        })
+    }
 }, {
     path: '/calendar',
-    name: 'HomeOwnerCalendar',
+    name: 'Calendar',
     component: () =>
-        import ('../views/HomeOwnerCalendar.vue'),
+        import ('../views/Calendar.vue'),
     beforeEnter: (to, from, next) => {
         checkAuthentification().then(response => {
             if (response != "ROLE_VACATION_HOME_OWNER" && response != "ROLE_BOAT_OWNER") {
@@ -144,11 +153,6 @@ const routes = [{
     name: 'InstructorReservations',
     component: () =>
         import ('../views/InstructorReservations.vue')
-}, {
-    path: '/instructorSpecialOffers',
-    name: 'InstructorSpecialOffers',
-    component: () =>
-        import ('../views/InstructorSpecialOffers.vue')
 }, {
     path: '/boats',
     name: 'MyBoats',

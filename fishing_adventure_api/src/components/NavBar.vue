@@ -145,22 +145,18 @@
                 >
                   <a class="dropdown-item" href="/calendar">Calander</a>
                 </li>
-                <li v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER'">
+                <li
+                  v-if="
+                    loggedInRole == 'ROLE_VACATION_HOME_OWNER' ||
+                    loggedInRole == 'ROLE_FISHING_INSTRUCTOR' ||
+                    loggedInRole == 'ROLE_BOAT_OWNER'
+                  "
+                >
                   <a class="dropdown-item" href="/specialOffers"
                     >Special offers</a
                   >
                 </li>
-                <li v-if="loggedInRole == 'ROLE_FISHING_INSTRUCTOR'">
-                  <a class="dropdown-item" href="/instructorSpecialOffers"
-                    >Special offers</a
-                  >
-                </li>
 
-                <li v-if="loggedInRole == 'ROLE_BOAT_OWNER'">
-                  <a class="dropdown-item" href="/boatOwnerSpecialOffers"
-                    >Special offers</a
-                  >
-                </li>
                 <li v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER'">
                   <a class="dropdown-item" href="/reservations">Reservations</a>
                 </li>
