@@ -144,6 +144,7 @@ export default {
   name: "OfferModal",
   data: function () {
     return {
+      serviceProfileId: "",
       persons: 1,
       maxPersons: "",
       pricePerDay: "",
@@ -222,7 +223,7 @@ export default {
 
         axios
           .get(
-            "http://localhost:8080/serviceProfile/getPriceAndPersonsByName/" +
+            "http://localhost:8080/serviceProfile/getServiceInfoForOfferByName/" +
               selectedEntity,
             {
               headers: {
@@ -235,12 +236,14 @@ export default {
             this.pricePerDay = res.data.price;
             this.originalPricePerDay = res.data.price;
             this.maxPersons = res.data.persons;
+            this.serviceProfileId = res.data.serviceProfileId;
 
             if (this.persons > this.maxPersons) {
               this.persons = this.maxPersons;
             }
           });
       } else {
+        this.serviceProfileId = "";
         this.persons = 1;
         this.maxPersons = 1;
         this.pricePerDay = "";
@@ -284,16 +287,24 @@ export default {
         this.error = "";
       }
 
-      let offerDto = {};
+      let offerDto = {
+        serviceProfileId: this.serviceProfileId,
+        discount: this.discount,
+        startDate: this.dateRange[0],
+        endDate: this.dateRange[1],
+        maxPersons: this.persons,
+        price: this.pricePerDay,
+        chosenServices: this.chosenServices,
+      };
       axios
-        .get("http://localhost:8080/appointment/create", offerDto, {
+        .post("http://localhost:8080/appointment/create", offerDto, {
           headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          window.location.reload();
         });
     },
     closeModal: function () {

@@ -26,4 +26,8 @@ public class ServiceProfileService {
     public ServiceProfile getByName(String name) {
         return profileRepository.getByName(name);
     }
+
+    public void save(ServiceProfile profile) {
+        profileRepository.save(profile);
+    }
 }

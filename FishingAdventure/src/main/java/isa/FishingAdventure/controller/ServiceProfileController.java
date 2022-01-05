@@ -34,9 +34,9 @@ public class ServiceProfileController {
     }
 
 
-    @GetMapping(value = "/getPriceAndPersonsByName/{name}")
+    @GetMapping(value = "/getServiceInfoForOfferByName/{name}")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER')")
-    public ResponseEntity<OfferDto> getPriceAndPersonsByName(@PathVariable String name) {
+    public ResponseEntity<OfferDto> getServiceInfoForOfferByName(@PathVariable String name) {
         ServiceProfile profile = serviceProfileService.getByName(name);
         OfferDto dto = new OfferDto(profile);
         return new ResponseEntity<>(dto, HttpStatus.OK);
