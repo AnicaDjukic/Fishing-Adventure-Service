@@ -99,8 +99,8 @@
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
               <p class="shadow-none" style="margin: 0">
-                {{ adventureEntity.street }} {{ adventureEntity.city }}
-                {{ adventureEntity.country }}
+                {{ adventureEntity.location.address.street }} {{ adventureEntity.location.address.city }}
+                {{ adventureEntity.location.address.country }}
               </p>
               <p
                 class="shadow-none"
