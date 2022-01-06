@@ -147,7 +147,16 @@ const routes = [{
     path: '/fishingAdventures',
     name: 'MyFishingAdventures',
     component: () =>
-        import ('../views/MyFishingAdventures.vue')
+        import ('../views/MyFishingAdventures.vue'),
+        beforeEnter: (to, from, next) => {
+            checkAuthentification().then(response => {
+                if (response != "ROLE_FISHING_INSTRUCTOR") {
+                    next("/")
+                } else {
+                    next();
+                }
+            })
+        }
 }, {
     path: '/instructorReservations',
     name: 'InstructorReservations',

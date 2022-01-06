@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import isa.FishingAdventure.dto.FishingAdventureDto;
 import isa.FishingAdventure.model.FishingAdventure;
@@ -48,14 +45,17 @@ public class FishingAdventureController{
 		return new ResponseEntity<>(fishingAdventureDtos, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/all/{token}")
+	@GetMapping(value = "/allByUser")
 	@PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')")
-	public ResponseEntity<List<FishingAdventure>> getAllFishingAdventuresByEmail(@PathVariable String token) {
-		String email = tokenUtils.getEmailFromToken(token);
-
+	public ResponseEntity<List<FishingAdventureDto>> getAllFishingAdventuresByEmail(@RequestHeader("Authorization") String token) {
+		String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
 		FishingInstructor instructor = instructorService.findByEmail(email);
 
-		List<FishingAdventure> fishingAdventures = adventureService.findByFishingInstructor(instructor);
-		return new ResponseEntity<>(fishingAdventures, HttpStatus.OK);
+		List<FishingAdventureDto> fishingAdventureDtos = new ArrayList<FishingAdventureDto>();
+		for (FishingAdventure fa: adventureService.findByFishingInstructor(instructor)) {
+			FishingAdventureDto dto = new FishingAdventureDto(fa);
+			fishingAdventureDtos.add(dto);
+		}
+		return new ResponseEntity<>(fishingAdventureDtos, HttpStatus.OK);
 	}
 }

@@ -89,9 +89,7 @@ export default {
   mounted: function () {
     axios
       .get(
-        "http://localhost:8080/fishingAdventure/all/" +
-          localStorage.refreshToken,
-        {
+        "http://localhost:8080/fishingAdventure/allByUser", {
           headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
