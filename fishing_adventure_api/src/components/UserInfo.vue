@@ -226,12 +226,13 @@
                       </button>
                       <span class="col-md-4 m-0 me-2"></span>
                       <button
-                        id="deleteAccount"
                         class="btn btn-primary col-md-4"
                         style="
                           background-color: rgb(94, 23, 30);
                           border-color: rgb(94, 23, 30);
                         "
+                        data-bs-toggle="modal"
+                        :data-bs-target="'#deleteAccount'"
                       >
                         Delete account
                       </button>
@@ -245,11 +246,14 @@
       </div>
     </div>
   </div>
+  <DeleteAccountModal id="deleteAccount"></DeleteAccountModal>
 </template>
 
 <script>
 import axios from "axios";
+import DeleteAccountModal from "@/components/DeleteAccountModal.vue";
 export default {
+  components: { DeleteAccountModal },
   mounted: function () {
     if (localStorage.jwt) {
       axios

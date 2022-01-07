@@ -217,9 +217,12 @@ async function refreshToken() {
                 "Access-Control-Allow-Origin": "http://localhost:8080",
                 Authorization: "Bearer " + localStorage.refreshToken,
             },
+        }).then(() => {
+            this.$toast.show("Session successfully refreshed.");
         })
     } catch {
         localStorage.clear();
         console.log("Refreshing token failed.")
+        this.$toast.show("Session expired.");
     }
 }
