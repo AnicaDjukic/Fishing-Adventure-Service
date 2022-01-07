@@ -21,6 +21,7 @@
           <textarea
             class="login-inputs-textarea"
             placeholder="Enter text here.."
+            v-model="content"
           />
           <br />
         </div>
@@ -41,15 +42,24 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   components: {},
   name: "DeleteAccountModal",
   data: function () {
-    return {};
+    return {
+      content: "",
+    };
   },
   mounted: function () {},
   methods: {
     createRequest: function () {
+      axios.post("http://localhost:8080/deleteRequest/create", this.content, {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      });
       this.$toast.show(
         "Request sent and waiting for review. You will be notified by email about the status of your account.",
         {

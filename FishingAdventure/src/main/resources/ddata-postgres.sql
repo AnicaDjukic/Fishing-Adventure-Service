@@ -607,3 +607,10 @@ INSERT INTO reservation
 VALUES (102, false, 102, 104, null);
 INSERT INTO reservation
 VALUES (103, false, 103, 104, null);
+
+--
+-- Data for Name: delete_request; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+INSERT INTO delete_request
+VALUES (101, '2022-01-05 15:43:20.716', 'client3@gmail.com', 'Not interested in new adventures anymore.', false,
+        'ROLE_CLIENT');

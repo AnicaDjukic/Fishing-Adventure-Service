@@ -207,6 +207,15 @@
                       v-model="password2"
                     />
                   </div>
+                  <div class="row shadow-none">
+                    <p class="card-text text-left shadow-none ">
+                      
+                      <pre style="overflow: inherit;color: rgb(219 89 102)"> <i
+                        class="fas fa-exclamation-triangle"
+                        style="color: rgb(219 89 102)"
+                      ></i> Account requested for deletion.</pre>
+                    </p>
+                  </div>
                   <div class="row shadow-none mt-5">
                     <div class="col-md-20">
                       <button
@@ -233,6 +242,7 @@
                         "
                         data-bs-toggle="modal"
                         :data-bs-target="'#deleteAccount'"
+                        v-if="!isRequested"
                       >
                         Delete account
                       </button>
@@ -253,8 +263,25 @@
 import axios from "axios";
 import DeleteAccountModal from "@/components/DeleteAccountModal.vue";
 export default {
+  props: ["requested"],
+  data: function () {
+    return {
+      role: undefined,
+      password1: "",
+      password2: "",
+      readioChecked: "",
+      name: "Derek Hayward",
+      account: "darek.hayward@gmail.com",
+      phonenumber: "347-393-6833",
+      address: "3293 Cantebury Drive, Garden City",
+      biography: "",
+      isRequested: false,
+    };
+  },
   components: { DeleteAccountModal },
   mounted: function () {
+    this.isRequested = this.requested;
+    console.log(this.isRequested);
     if (localStorage.jwt) {
       axios
         .get("http://localhost:8080/users/getRole", {
@@ -286,19 +313,6 @@ export default {
           res.data.street + ", " + res.data.city + ", " + res.data.country;
         this.biography = res.data.biography;
       });
-  },
-  data: function () {
-    return {
-      role: undefined,
-      password1: "",
-      password2: "",
-      readioChecked: "",
-      name: "Derek Hayward",
-      account: "darek.hayward@gmail.com",
-      phonenumber: "347-393-6833",
-      address: "3293 Cantebury Drive, Garden City",
-      biography: "",
-    };
   },
   methods: {
     enableAboutMe: function () {
