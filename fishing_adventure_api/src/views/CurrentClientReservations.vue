@@ -15,11 +15,6 @@
           style="justify-content: space-evenly; align-items: center"
         >
           <div class="col-md-3">
-            <button type="button" class="btn btn-outline-primary text-nowrap">
-              New reservation
-            </button>
-          </div>
-          <div class="col-md-3">
             <input
               class="form-control me-2"
               type="search"
@@ -59,14 +54,18 @@
     </div>
     <div style="margin-top: 5%">
       <ClientReservationCard
-        :review="true"
-        v-for="index in 5"
-        :key="index"
+        :review="false"
+        :current="true"
+        v-for="reservation in nonCancellable"
+        :key="reservation.id"
+        :reservation="reservation"
       ></ClientReservationCard>
       <ClientReservationCard
-        :review="false"
-        v-for="index in 5"
-        :key="index"
+        :review="true"
+        :current="true"
+        v-for="reservation in reservations"
+        :key="reservation.id"
+        :reservation="reservation"
       ></ClientReservationCard>
     </div>
   </div>
@@ -74,17 +73,41 @@
 
 <script>
 import ClientReservationCard from "@/components/ClientReservationCard.vue";
+import axios from "axios";
+import moment from "moment";
 export default {
   components: { ClientReservationCard },
   data: function () {
     return {
       numberOfPersons: "",
-      range: {
-        start: new Date(2020, 9, 12),
-        end: new Date(2020, 9, 16),
-      },
       date: "",
+      nonCancellable:[],
+      reservations:[],
+      range: {
+        start: new Date(),
+        end: new Date(),
+      },
     };
+  },
+  mounted() {
+    axios
+      .get("http://localhost:8080/reservation/client/current", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 3);
+        for(let d of res.data) {
+          if(moment(d.startDate).isBefore(moment(currentDate)))
+            this.nonCancellable.push(d);
+          else
+            this.reservations.push(d);
+        }
+      });
   },
   methods: {},
 };

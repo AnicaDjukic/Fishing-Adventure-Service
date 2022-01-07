@@ -14,11 +14,6 @@
           style="justify-content: space-evenly; align-items: center"
         >
           <div class="col-md-3">
-            <button type="button" class="btn btn-outline-primary text-nowrap">
-              New reservation
-            </button>
-          </div>
-          <div class="col-md-3">
             <input
               class="form-control me-2"
               type="search"
@@ -59,6 +54,7 @@
     <div style="margin-top: 5%">
       <ClientReservationCard
         :review="false"
+        :current="false"
         v-for="index in 5"
         :key="index"
       ></ClientReservationCard>

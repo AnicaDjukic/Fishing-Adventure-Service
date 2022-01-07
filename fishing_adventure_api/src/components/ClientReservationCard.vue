@@ -9,14 +9,10 @@
             class="img-fluid rounded-start shadow-none"
           />
         </div>
-
         <div class="col-md-8 shadow-none" name="main-col">
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
-              <h5 class="card-title shadow-none">Villa Madam</h5>
-              <p class="reservationStatus shadow-none" v-if="review != true">
-                <b class="shadow-none"></b>
-              </p>
+              <h5 class="card-title shadow-none">{{ serviceName }}</h5>
             </div>
             <div
               class="card-text shadow-none"
@@ -28,59 +24,57 @@
                     Client:
                   </p>
                   <p class="advertiserTitle shadow-none col-md-6">
-                    @alexaLopez
+                    {{ client.email }}
                   </p>
                 </div>
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">
-                    Period:
+                    Start date:
                   </p>
                   <p class="card-text text-left shadow-none col-md-8">
-                    {{ date }}
+                    {{ startDate }}
+                  </p>
+                </div>
+                <div class="row shadow-none">
+                  <p class="card-text text-left shadow-none col-md-4">
+                    End date:
+                  </p>
+                  <p class="card-text text-left shadow-none col-md-8">
+                    {{ endDate }}
                   </p>
                 </div>
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">Price:</p>
                   <p class="card-text text-left shadow-none col-md-8">
-                    50 <i class="fas fa-dollar-sign"></i>
+                    {{ price }} <i class="fas fa-dollar-sign"></i>
                   </p>
                 </div>
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">
                     Persons:
                   </p>
-                  <p class="card-text text-left shadow-none col-md-8">2</p>
+                  <p class="card-text text-left shadow-none col-md-8">
+                    {{ persons }}
+                  </p>
                 </div>
                 <p class="card-text text-left shadow-none">
                   Additional services:
                 </p>
 
                 <div class="row shadow-none" style="margin-left: 1%">
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-wifi fa-xs shadow-none"></i> WiFi
-                  </p>
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-tv fa-xs shadow-none"></i> TV
-                  </p>
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-fan fa-xs shadow-none"></i> Air Conditioner
-                  </p>
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-parking fa-xs shadow-none"></i> Private
-                    parking
-                  </p>
-                  <p class="additionalServices shadow-none">
-                    <i class="fas fa-glass-martini-alt"></i> Bar
+                  <p
+                    v-for="additionalService in reservation.chosenServices"
+                    :key="additionalService.id"
+                    class="additionalServices shadow-none"
+                  >
+                    <i class="shadow-none"></i> {{ additionalService.name }}
                   </p>
                 </div>
               </div>
 
-
-              
-
               <div class="manageReservation shadow-none">
                 <button
-                  v-if="review != true"
+                  v-if="current == false"
                   class="btn btn-primary shadow-none mb-2"
                   style="
                     background-color: rgb(94 23 30);
@@ -91,7 +85,8 @@
                 </button>
                 <button
                   class="btn btn-primary shadow-none"
-                   v-if="review == true"
+                  v-if="current == true"
+                  :disabled="review != true"
                   style="
                     background-color: rgb(94 23 30);
                     border-color: rgb(94 23 30);
@@ -109,12 +104,40 @@
 </template>
 
 <script>
+import axios from "axios";
+import moment from "moment";
 export default {
-  props: ["review"],
+  props: ["reservation", "review", "current"],
   data: function () {
     return {
-      date: "12/20/2021 - 12/25/2021",
+      serviceName: "",
+      client: {},
+      startDate: {},
+      endDate: {},
+      price: 0.0,
+      persons: 0,
     };
+  },
+  mounted: function () {
+    axios
+      .get("http://localhost:8080/users/get", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.client = res.data;
+      });
+    this.serviceName = this.reservation.serviceName;
+    this.startDate = moment(this.reservation.startDate).format(
+      "DD MMM YYYY hh:mm a"
+    );
+    this.endDate = moment(this.reservation.endDate).format(
+      "DD MMM YYYY hh:mm a"
+    );
+    this.price = this.reservation.price;
+    this.persons = this.reservation.persons;
   },
 };
 </script>
@@ -180,6 +203,18 @@ div {
 
 .card-body {
   padding: 1rem 0 1rem 1rem;
+}
+
+.discountStatus {
+  margin: auto 0px auto auto;
+  text-align: right;
+  padding: 0 10px;
+  background-color: #b1090966;
+  width: 30%;
+  text-align: center;
+  color: white;
+  border-radius: 5px 0px 0px 5px;
+  text-decoration: bold;
 }
 
 .reservationStatus {

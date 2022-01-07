@@ -17,6 +17,7 @@
               <!--<p class="advertiserTitle shadow-none">@marinaGibson</p>-->
               <p
                 class="top-right-corner shadow-none"
+                v-on:click="unsubscribe"
               >
                 <button
                   class="btn btn-primary shadow-none mb-2"
@@ -24,7 +25,6 @@
                     background-color: rgb(94 23 30);
                     border-color: rgb(94 23 30);
                   "
-                  v-on:click="unsubscribe"
                 >
                   Unsubscribe
                 </button>

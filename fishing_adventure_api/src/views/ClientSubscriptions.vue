@@ -78,6 +78,7 @@ export default {
     refresh: function() {
       this.refreshData();
       this.refreshData();
+      this.refreshData();
     },
     refreshData: function() {
       axios

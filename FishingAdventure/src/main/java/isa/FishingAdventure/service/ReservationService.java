@@ -6,6 +6,10 @@ import isa.FishingAdventure.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class ReservationService {
 
@@ -54,6 +58,19 @@ public class ReservationService {
         return true;
     }
 
+    public List<Reservation> getClientCurrentReservations(String token) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        Client client = clientService.findByEmail(email);
+        List<Reservation> reservations = repository.findByClient(client);
+        List<Reservation> currentReservations = new ArrayList<Reservation>();
+        for(Reservation r : reservations){
+            if(r.getAppointment().getStartDate().after(new Date())) {
+                currentReservations.add(r);
+            }
+        }
+        return currentReservations;
+    }
+
     private String createEmail(Client client, Appointment newAppointment, ServiceProfile serviceProfile) {
         StringBuilder content = new StringBuilder();
         content.append(client.getName()).append(" ").append(client.getSurname()).append(" thank you for your reservation!\n");
@@ -73,5 +90,21 @@ public class ReservationService {
         content.append("Sincerely,\n").append("Angler");
 
         return content.toString();
+    }
+
+    public List<ServiceProfile> getServiceProfiles(List<Reservation> reservations) {
+        List<ServiceProfile> serviceProfiles = new ArrayList<ServiceProfile>();
+        System.out.println(reservations.size());
+        for(Reservation r : reservations) {
+            for(ServiceProfile s : serviceProfileService.findAll()){
+                if(s.getAppointments().contains(r.getAppointment())){
+                    System.out.print(s.getId());
+                    serviceProfiles.add(s);
+                    break;
+                }
+            }
+        }
+        System.out.println(serviceProfiles.size());
+        return serviceProfiles;
     }
 }
