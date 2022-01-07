@@ -7,7 +7,9 @@
           Enjoy in your boat <br />
           today!
         </h2>
-        <button class="book-btn">Book a boat</button>
+        <button data-bs-toggle="modal"
+          :data-bs-target="'#cottage'"
+          class="book-btn">Book a boat</button>
       </div>
       <div class="tagline-subscribe-fa" v-if="loggedInRole == 'ROLE_CLIENT'">
         <button class="subscribe-btn" v-if="!subscribed" v-on:click="subscribe">
@@ -298,18 +300,30 @@
       </div>
     </div>
   </div>
+  <ReservationModal
+    :id="'cottage'"
+    v-bind:serviceId="entity.id"
+    v-bind:date="date"
+    v-bind:persons="persons"
+    v-bind:additionalServices="entity.additionalServices"
+    v-bind:price="entity.pricePerDay"
+    v-if="loggedInRole == 'ROLE_CLIENT'"
+  ></ReservationModal>
 </template>
 
 <script>
 import axios from "axios";
+import ReservationModal from "@/components/ReservationModal.vue";
 import OffersCardNoImage from "@/components/OffersCardNoImage.vue";
 export default {
-  components: { OffersCardNoImage },
+  components: { ReservationModal, OffersCardNoImage },
   data: function () {
     return {
       offers: "",
       subscribed: false,
       loggedInRole: "",
+      date: [],
+      persons: 1,
       entity: "",
       address: "",
       location: "",
@@ -360,6 +374,12 @@ export default {
       .finally(() => {
         this.isSubscribed();
       });
+
+    if (this.$route.query.id != undefined) {
+      console.log(this.$route.query.id);
+      this.date = this.$route.query.date;
+      this.persons = this.$route.query.persons;
+    }
 
     axios
       .get(

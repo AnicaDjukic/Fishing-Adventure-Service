@@ -110,7 +110,8 @@ import NewBoatModal from "./NewBoatModal/NewBoatModal.vue";
 
 export default {
   components: { NewBoatModal },
-  props: ["boatEntity"],
+  props: ["boatEntity", "info"],
+  emits: ["reservation"],
   setup(props) {
     const date = ref();
     onMounted(() => {
@@ -146,7 +147,17 @@ export default {
       }
     },
     openBoat: function () {
-      window.location.href = "/boat/?id=" + this.boatEntity.id;
+      if (this.path == "searchboats") {
+        window.location.href =
+          "/boat/?id=" +
+          this.boatEntity.id +
+          "&date=" +
+          this.info.date +
+          "&persons=" +
+          this.info.persons;
+      } else {
+        window.location.href = "/boat/?id=" + this.boatEntity.id;
+      }
     },
     preventPropagation: function (event) {
       event.preventDefault();
@@ -167,6 +178,14 @@ export default {
           },
         })
         .then(window.location.reload());
+    },
+    createReservation: function (event) {
+      let object = {
+        entity: this.entity,
+        event: event,
+      };
+      this.$emit("reservation", object);
+      this.preventPropagation(event);
     },
   },
 };

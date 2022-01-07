@@ -287,7 +287,7 @@
   </div>
   <ReservationModal
     :id="'cottage'"
-    v-bind:cottageId="entity.id"
+    v-bind:serviceId="entity.id"
     v-bind:date="date"
     v-bind:persons="persons"
     v-bind:additionalServices="entity.additionalServices"
@@ -308,7 +308,7 @@ export default {
       subscribed: false,
       loggedInRole: "",
       date: [],
-      persons: 0,
+      persons: 1,
       entity: "",
       address: "",
       location: "",

@@ -1,10 +1,7 @@
 package isa.FishingAdventure.service;
 
 import isa.FishingAdventure.dto.AppointmentDto;
-import isa.FishingAdventure.model.Appointment;
-import isa.FishingAdventure.model.Boat;
-import isa.FishingAdventure.model.BoatOwner;
-import isa.FishingAdventure.model.Image;
+import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.BoatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +18,9 @@ public class BoatService {
 
     @Autowired
     private BoatOwnerService ownerService;
+
+    @Autowired
+    private AvailabilityDateRangeService dateRangeService;
 
     public List<Boat> findAll() {
         return boatRepository.findAll();
@@ -75,5 +75,80 @@ public class BoatService {
             }
         }
         return appointmentDtos;
+    }
+
+    public List<Boat> findAllAvailableBoats(Date start, Date end, int persons) {
+
+        boolean available = true;
+        ArrayList<Boat> availableBoats = new ArrayList<Boat>();
+        System.out.println(findAll().size());
+        for (Boat boat : findAll()) {
+
+            if (boat.getPersons() < persons)
+                continue;
+
+            available = false;
+            for (AvailabilityDateRange dateRange : dateRangeService.findByServiceProfile(boat)) {
+                if (start.after(dateRange.getStartDate()) && end.before(dateRange.getEndDate())) {
+                    available = true;
+                    break;
+                }
+            }
+
+            if (!available)
+                continue;
+
+            for (Appointment ap : boat.getAppointments()) {
+                if (!ap.isReserved())
+                    continue;
+                if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
+                    available = false;
+                    break;
+                }
+            }
+
+            System.out.println(available);
+            if (available)
+                availableBoats.add(boat);
+        }
+
+        return availableBoats;
+    }
+
+    public boolean isBoatAvailableForPersons(Integer id, int persons) {
+        Boat boat = findById(id);
+        return boat.getPersons() >= persons;
+    }
+
+    private Boat findById(Integer id) {
+        return boatRepository.findById(id).orElse(new Boat());
+    }
+
+    public boolean isBoatAvailableForDateRange(Integer id, Date start, Date end) {
+        Boat boat = findById(id);
+
+        boolean available = false;
+        for (AvailabilityDateRange dateRange : dateRangeService.findByServiceProfile(boat)) {
+            if (start.after(dateRange.getStartDate()) && end.before(dateRange.getEndDate())) {
+                available = true;
+                break;
+            }
+        }
+
+        if (!available)
+            return false;
+
+        for (Appointment ap : boat.getAppointments()) {
+            if (!ap.isReserved())
+                continue;
+            System.out.println(start + " " + ap.getStartDate());
+            System.out.println(end + " " + ap.getEndDate());
+            if (start.equals (ap.getStartDate()) || end.equals(ap.getEndDate()) || (start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
+                available = false;
+                break;
+            }
+        }
+
+        return available;
     }
 }

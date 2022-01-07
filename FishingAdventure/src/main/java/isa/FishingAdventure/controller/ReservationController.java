@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "reservation")
@@ -93,6 +90,7 @@ public class ReservationController {
             newAppointment.getChosenServices().add(as);
         }
         newAppointment.setPrice(dto.getPrice());
+        newAppointment.setDateCreated(new Date());
         return newAppointment;
     }
 }
