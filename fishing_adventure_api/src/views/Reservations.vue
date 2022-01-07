@@ -1,11 +1,8 @@
 <template>
   <div>
     <div class="title">
-      <h1>Reservations</h1>
-      <i
-        class="fas fa-id-card fa-3x"
-        style="font-family: 'Font Awesome 5 Pro'"
-      ></i>
+      <h1>My reservations</h1>
+      <img style="height: 10rem" src="@/assets/reserved.png" />
     </div>
     <div style="background-color: #212529; padding: 15px">
       <div class="container w-100" style="flex-direction: column">
@@ -13,6 +10,11 @@
           class="row row-cols-1 row-cols-sm-1 row-cols-md-4"
           style="justify-content: space-evenly; align-items: center"
         >
+          <div class="col-md-3">
+            <button type="button" class="btn btn-outline-primary text-nowrap">
+              New reservation
+            </button>
+          </div>
           <div class="col-md-3">
             <input
               class="form-control me-2"
@@ -43,29 +45,35 @@
               aria-label=".form-select-sm example"
             >
               <option selected>All statuses</option>
-              <option value="1">Upcoming</option>
+              <option value="1">Panding</option>
               <option value="2">Current</option>
-              <option value="3">Finished</option>
+              <option value="3">Review</option>
+              <option value="4">Former</option>
+              <option value="5">Rejected</option>
             </select>
           </div>
         </div>
       </div>
     </div>
     <div style="margin-top: 5%">
-      <FishingAdventureReservationCard
-        v-for="entity in searchResults"
-        :key="entity.id"
-        v-bind:entity="entity"
-      ></FishingAdventureReservationCard>
+      <CottageReservationCard
+        :review="false"
+        v-for="index in 5"
+        :key="index"
+      ></CottageReservationCard>
+      <CottageReservationCard
+        :review="true"
+        v-for="index in 2"
+        :key="index"
+      ></CottageReservationCard>
     </div>
   </div>
 </template>
 
 <script>
-import FishingAdventureReservationCard from "@/components/FishingAdventureReservationCard.vue";
-import axios from "axios";
+import CottageReservationCard from "@/components/CottageReservationCard.vue";
 export default {
-  components: { FishingAdventureReservationCard },
+  components: { CottageReservationCard },
   data: function () {
     return {
       numberOfPersons: "",
@@ -74,25 +82,7 @@ export default {
         end: new Date(2020, 9, 16),
       },
       date: "",
-      searchText: "",
-      searchResults: [],
-      entities: [],
     };
-  },
-  mounted: function () {
-    axios
-      .get(
-        "http://localhost:8080/reservation/allByAdvertiser", {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
-            Authorization: "Bearer " + localStorage.refreshToken,
-          },
-        }
-      )
-      .then((res) => {
-        this.searchResults = res.data;
-        this.entities = res.data;
-      });
   },
   methods: {},
 };
