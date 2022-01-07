@@ -66,11 +66,6 @@ const routes = [{
         })
     }
 }, {
-    path: '/reservations',
-    name: 'HomeOwnerReservations',
-    component: () =>
-        import ('../views/HomeOwnerReservations.vue')
-}, {
     path: '/client/currentReservations',
     name: 'CurrentClientReservations',
     component: () =>
@@ -158,10 +153,19 @@ const routes = [{
             })
         }
 }, {
-    path: '/instructorReservations',
-    name: 'InstructorReservations',
+    path: '/reservations',
+    name: 'Reservations',
     component: () =>
-        import ('../views/InstructorReservations.vue')
+        import ('../views/Reservations.vue'),
+        beforeEnter: (to, from, next) => {
+            checkAuthentification().then(response => {
+                if ((response != "ROLE_FISHING_INSTRUCTOR") && (response != "ROLE_VACATION_HOME_OWNER") && (response != "ROLE_BOAT_OWNER")) {
+                    next("/")
+                } else {
+                    next();
+                }
+            })
+        }
 }, {
     path: '/boats',
     name: 'MyBoats',

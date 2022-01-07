@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title">
-      <h1>My reservations</h1>
+      <h1>Reservations</h1>
       <img style="height: 10rem" src="@/assets/reserved.png" />
     </div>
     <div style="background-color: #212529; padding: 15px">
@@ -10,11 +10,6 @@
           class="row row-cols-1 row-cols-sm-1 row-cols-md-4"
           style="justify-content: space-evenly; align-items: center"
         >
-          <div class="col-md-3">
-            <button type="button" class="btn btn-outline-primary text-nowrap">
-              New reservation
-            </button>
-          </div>
           <div class="col-md-3">
             <input
               class="form-control me-2"
@@ -45,35 +40,29 @@
               aria-label=".form-select-sm example"
             >
               <option selected>All statuses</option>
-              <option value="1">Panding</option>
+              <option value="1">Upcoming</option>
               <option value="2">Current</option>
-              <option value="3">Review</option>
-              <option value="4">Former</option>
-              <option value="5">Rejected</option>
+              <option value="3">Finished</option>
             </select>
           </div>
         </div>
       </div>
     </div>
     <div style="margin-top: 5%">
-      <CottageReservationCard
-        :review="false"
-        v-for="index in 5"
-        :key="index"
-      ></CottageReservationCard>
-      <CottageReservationCard
-        :review="true"
-        v-for="index in 2"
-        :key="index"
-      ></CottageReservationCard>
+      <AdvertiserReservationCard
+        v-for="entity in searchResults"
+        :key="entity.id"
+        v-bind:entity="entity"
+      ></AdvertiserReservationCard>
     </div>
   </div>
 </template>
 
 <script>
-import CottageReservationCard from "@/components/CottageReservationCard.vue";
+import AdvertiserReservationCard from "@/components/AdvertiserReservationCard.vue";
+import axios from "axios";
 export default {
-  components: { CottageReservationCard },
+  components: { AdvertiserReservationCard },
   data: function () {
     return {
       numberOfPersons: "",
@@ -82,7 +71,25 @@ export default {
         end: new Date(2020, 9, 16),
       },
       date: "",
+      searchText: "",
+      searchResults: [],
+      entities: [],
     };
+  },
+  mounted: function () {
+    axios
+      .get(
+        "http://localhost:8080/reservation/allByAdvertiser", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        }
+      )
+      .then((res) => {
+        this.searchResults = res.data;
+        this.entities = res.data;
+      });
   },
   methods: {},
 };
