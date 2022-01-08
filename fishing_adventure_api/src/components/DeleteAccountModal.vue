@@ -45,6 +45,7 @@
 import axios from "axios";
 export default {
   components: {},
+  emits: ["deleterequestsent"],
   name: "DeleteAccountModal",
   data: function () {
     return {
@@ -54,18 +55,25 @@ export default {
   mounted: function () {},
   methods: {
     createRequest: function () {
-      axios.post("http://localhost:8080/deleteRequest/create", this.content, {
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
-          Authorization: "Bearer " + localStorage.refreshToken,
-        },
-      });
-      this.$toast.show(
-        "Request sent and waiting for review. You will be notified by email about the status of your account.",
-        {
-          duration: 7000,
-        }
-      );
+      let request = {
+        content: this.content,
+      };
+      axios
+        .post("http://localhost:8080/deleteRequest/create", request, {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then(() => {
+          this.$emit("deleterequestsent", true);
+          this.$toast.show(
+            "Request sent and waiting for review. You will be notified by email about the status of your account.",
+            {
+              duration: 7000,
+            }
+          );
+        });
     },
   },
 };

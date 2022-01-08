@@ -1,5 +1,6 @@
 package isa.FishingAdventure.controller;
 
+import isa.FishingAdventure.dto.DeleteRequestDto;
 import isa.FishingAdventure.service.DeleteRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,8 @@ public class DeleteRequestController {
     private DeleteRequestService deleteRequestService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<String> createDeleteRequest(@RequestHeader("Authorization") String token, @RequestBody String content) {
-        System.out.println(content);
-        deleteRequestService.createDeleteRequest(token, content);
+    public ResponseEntity<String> createDeleteRequest(@RequestHeader("Authorization") String token, @RequestBody DeleteRequestDto requestDto) {
+        deleteRequestService.createDeleteRequest(token, requestDto.getContent());
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 

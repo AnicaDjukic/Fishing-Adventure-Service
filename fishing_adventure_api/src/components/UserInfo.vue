@@ -262,14 +262,13 @@
       </div>
     </div>
   </div>
-  <DeleteAccountModal id="deleteAccount"></DeleteAccountModal>
+  <DeleteAccountModal id="deleteAccount" v-on:deleterequestsent="deleteRequestSent"></DeleteAccountModal>
 </template>
 
 <script>
 import axios from "axios";
 import DeleteAccountModal from "@/components/DeleteAccountModal.vue"
 export default {
-  props: ["requested"],
   data: function () {
     return {
       role: undefined,
@@ -285,7 +284,16 @@ export default {
   },
   components: { DeleteAccountModal },
   mounted: function () {
-    this.isRequested = this.requested;
+    axios
+      .get("http://localhost:8080/deleteRequest/isRequested", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.isRequested = res.data;
+      });
     if (localStorage.jwt) {
       axios
         .get("http://localhost:8080/users/getRole", {
@@ -316,6 +324,9 @@ export default {
       });
   },
   methods: {
+    deleteRequestSent: function(){
+      this.isRequested = true;
+    },
     changeMenuDisplay: function (event) {
       let elID = event.currentTarget.id;
       document.getElementById("about").style.borderBottom = "0px";
