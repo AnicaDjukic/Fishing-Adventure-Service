@@ -53,16 +53,25 @@
         v-for="entity in searchResults"
         :key="entity.id"
         v-bind:entity="entity"
+        @createReservation="createReservation"
       ></AdvertiserReservationCard>
     </div>
   </div>
+  <AdvertiserReservationModal 
+    id="AdvertiserReservationModal"
+    :clientEmail="clientEmail"
+    :clientName="clientName"
+    :clientSurname="clientSurname"
+  ></AdvertiserReservationModal>
 </template>
 
 <script>
 import AdvertiserReservationCard from "@/components/AdvertiserReservationCard.vue";
+import AdvertiserReservationModal from "@/components/AdvertiserReservationModal.vue";
+import { Modal } from 'bootstrap';
 import axios from "axios";
 export default {
-  components: { AdvertiserReservationCard },
+  components: { AdvertiserReservationCard, AdvertiserReservationModal },
   data: function () {
     return {
       numberOfPersons: "",
@@ -74,6 +83,9 @@ export default {
       searchText: "",
       searchResults: [],
       entities: [],
+      clientEmail: "",
+      clientNane: "",
+      clientSurname: "",
     };
   },
   mounted: function () {
@@ -91,7 +103,16 @@ export default {
         this.entities = res.data;
       });
   },
-  methods: {},
+  methods: {
+    createReservation(email, clientName, clientSurname) {
+      this.clientEmail = email;
+      this.clientName = clientName;
+      this.clientSurname = clientSurname;
+      var myModal = document.getElementById('AdvertiserReservationModal');
+      var modal = Modal.getOrCreateInstance(myModal)
+      modal.show()
+    }
+  },
 };
 </script>
 

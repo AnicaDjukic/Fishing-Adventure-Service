@@ -93,6 +93,7 @@
                   v-if="entity.status == 'Current'"
                   class="btn btn-primary shadow-none mb-2"
                   style="background-color: #026756; border-color: #A0C6C0; width:max-content; margin-bottom: 3rem!important;"
+                  v-on:click="createReservation"
                 >
                   New reservation
                 </button>
@@ -109,6 +110,7 @@
 import moment from "moment";
 export default {
   props: ["entity"],
+  emits: ["createReservation"],
   data: function () {
     return {
       date: "12/20/2021 - 12/25/2021",
@@ -122,6 +124,11 @@ export default {
     this.startDate = moment(this.startDate).format("MM/DD/yyyy HH:mm");
     this.endDate = moment(this.endDate).format("MM/DD/yyyy HH:mm");
   },
+  methods: {
+    createReservation: function() {
+      this.$emit("createReservation", this.entity.clientEmail, this.entity.clientName, this.entity.clientSurname);
+    }
+  }
 };
 </script>
 <style scoped>
