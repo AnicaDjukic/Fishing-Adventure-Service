@@ -3,7 +3,7 @@
     <div class="footer">
       <h4>About Us</h4>
       <p>
-        We are students at the Faculty of Tehnical Sciences in Novi Sad
+        We are students at the Faculty of Technical Sciences in Novi Sad
         <br />
         trying to make this project for a course in Internet Software
         Architecture

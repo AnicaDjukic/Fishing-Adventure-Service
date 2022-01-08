@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "reservation")
@@ -61,7 +58,7 @@ public class ReservationController {
 
     private List<ReservationDto> createReservationDtos(List<Reservation> reservations, List<ServiceProfile> serviceProfiles) {
         List<ReservationDto> reservationDtos = new ArrayList<>();
-        for(int i = 0; i < reservations.size(); i++){
+        for (int i = 0; i < reservations.size(); i++) {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservations.get(i).getReservationId());
             dto.setStartDate(reservations.get(i).getAppointment().getStartDate());
@@ -80,6 +77,7 @@ public class ReservationController {
         newAppointment.setPlace("");
         newAppointment.setDiscount(0.0);
         newAppointment.setReserved(true);
+        newAppointment.setDateCreated(new Date());
         newAppointment.setStartDate(dto.getStartDate());
         newAppointment.setEndDate(dto.getEndDate());
         long duration = (dto.getEndDate().getTime() - dto.getStartDate().getTime()) / (1000 * 60 * 60 * 24);
