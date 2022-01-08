@@ -1,11 +1,13 @@
 <template>
-  <div>
+  <div class="fa-page">
     <h2 v-if="role == 'ROLE_CLIENT'" style="color: white">
       You have 2 penalties, after 3 penalties you will not be allow create any
       reservation
     </h2>
     <div class="card mb-3 bg-dark mt-3" style="width: 80%; margin: auto">
+      
       <div class="row g-0">
+        
         <div class="col-md-4 shadow-none">
           <img
             v-if="role != 'ROLE_CLIENT' && role != 'ROLE_ADMIN'"
@@ -48,39 +50,41 @@
           />
         </div>
         <div class="col-md-8 shadow-none" name="main-col">
-          <div class="card-body shadow-none p-0">
-            <div
-              class="btn-group"
-              role="group"
-              aria-label="Basic radio toggle button group"
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-info">
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarText"
+          aria-controls="navbarText"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 menu-ol">
+            <li
+              v-on:click="changeMenuDisplay"
+              id="about"
+              style="border-bottom: 1px solid white"
             >
-              <input
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio1"
-                value="1"
-                v-model="readioChecked"
-                autocomplete="off"
-              />
-              <label class="btn navigation-btn" for="btnradio1">About me</label>
+              About me
+            </li>
+            <li v-on:click="changeMenuDisplay" id="account">
+              Account
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-              <input
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio2"
-                value="2"
-                v-model="readioChecked"
-                autocomplete="off"
-              />
-              <label class="btn navigation-btn" for="btnradio2">Account</label>
-            </div>
-            <div class="container" style="min-height: 320px">
-              <div
-                v-if="readioChecked == '1'"
+    <div class="menu">
+      <div class="menu-body">
+        <div class="menu-about" style="text-align: justify">
+          <div
                 class="card-text shadow-none info-container"
-                style=""
               >
                 <div
                   class="shadow-none"
@@ -163,95 +167,97 @@
                     Your points: 50
                   </h2>
                 </div>
-              </div>
-              <div
-                v-if="readioChecked == '2'"
-                class="card-text shadow-none info-container"
-                style=""
-              >
-                <div class="shadow-none" style="width: 100%; padding: 40px">
-                  <div class="row shadow-none">
-                    <p class="card-text text-left shadow-none col-md-3">
-                      Account:
-                    </p>
-                    <input
-                      type="text"
-                      v-model="account"
-                      disabled
-                      class="shadow-none login-inputs col-md-8 mb-2"
-                    />
-                  </div>
-                  <div class="row shadow-none">
-                    <p class="card-text text-left shadow-none col-md-3">
-                      Password:
-                    </p>
-                    <input
-                      name="account"
-                      disabled
-                      type="password"
-                      class="login-inputs col-md-8 mb-2"
-                      placeholder="Enter new password"
-                      v-model="password1"
-                    />
-                  </div>
-                  <div class="row shadow-none">
-                    <p class="card-text text-left shadow-none col-md-3">
-                      Password:
-                    </p>
-                    <input
-                      name="account"
-                      disabled
-                      type="password"
-                      class="login-inputs col-md-8 mb-2"
-                      placeholder="Enter new password again"
-                      v-model="password2"
-                    />
-                  </div>
-                  <div class="row shadow-none">
-                    <p class="card-text text-left shadow-none ">
-                      
-                      <pre style="overflow: inherit;color: rgb(219 89 102)"> <i
-                        class="fas fa-exclamation-triangle"
-                        style="color: rgb(219 89 102)"
-                      ></i> Account requested for deletion.</pre>
-                    </p>
-                  </div>
-                  <div class="row shadow-none mt-5">
-                    <div class="col-md-20">
-                      <button
-                        class="btn btn-primary col-md-4"
-                        id="editAccount"
-                        v-on:click="enableAccount"
-                      >
-                        Change password
-                      </button>
-                      <button
-                        id="saveAccount"
-                        style="display: none"
-                        class="btn btn-primary col-md-4"
-                        v-on:click="changePassword"
-                      >
-                        Save
-                      </button>
-                      <span class="col-md-4 m-0 me-2"></span>
-                      <button
-                        class="btn btn-primary col-md-4"
-                        style="
-                          background-color: rgb(94, 23, 30);
-                          border-color: rgb(94, 23, 30);
-                        "
-                        data-bs-toggle="modal"
-                        :data-bs-target="'#deleteAccount'"
-                        v-if="!isRequested"
-                      >
-                        Delete account
-                      </button>
+          </div>
+          
+        </div>
+
+        <div class="menu-account" style="display: none">
+          <div class="card-text shadow-none info-container">
+                  <div class="shadow-none" style="width: 100%; padding: 40px">
+                    <div class="row shadow-none">
+                      <p class="card-text text-left shadow-none col-md-3">
+                        Account:
+                      </p>
+                      <input
+                        type="text"
+                        v-model="account"
+                        disabled
+                        class="shadow-none login-inputs col-md-8 mb-2"
+                      />
+                    </div>
+                    <div class="row shadow-none">
+                      <p class="card-text text-left shadow-none col-md-3">
+                        Password:
+                      </p>
+                      <input
+                        name="account"
+                        disabled
+                        type="password"
+                        class="login-inputs col-md-8 mb-2"
+                        placeholder="Enter new password"
+                        v-model="password1"
+                      />
+                    </div>
+                    <div class="row shadow-none">
+                      <p class="card-text text-left shadow-none col-md-3">
+                        Password:
+                      </p>
+                      <input
+                        name="account"
+                        disabled
+                        type="password"
+                        class="login-inputs col-md-8 mb-2"
+                        placeholder="Enter new password again"
+                        v-model="password2"
+                      />
+                    </div>
+                    <div class="row shadow-none" v-if="isRequested">
+                      <p class="card-text text-left shadow-none ">
+                        
+                        <pre style="overflow: inherit;color: rgb(219 89 102)"> <i
+                          class="fas fa-exclamation-triangle"
+                          style="color: rgb(219 89 102)"
+                        ></i> Account requested for deletion.</pre>
+                      </p>
+                    </div>
+                    <div class="row shadow-none mt-5">
+                      <div class="col-md-20">
+                        <button
+                          class="btn btn-primary col-md-4"
+                          id="editAccount"
+                          v-on:click="enableAccount"
+                        >
+                          Change password
+                        </button>
+                        <button
+                          id="saveAccount"
+                          style="display: none"
+                          class="btn btn-primary col-md-4"
+                          v-on:click="changePassword"
+                        >
+                          Save
+                        </button>
+                        <span class="col-md-4 m-0 me-2"></span>
+                        <button
+                          class="btn btn-primary col-md-4"
+                          style="
+                            background-color: rgb(94, 23, 30);
+                            border-color: rgb(94, 23, 30);
+                          "
+                          data-bs-toggle="modal"
+                          :data-bs-target="'#deleteAccount'"
+                          v-if="!isRequested"
+                        >
+                          Delete account
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
+                </div>
+      </div>
+    </div>
+          
         </div>
       </div>
     </div>
@@ -261,7 +267,7 @@
 
 <script>
 import axios from "axios";
-import DeleteAccountModal from "@/components/DeleteAccountModal.vue";
+import DeleteAccountModal from "@/components/DeleteAccountModal.vue"
 export default {
   props: ["requested"],
   data: function () {
@@ -269,7 +275,6 @@ export default {
       role: undefined,
       password1: "",
       password2: "",
-      readioChecked: "",
       name: "Derek Hayward",
       account: "darek.hayward@gmail.com",
       phonenumber: "347-393-6833",
@@ -281,7 +286,6 @@ export default {
   components: { DeleteAccountModal },
   mounted: function () {
     this.isRequested = this.requested;
-    console.log(this.isRequested);
     if (localStorage.jwt) {
       axios
         .get("http://localhost:8080/users/getRole", {
@@ -295,9 +299,6 @@ export default {
         });
     }
 
-    let element = document.getElementById("btnradio1");
-    element.checked = true;
-    this.readioChecked = "1";
     axios
       .get("http://localhost:8080/users/get", {
         headers: {
@@ -315,6 +316,24 @@ export default {
       });
   },
   methods: {
+    changeMenuDisplay: function (event) {
+      let elID = event.currentTarget.id;
+      document.getElementById("about").style.borderBottom = "0px";
+      document.getElementById("account").style.borderBottom = "0px";
+
+      document.getElementById(elID).style.borderBottom = "1px solid white";
+
+      if (elID == "about") {
+        document.querySelector(".menu-about").style.display = "block";
+        document.querySelector(".menu-account").style.display = "none";
+      } else if (elID == "account") {
+        document.querySelector(".menu-about").style.display = "none";
+        document.querySelector(".menu-account").style.display = "block";
+      } else {
+        document.querySelector(".menu-about").style.display = "none";
+        document.querySelector(".menu-account").style.display = "none";
+      }
+    },
     enableAboutMe: function () {
       var elements = document.getElementsByName("aboutMe");
       var editBtn = document.getElementById("editAboutMe");
@@ -411,116 +430,6 @@ export default {
 };
 </script>
 
-<style scoped>
-.img-fluid {
-  width: 100%;
-  height: 100%;
-}
-.overlay {
-  background: rgb(17, 16, 16);
-  background: linear-gradient(
-    90deg,
-    rgba(17, 16, 16, 1) 0%,
-    rgba(30, 34, 36, 1) 50%,
-    rgba(33, 37, 41, 1) 100%
-  );
-}
+<style scoped src="@/css/userInfo.css">
 
-.navigation-btn {
-  border: 0;
-  background-color: transparent;
-  color: white;
-  border-bottom: 0.5px solid white;
-  font-size: 18px;
-}
-
-.navigation-btn:hover {
-  transition: 0.2s;
-  font-size: 19px;
-}
-
-.btn-check:checked + .navigation-btn {
-  transition: 0.2s;
-  font-weight: bold;
-  font-size: 18.5px;
-}
-.login-inputs {
-  height: 20%;
-  display: block;
-  background-color: transparent;
-  border-width: 0;
-  border-bottom-width: 0.5px;
-  border-color: white;
-  color: white;
-}
-
-.login-inputs:disabled {
-  border-color: gray;
-  color: gray;
-}
-
-.login-inputs-select {
-  display: block;
-  margin: 15px auto 0 auto;
-  background-color: transparent;
-  width: 58%;
-  border-width: 0;
-  border-bottom-width: 1px;
-  border-color: white;
-  padding: 2px 16px;
-  color: white;
-  font-size: 17px;
-}
-
-.login-inputs-select option {
-  background-color: rgba(44, 53, 63, 1);
-  color: white;
-}
-
-.login-inputs-select:focus {
-  border-width: 1px;
-}
-
-#text1 {
-  color: white;
-  letter-spacing: 8px;
-  font-size: 20px;
-  animation: animation2 0.75s ease-out 0s forwards;
-}
-
-#text2 {
-  margin-top: 20px;
-  width: 50vh;
-  animation: animation2 0.75s ease-out 1s forwards;
-}
-@keyframes animation1 {
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes animation2 {
-  100% {
-    opacity: 1;
-    left: 0px;
-  }
-}
-
-.info-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-  left: 50px;
-  opacity: 0;
-  animation: animation2 0.2s ease-out 0s forwards;
-}
-
-.row {
-  justify-content: center;
-}
-
-.btn-primary {
-  background-color: #131517f3;
-  border-color: #131517f3;
-}
 </style>

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <UserInfo
-      :requested="isRequestedForDelete"
-      v-if="isRequestedForDelete != undefined"
-    ></UserInfo>
+    <UserInfo></UserInfo>
     <HomeOwnerStatistics></HomeOwnerStatistics>
   </div>
 </template>
@@ -29,7 +26,6 @@ export default {
       })
       .then((res) => {
         this.isRequestedForDelete = res.data;
-        console.log(res.data);
       });
   },
 };
