@@ -1,13 +1,7 @@
 <template>
   <div class="fa-page">
-    <h2 v-if="role == 'ROLE_CLIENT'" style="color: white">
-      You have 2 penalties, after 3 penalties you will not be allow create any
-      reservation
-    </h2>
     <div class="card mb-3 bg-dark mt-3" style="width: 80%; margin: auto">
-      
       <div class="row g-0">
-        
         <div class="col-md-4 shadow-none">
           <img
             v-if="role != 'ROLE_CLIENT' && role != 'ROLE_ADMIN'"
@@ -51,139 +45,133 @@
         </div>
         <div class="col-md-8 shadow-none" name="main-col">
           <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-info">
-      <div class="container-fluid">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarText"
-          aria-controls="navbarText"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 menu-ol">
-            <li
-              v-on:click="changeMenuDisplay"
-              id="about"
-              style="border-bottom: 1px solid white"
-            >
-              About me
-            </li>
-            <li v-on:click="changeMenuDisplay" id="account">
-              Account
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <div class="menu">
-      <div class="menu-body">
-        <div class="menu-about" style="text-align: justify">
-          <div
-                class="card-text shadow-none info-container"
+            <div class="container-fluid">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarText"
+                aria-controls="navbarText"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
               >
-                <div
-                  class="shadow-none"
-                  style="width: 100%; padding: 20px; text-align: left"
-                >
-                  <div class="row shadow-none">
-                    <p class="card-text text-left shadow-none col-md-3">
-                      Name:
-                    </p>
-                    <input
-                      disabled
-                      type="text"
-                      v-model="name"
-                      name="aboutMe"
-                      class="shadow-none login-inputs col-md-8 mb-2"
-                    />
-                  </div>
-                  <div class="row shadow-none">
-                    <p class="card-text text-left shadow-none col-md-3">
-                      Biography:
-                    </p>
-                    <textarea
-                      name="aboutMe"
-                      v-model="biography"
-                      style="
-                        min-height: 100px;
-                        margin-bottom: 20px;
-                        resize: none;
-                      "
-                      disabled
-                      placeholder="Something about me.."
-                      class="shadow-none login-inputs col-md-8"
-                    />
-                  </div>
-                  <div class="row shadow-none">
-                    <p class="card-text text-left shadow-none col-md-3">
-                      Phonenumber:
-                    </p>
-                    <input
-                      name="aboutMe"
-                      type="text"
-                      v-model="phonenumber"
-                      disabled
-                      class="shadow-none login-inputs col-md-8 mb-2"
-                    />
-                  </div>
-                  <div class="row shadow-none">
-                    <p class="card-text text-left shadow-none col-md-3">
-                      Address:
-                    </p>
-                    <input
-                      name="aboutMe"
-                      type="text"
-                      v-model="address"
-                      disabled
-                      class="shadow-none login-inputs col-md-8 mb-2"
-                    />
-                  </div>
-                  <div class="row shadow-none">
-                    <button
-                      id="editAboutMe"
-                      class="btn btn-primary col-md-4"
-                      v-on:click="enableAboutMe"
-                    >
-                      Edit settings
-                    </button>
-                    <button
-                      id="saveAboutMe"
-                      style="display: none"
-                      class="btn btn-primary col-md-4"
-                      v-on:click="saveInfo"
-                    >
-                      Save
-                    </button>
-                  </div>
-                  <h2 v-if="role == 'ROLE_CLIENT'" style="color: white">
-                    User category: <b style="color: orange"> GOLD USER </b>
-                  </h2>
-                  <h2 v-if="role == 'ROLE_CLIENT'" style="color: white">
-                    Your points: 50
-                  </h2>
-                </div>
-          </div>
-          
-        </div>
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 menu-ol">
+                  <li
+                    v-on:click="changeMenuDisplay"
+                    id="about"
+                    style="border-bottom: 1px solid white"
+                  >
+                    About me
+                  </li>
+                  <li v-on:click="changeMenuDisplay" id="account">
+                    Account
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
 
-        <div class="menu-account" style="display: none">
-          <div class="card-text shadow-none info-container">
-                  <div class="shadow-none" style="width: 100%; padding: 40px">
+          <div class="menu">
+            <div class="menu-body">
+              <div class="menu-about" style="text-align: justify">
+                <div
+                  class="card-text shadow-none info-container"
+                  >
+                    <div
+                      class="shadow-none"
+                      style="width: 100%; padding: 20px; text-align: left"
+                      >
+                      <div class="row shadow-none">
+                        <p class="card-text text-left shadow-none col-md-3">
+                          Name:
+                        </p>
+                        <input
+                          disabled
+                          type="text"
+                          v-model="name"
+                          name="aboutMe"
+                          class="shadow-none login-inputs col-md-8 mb-2"
+                        />
+                      </div>
+                      <div class="row shadow-none">
+                        <p class="card-text text-left shadow-none col-md-3">
+                          Biography:
+                        </p>
+                        <textarea
+                          name="aboutMe"
+                          v-model="biography"
+                          style="
+                            min-height: 100px;
+                            margin-bottom: 20px;
+                            resize: none;
+                          "
+                          disabled
+                          placeholder="Something about me.."
+                          class="shadow-none login-inputs col-md-8"
+                        />
+                      </div>
+                      <div class="row shadow-none">
+                        <p class="card-text text-left shadow-none col-md-3">
+                          Phonenumber:
+                        </p>
+                        <input
+                          name="aboutMe"
+                          type="text"
+                          v-model="phonenumber"
+                          disabled
+                          class="shadow-none login-inputs col-md-8 mb-2"
+                        />
+                      </div>
+                      <div class="row shadow-none">
+                        <p class="card-text text-left shadow-none col-md-3">
+                          Address:
+                        </p>
+                        <input
+                          name="aboutMe"
+                          type="text"
+                          v-model="address"
+                          disabled
+                          class="shadow-none login-inputs col-md-8 mb-2"
+                        />
+                      </div>
+                      <div class="row shadow-none">
+                        <button
+                          id="editAboutMe"
+                          class="btn btn-primary col-md-4"
+                          v-on:click="enableAboutMe"
+                        >
+                          Edit settings
+                        </button>
+                        <button
+                        id="saveAboutMe"
+                          style="display: none"
+                          class="btn btn-primary col-md-4"
+                          v-on:click="saveInfo"
+                        >
+                          Save
+                        </button>
+                      </div>
+                      
+                  </div>
+                </div>
+              </div>
+
+              <div class="menu-account" style="display: none">
+                <div class="card-text shadow-none info-container">
+                  <div class="shadow-none" style="width: 100%; padding: 20px">
                     <div class="row shadow-none">
                       <p class="card-text text-left shadow-none col-md-3">
                         Account:
-                      </p>
-                      <input
+                        </p>
+                        <input
                         type="text"
                         v-model="account"
                         disabled
                         class="shadow-none login-inputs col-md-8 mb-2"
-                      />
+                        />
                     </div>
                     <div class="row shadow-none">
                       <p class="card-text text-left shadow-none col-md-3">
@@ -213,11 +201,11 @@
                     </div>
                     <div class="row shadow-none" v-if="isRequested">
                       <p class="card-text text-left shadow-none ">
-                        
-                        <pre style="overflow: inherit;color: rgb(219 89 102)"> <i
+                        <pre style="overflow: inherit;color: rgb(219 89 102)"><i
                           class="fas fa-exclamation-triangle"
                           style="color: rgb(219 89 102)"
-                        ></i> Account requested for deletion.</pre>
+                        ></i> Account requested for deletion.
+                        </pre>
                       </p>
                     </div>
                     <div class="row shadow-none mt-5">
@@ -254,10 +242,9 @@
                     </div>
                   </div>
                 </div>
-                </div>
-      </div>
-    </div>
-          
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
