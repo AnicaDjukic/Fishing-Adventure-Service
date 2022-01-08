@@ -30,7 +30,7 @@ public class ReservationController {
     @Transactional
     public ResponseEntity<NewReservationDto> saveNewAppointment(@RequestHeader("Authorization") String token, @RequestBody NewReservationDto dto) {
         Appointment newAppointment = getNewAppointment(dto);
-        boolean sucess = reservationService.createReservation(token, newAppointment, dto.getCottageId());
+        boolean sucess = reservationService.createReservation(token, newAppointment, dto.getServiceId());
         if (!sucess)
             return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -91,6 +91,7 @@ public class ReservationController {
         }
         newAppointment.setPrice(dto.getPrice());
         newAppointment.setDateCreated(new Date());
+        newAppointment.setOwnerPresence(dto.isOwnersPresence());
         return newAppointment;
     }
 }

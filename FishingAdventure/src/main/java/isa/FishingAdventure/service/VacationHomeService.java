@@ -70,8 +70,6 @@ public class VacationHomeService {
                 continue;
 
             for (Appointment ap : vh.getAppointments()) {
-                if (!ap.isReserved())
-                    continue;
                 if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
                     available = false;
                     break;
@@ -115,8 +113,6 @@ public class VacationHomeService {
             return false;
 
         for (Appointment ap : vacationHome.getAppointments()) {
-            if (!ap.isReserved())
-                continue;
             System.out.println(start + " " + ap.getStartDate());
             System.out.println(end + " " + ap.getEndDate());
             if (start.equals (ap.getStartDate()) || end.equals(ap.getEndDate()) || (start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {

@@ -21,7 +21,7 @@ public class Boat extends ServiceProfile {
     @Column(name = "maxSpeed", nullable = false)
     private double maxSpeed;
 
-    @ManyToOne(targetEntity = BoatOwner.class, cascade = CascadeType.MERGE)
+    @ManyToOne(targetEntity = BoatOwner.class, cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     public BoatOwner boatOwner;
 
     @ManyToMany(targetEntity = NavigationEquipment.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

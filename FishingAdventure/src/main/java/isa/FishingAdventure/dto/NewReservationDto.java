@@ -7,7 +7,7 @@ import java.util.List;
 
 public class NewReservationDto {
 
-    private Integer cottageId;
+    private Integer serviceId;
 
     private Date startDate;
 
@@ -19,25 +19,28 @@ public class NewReservationDto {
 
     private double price;
 
-    public NewReservationDto(Integer cottageId, Date startDate, Date endDate, int persons, List<AdditionalService> chosenServices, double price) {
-        this.cottageId = cottageId;
+    private boolean ownersPresence;
+
+    public NewReservationDto(Integer cottageId, Date startDate, Date endDate, int persons, List<AdditionalService> chosenServices, double price, boolean ownersPresence) {
+        this.serviceId = cottageId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.persons = persons;
         this.chosenServices = chosenServices;
         this.price = price;
+        this.ownersPresence = ownersPresence;
     }
 
     public NewReservationDto() {
 
     }
 
-    public Integer getCottageId() {
-        return cottageId;
+    public Integer getServiceId() {
+        return serviceId;
     }
 
-    public void setCottageId(Integer cottageId) {
-        this.cottageId = cottageId;
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
     }
 
     public Date getStartDate() {
@@ -78,5 +81,13 @@ public class NewReservationDto {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public boolean isOwnersPresence() {
+        return ownersPresence;
+    }
+
+    public void setOwnersPresence(boolean ownersPresence) {
+        this.ownersPresence = ownersPresence;
     }
 }

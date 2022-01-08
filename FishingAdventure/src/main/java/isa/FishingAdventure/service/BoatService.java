@@ -99,8 +99,6 @@ public class BoatService {
                 continue;
 
             for (Appointment ap : boat.getAppointments()) {
-                if (!ap.isReserved())
-                    continue;
                 if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
                     available = false;
                     break;
@@ -139,8 +137,6 @@ public class BoatService {
             return false;
 
         for (Appointment ap : boat.getAppointments()) {
-            if (!ap.isReserved())
-                continue;
             System.out.println(start + " " + ap.getStartDate());
             System.out.println(end + " " + ap.getEndDate());
             if (start.equals (ap.getStartDate()) || end.equals(ap.getEndDate()) || (start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
@@ -150,5 +146,15 @@ public class BoatService {
         }
 
         return available;
+    }
+
+    public List<Boat> findAllNonDeleted() {
+        List<Boat> boats = new ArrayList<Boat>();
+        for (Boat boat : boatRepository.findAll()) {
+            if (!boat.getDeleted()) {
+                boats.add(boat);
+            }
+        }
+        return boats;
     }
 }

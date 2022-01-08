@@ -41,7 +41,10 @@ public class Appointment {
     @ManyToMany(targetEntity = AdditionalService.class, cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     public Set<AdditionalService> chosenServices;
 
-    public Appointment(Integer appointmentId, double discount, boolean isReserved, Date startDate, Date endDate, Duration duration, int maxPersons, double price, Set<AdditionalService> chosenServices) {
+    @Column(name = "owner_presence", nullable = false)
+    private Boolean ownerPresence;
+
+    public Appointment(Integer appointmentId, double discount, boolean isReserved, Date startDate, Date endDate, Duration duration, int maxPersons, double price, Set<AdditionalService> chosenServices, boolean ownerPresence) {
         this.appointmentId = appointmentId;
         this.discount = discount;
         this.isReserved = isReserved;
@@ -52,6 +55,7 @@ public class Appointment {
         this.price = price;
         this.chosenServices = chosenServices;
         this.dateCreated = new Date();
+        this.ownerPresence = ownerPresence;
     }
 
     public Appointment() {
@@ -143,5 +147,13 @@ public class Appointment {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Boolean getOwnerPresence() {
+        return ownerPresence;
+    }
+
+    public void setOwnerPresence(Boolean ownerPresence) {
+        this.ownerPresence = ownerPresence;
     }
 }
