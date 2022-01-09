@@ -262,27 +262,27 @@ VALUES (109, true,
 INSERT INTO fishing_adventure
 VALUES (107, 0,
         'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.',
-        false, 'Tahoe adventure', 2, 50.0, 2.58, 108, 107);
+        false, 'Tahoe adventure', 2, 50.0, 2.58, 108, 7200000000000, 107);
 INSERT INTO fishing_adventure
 VALUES (108, 0,
         'The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.',
-        false, 'Nevada adventure', 2, 50.0, 4.58, 105, 107);
+        false, 'Nevada adventure', 2, 50.0, 4.58, 105, 5400000000000, 107);
 INSERT INTO fishing_adventure
 VALUES (109, 0,
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry''s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-        false, 'Oregon adventure', 2, 50.0, 3.54, 102, 108);
+        false, 'Oregon adventure', 2, 50.0, 3.54, 102, 7200000000000,108);
 INSERT INTO fishing_adventure
 VALUES (110, 0,
         'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
-        false, 'Marion and Moultrie adventure', 2, 50.0, 4.98, 109, 108);
+        false, 'Marion and Moultrie adventure', 2, 50.0, 4.98, 109, 7200000000000, 108);
 INSERT INTO fishing_adventure
 VALUES (111, 0,
         'Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).',
-        false, 'Okeechobee adventure', 2, 50.0, 2.13, 103, 109);
+        false, 'Okeechobee adventure', 2, 50.0, 2.13, 103, 5400000000000, 109);
 INSERT INTO fishing_adventure
 VALUES (112, 0,
         'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don''t look even slightly believable.',
-        false, 'Hartwell adventure', 2, 50.0, 3.38, 104, 109);
+        false, 'Hartwell adventure', 2, 50.0, 3.38, 104, 7200000000000, 109);
 
 
 

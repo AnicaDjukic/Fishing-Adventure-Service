@@ -41,16 +41,24 @@
                   <p class="card-text text-left shadow-none col-md-4">
                     Client:
                   </p>
-                  <p class="advertiserTitle shadow-none col-md-6">
+                  <p class="advertiserTitle shadow-none col-md-6" style="margin-left: 11px;">
                     @{{ entity.clientName }}{{ entity.clientSurname }}
                   </p>
                 </div>
-                <div class="row shadow-none">
+                <div class="row shadow-none" v-if="entityType != 'adventure'">
                   <p class="card-text text-left shadow-none col-md-4">
                     Period:
                   </p>
                   <p class="card-text text-left shadow-none col-md-8">
                     {{ startDate }} - {{ endDate }}
+                  </p>
+                </div>
+                <div class="row shadow-none" v-else>
+                  <p class="card-text text-left shadow-none col-md-4">
+                    Date:
+                  </p>
+                  <p class="card-text text-left shadow-none col-md-8">
+                    {{ startDate }} ({{ hours }}h)
                   </p>
                 </div>
                 <div class="row shadow-none">
@@ -108,6 +116,7 @@
 
 <script>
 import moment from "moment";
+import axios from "axios";
 export default {
   props: ["entity"],
   emits: ["createReservation"],
@@ -116,6 +125,8 @@ export default {
       date: "12/20/2021 - 12/25/2021",
       startDate: "",
       endDate: "",
+      entityType: "",
+      hours: "",
     };
   },
   mounted() {
@@ -123,6 +134,25 @@ export default {
     this.endDate = new Date(this.entity.endDate);
     this.startDate = moment(this.startDate).format("MM/DD/yyyy HH:mm");
     this.endDate = moment(this.endDate).format("MM/DD/yyyy HH:mm");
+
+    axios
+      .get("http://localhost:8080/users/getRole", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        let loggedInRole = res.data;
+        if (loggedInRole == "ROLE_VACATION_HOME_OWNER") {
+          this.entityType = "cottage";
+        } else if (loggedInRole == "ROLE_BOAT_OWNER") {
+          this.entityType = "boat";
+        } else if(loggedInRole == "ROLE_FISHING_INSTRUCTOR"){
+          this.entityType = 'adventure';
+          this.hours = Math.abs(this.entity.startDate - this.entity.endDate) / 36e5;
+        }
+      });
   },
   methods: {
     createReservation: function() {

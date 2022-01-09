@@ -1,11 +1,14 @@
 package isa.FishingAdventure.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import isa.FishingAdventure.dto.ServiceNameDto;
 import isa.FishingAdventure.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ import isa.FishingAdventure.service.FishingInstructorService;
 
 @RestController
 @Configurable
+@CrossOrigin
 @RequestMapping(value = "/fishingAdventure", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FishingAdventureController{
 
@@ -57,5 +61,34 @@ public class FishingAdventureController{
 			fishingAdventureDtos.add(dto);
 		}
 		return new ResponseEntity<>(fishingAdventureDtos, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/getNamesByUser")
+	@PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')")
+	public ResponseEntity<List<ServiceNameDto>> getNamesByUser(@RequestHeader("Authorization") String token) {
+		String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+		FishingInstructor instructor = instructorService.findByEmail(email);
+
+		List<ServiceNameDto> adventures = new ArrayList<ServiceNameDto>();
+		for (FishingAdventure adventure : adventureService.findByFishingInstructor(instructor)) {
+			adventures.add(new ServiceNameDto(adventure));
+		}
+
+		return new ResponseEntity<>(adventures, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/getDurationById/{id}")
+	public ResponseEntity getDurationById(@PathVariable Integer id) {
+		long duration = adventureService.findById(id).getAdventureDuration().toMinutes();
+				return new ResponseEntity(duration, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/isInstructorAvailable")
+	public ResponseEntity isInstructorAvailable(@RequestHeader("Authorization") String token, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+										   @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) {
+		String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+		boolean available = adventureService.isInstructorAvailable(instructorService.findByEmail(email), start, end);
+
+		return new ResponseEntity(available, HttpStatus.OK);
 	}
 }

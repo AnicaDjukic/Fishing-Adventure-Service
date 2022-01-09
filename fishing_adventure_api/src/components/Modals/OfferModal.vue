@@ -176,6 +176,8 @@ export default {
       error: "",
       offerEndDate: undefined,
       originalTotalPrice: "",
+      priceForPeriod: 0,
+      priceForServices: 0,
     };
   },
   mounted: function () {
@@ -213,13 +215,12 @@ export default {
             .then((res) => {
               this.selectData = res.data;
             });
+        } else if(loggedInRole == "ROLE_FISHING_INSTRUCTOR"){
+          this.entityType = 'adventure';
+
         } else {
           window.location.href = "/";
         }
-        // else if(loggedInRole == "ROLE_FISHING_INSTRUCTOR"){
-        // this.entityType = 'adventure';
-
-        // }
       });
   },
   methods: {
@@ -273,7 +274,10 @@ export default {
         this.chosenServices = [];
         this.error = "";
         this.offerEndDate = undefined;
+        this.priceForPeriod = 0;
+        this.priceForServices = 0;
       }
+      this.priceForServices = 0;
       this.dateRangeChanged();
     },
     dateRangeChanged: function () {
@@ -281,13 +285,15 @@ export default {
         let duration = this.dateRange[1] - this.dateRange[0];
         let days = duration / (1000 * 3600 * 24);
         days = parseInt(days, 10);
-        let hours = duration - days * 24;
+        let hours = (duration / (1000 * 3600)) - days * 24;
         hours = parseInt(hours, 10);
         if (hours > 12) {
           days += 1;
         }
-        this.priceField = days * this.originalPricePerDay;
-        this.originalTotalPrice = days * this.originalPricePerDay;
+        this.priceForPeriod = days * this.originalPricePerDay;
+
+        this.originalTotalPrice = this.priceForPeriod + this.priceForServices;
+        this.priceField = this.originalTotalPrice;
         this.recalculatePrice();
       }
     },
@@ -295,16 +301,16 @@ export default {
       var checkBox = document.getElementById(additionalService.id);
       if (checkBox.checked === true) {
         this.chosenServices.push(additionalService);
-        this.originalTotalPrice += additionalService.price;
-        this.priceField += additionalService.price;
+        this.priceForServices += additionalService.price;
       } else {
         const index = this.chosenServices.indexOf(additionalService);
-        this.originalTotalPrice -= additionalService.price;
-        this.priceField -= additionalService.price;
+        this.priceForServices -= additionalService.price;
         if (index > -1) {
           this.chosenServices.splice(index, 1);
         }
       }
+      this.originalTotalPrice = this.priceForPeriod + this.priceForServices;
+      this.priceField = this.originalTotalPrice;
 
       this.recalculatePrice();
     },
@@ -372,6 +378,8 @@ export default {
       this.dateRange = [];
       this.chosenServices = [];
       this.error = "";
+      this.priceForPeriod = 0;
+      this.priceForServices = 0;
     },
   },
 };

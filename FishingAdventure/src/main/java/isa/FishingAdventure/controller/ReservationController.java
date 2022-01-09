@@ -29,14 +29,24 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-
     @PostMapping(value = "/new")
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @Transactional
     public ResponseEntity<NewReservationDto> saveNewAppointment(@RequestHeader("Authorization") String token, @RequestBody NewReservationDto dto) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         Appointment newAppointment = getNewAppointment(dto);
-        boolean sucess = reservationService.createReservation(token, newAppointment, dto.getServiceId());
-        if (!sucess)
+        boolean success = reservationService.createReservation(email, newAppointment, dto.getServiceId());
+        if (!success)
+            return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/newByAdvertiser")
+    @PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')")   //TODO: add other roles
+    @Transactional
+    public ResponseEntity<NewReservationDto> saveNewAppointmentByAdvertiser(@RequestBody NewReservationDto dto) {
+        boolean success = reservationService.createReservation(dto.getClientEmail(), getNewAppointment(dto), dto.getServiceId());
+        if (!success)
             return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

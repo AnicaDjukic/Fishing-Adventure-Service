@@ -25,8 +25,9 @@ public class ServiceProfileController {
     private ServiceProfileService serviceProfileService;
 
     @GetMapping(value = "/getAdditionalServicesByName/{name}")
-    @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER')")
+    @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
     public ResponseEntity<List<AdditionalServiceDto>> getAdditionalServicesByName(@PathVariable String name) {
+        System.out.println(name);
         ServiceProfile profile = serviceProfileService.getByName(name);
         List<AdditionalServiceDto> dtos = new ArrayList<>();
         for (AdditionalService service : profile.getAdditionalServices()) {
@@ -37,7 +38,7 @@ public class ServiceProfileController {
 
 
     @GetMapping(value = "/getServiceInfoForOfferByName/{name}")
-    @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER')")
+    @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
     public ResponseEntity<OfferDto> getServiceInfoForOfferByName(@PathVariable String name) {
         ServiceProfile profile = serviceProfileService.getByName(name);
         OfferDto dto = new OfferDto(profile);
@@ -45,7 +46,7 @@ public class ServiceProfileController {
     }
 
     @GetMapping(value = "/getAppointments/{id}")
-    @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER')")
+    @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
     public ResponseEntity<List<AppointmentDto>> getAppointmentsByServiceId(@PathVariable String id) {
         ServiceProfile profile = serviceProfileService.getById(Integer.parseInt(id));
 

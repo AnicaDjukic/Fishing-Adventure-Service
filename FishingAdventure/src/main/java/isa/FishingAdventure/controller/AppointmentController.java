@@ -26,17 +26,15 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
 
-    // TODO: add role for fishing instructor
     @GetMapping(value = "/getOffersByAdvertiser")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
     @Transactional
     public ResponseEntity<List<AppointmentDto>> getOffersByAdvertiser(@RequestHeader("Authorization") String token) throws MessagingException {
         return new ResponseEntity<>(appointmentService.getOffersByAdvertiser(token), HttpStatus.OK);
     }
 
-    // TODO: add role for fishing instructor
     @PostMapping(value = "/create")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
+    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
     @Transactional
     public ResponseEntity<AppointmentDto> create(@RequestBody AppointmentDto dto) throws InterruptedException, MessagingException {
         ResponseEntity<AppointmentDto> retVal = new ResponseEntity<AppointmentDto>(dto, HttpStatus.BAD_REQUEST);

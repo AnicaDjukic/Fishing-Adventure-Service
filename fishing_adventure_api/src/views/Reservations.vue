@@ -56,19 +56,19 @@
         @createReservation="createReservation"
       ></AdvertiserReservationCard>
     </div>
-  </div>
-  <AdvertiserReservationModal
+    <AdvertiserReservationModal
     id="AdvertiserReservationModal"
     :clientEmail="clientEmail"
     :clientName="clientName"
     :clientSurname="clientSurname"
   ></AdvertiserReservationModal>
+  </div>
 </template>
 
 <script>
 import AdvertiserReservationCard from "@/components/ReservationCards/AdvertiserReservationCard.vue";
 import AdvertiserReservationModal from "@/components/Modals/AdvertiserReservationModal.vue";
-import { Modal } from "bootstrap";
+
 import axios from "axios";
 export default {
   components: { AdvertiserReservationCard, AdvertiserReservationModal },
@@ -107,7 +107,7 @@ export default {
       this.clientName = clientName;
       this.clientSurname = clientSurname;
       var myModal = document.getElementById("AdvertiserReservationModal");
-      var modal = Modal.getOrCreateInstance(myModal);
+      var modal = window.bootstrap.Modal.getOrCreateInstance(myModal);
       modal.show();
     },
   },

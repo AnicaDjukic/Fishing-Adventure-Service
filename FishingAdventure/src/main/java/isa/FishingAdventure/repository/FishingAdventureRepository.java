@@ -12,5 +12,6 @@ import isa.FishingAdventure.model.FishingInstructor;
 public interface FishingAdventureRepository extends JpaRepository<FishingAdventure, Integer>{
 
 	List<FishingAdventure> findByFishingInstructor(FishingInstructor instructor);
+	FishingAdventure findById(int id);
 
 }

@@ -21,6 +21,8 @@ public class NewReservationDto {
 
     private boolean ownersPresence;
 
+    private String clientEmail;
+
     public NewReservationDto(Integer cottageId, Date startDate, Date endDate, int persons, List<AdditionalService> chosenServices, double price, boolean ownersPresence) {
         this.serviceId = cottageId;
         this.startDate = startDate;
@@ -29,6 +31,19 @@ public class NewReservationDto {
         this.chosenServices = chosenServices;
         this.price = price;
         this.ownersPresence = ownersPresence;
+    }
+
+    public NewReservationDto(Integer serviceId, Date startDate, Date endDate, int persons,
+                             List<AdditionalService> chosenServices, double price, boolean ownersPresence,
+                             String clientEmail) {
+        this.serviceId = serviceId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.persons = persons;
+        this.chosenServices = chosenServices;
+        this.price = price;
+        this.ownersPresence = ownersPresence;
+        this.clientEmail = clientEmail;
     }
 
     public NewReservationDto() {
@@ -89,5 +104,13 @@ public class NewReservationDto {
 
     public void setOwnersPresence(boolean ownersPresence) {
         this.ownersPresence = ownersPresence;
+    }
+
+    public String getClientEmail() {
+        return clientEmail;
+    }
+
+    public void setClientEmail(String clientEmail) {
+        this.clientEmail = clientEmail;
     }
 }

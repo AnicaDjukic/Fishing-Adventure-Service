@@ -61,10 +61,9 @@ public class ReservationService {
         return repository.findAll();
     }
 
-    public boolean createReservation(String token, Appointment newAppointment, Integer serviceProfileId) {
+    public boolean createReservation(String clientEmail, Appointment newAppointment, Integer serviceProfileId) {
         try {
-            String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-            Client client = clientService.findByEmail(email);
+            Client client = clientService.findByEmail(clientEmail);
             appointmentService.save(newAppointment);
             ServiceProfile serviceProfile = serviceProfileService.getById(serviceProfileId);
             serviceProfile.getAppointments().add(newAppointment);
@@ -75,7 +74,7 @@ public class ReservationService {
             newReservation.setCanceled(false);
             save(newReservation);
             String emailText = createEmail(client, newAppointment, serviceProfile);
-            emailService.sendEmail(email, "Reservation confirmation", emailText);
+            emailService.sendEmail(clientEmail, "Reservation confirmation", emailText);
 
         } catch (Exception e) {
             return true;
@@ -170,6 +169,19 @@ public class ReservationService {
         }
 
         return reservationDtos;
+    }
+
+    public boolean isReservationCanceled(int appointmentId) {
+        boolean isCanceled = false;
+        for (Reservation reservation : findAll()) {
+            if (reservation.getAppointment().getAppointmentId().equals(appointmentId)) {
+                if (reservation.getCanceled()) {
+                    isCanceled = true;
+                    break;
+                }
+            }
+        }
+        return isCanceled;
     }
 
     private String checkReservationStatus(Date startDate, Date endDate) {
