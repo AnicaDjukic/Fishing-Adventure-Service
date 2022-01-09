@@ -14,7 +14,7 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    public Review(String content, int rating, Reservation reservation) {
+    public Review(String content, int rating) {
         this.content = content;
         this.rating = rating;
     }

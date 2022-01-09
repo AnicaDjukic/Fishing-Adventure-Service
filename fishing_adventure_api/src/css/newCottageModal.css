@@ -226,3 +226,56 @@ select {
 option {
     background: #212529;
 }
+
+.rating {
+    display: inline-flex;
+    justify-content: center;
+    width: fit-content;
+    transform: rotateY(180deg);
+  }
+  
+  .rating label {
+    display: block;
+    cursor: pointer;
+    background-color: transparent;
+  }
+  
+  .rating label::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f005";
+    position: relative;
+    display: block;
+    color: white;
+    font-size: 3vh;
+  }
+  
+  .rating label::after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f005";
+    position: absolute;
+    display: block;
+    color: rgb(255, 217, 0);
+    opacity: 0;
+    font-size: 3vh;
+    top: 0vh;
+    transition: 0.5s;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  }
+  
+  .rating label:hover:after,
+  .rating label:hover ~ label:after,
+  .rating input:checked ~ label:after {
+    opacity: 1;
+  }
+  
+  .rating-div label {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 2%;
+  }
+  
+  input[type="radio"] {
+    display: none;
+  }

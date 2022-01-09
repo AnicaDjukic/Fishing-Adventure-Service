@@ -58,16 +58,19 @@
         v-for="reservation in pastReservations"
         :key="reservation.id"
         :reservation="reservation"
+        v-on:emitReview="reviewForService"
       ></ClientReservationCard>
     </div>
   </div>
+  <ReviewModal id="reviewAccount" :reservation="reservation"></ReviewModal>
 </template>
 
 <script>
 import ClientReservationCard from "@/components/ReservationCards/ClientReservationCard.vue";
+import ReviewModal from "@/components/Modals/ReviewModal.vue";
 import axios from "axios";
 export default {
-  components: { ClientReservationCard },
+  components: { ClientReservationCard, ReviewModal },
   data: function () {
     return {
       numberOfPersons: "",
@@ -77,6 +80,7 @@ export default {
         end: new Date(2020, 9, 16),
       },
       date: "",
+      reservation: "",
     };
   },
   mounted() {
@@ -92,7 +96,11 @@ export default {
         this.pastReservations = res.data;
       });
   },
-  methods: {},
+  methods: {
+    reviewForService: function(reservation){
+      this.reservation = reservation;
+    }
+  },
 };
 </script>
 

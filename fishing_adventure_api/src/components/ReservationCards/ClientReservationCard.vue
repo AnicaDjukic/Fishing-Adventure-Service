@@ -12,7 +12,7 @@
         <div class="col-md-8 shadow-none" name="main-col">
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
-              <h5 class="card-title shadow-none">{{ serviceName }}</h5>
+              <h5 class="card-title shadow-none">{{ reservation.serviceName }}</h5>
             </div>
             <div
               class="card-text shadow-none"
@@ -75,11 +75,15 @@
               <div class="manageReservation shadow-none">
                 <button
                   v-if="current == false"
+                  :disabled="reservation.reviewId != null"
                   class="btn btn-primary shadow-none mb-2"
                   style="
                     background-color: rgb(0 102 102);
                     border-color: rgb(0 102 102);
                   "
+                  v-on:click="emitReview"
+                  data-bs-toggle="modal"
+                  :data-bs-target="'#reviewAccount'"
                 >
                   Review
                 </button>
@@ -123,7 +127,6 @@ export default {
   props: ["reservation", "review", "current"],
   data: function () {
     return {
-      serviceName: "",
       client: {},
       startDate: {},
       endDate: {},
@@ -142,7 +145,6 @@ export default {
       .then((res) => {
         this.client = res.data;
       });
-    this.serviceName = this.reservation.serviceName;
     this.startDate = moment(this.reservation.startDate).format(
       "DD MMM YYYY hh:mm a"
     );
@@ -152,6 +154,11 @@ export default {
     this.price = this.reservation.price;
     this.persons = this.reservation.persons;
   },
+  methods: {
+    emitReview: function() {
+      this.$emit('emitReview', this.reservation);
+    }
+  }
 };
 </script>
 <style scoped>

@@ -119,7 +119,7 @@ public class ReservationService {
         List<Reservation> reservations = repository.findByClient(client);
         List<Reservation> currentReservations = new ArrayList<Reservation>();
         for (Reservation r : reservations) {
-            if (r.getAppointment().getStartDate().before(new Date())) {
+            if (r.getAppointment().getEndDate().before(new Date())) {
                 currentReservations.add(r);
             }
         }
@@ -183,6 +183,10 @@ public class ReservationService {
             reservationStatus = "Current";
 
         return reservationStatus;
+    }
+
+    public Reservation findById(Integer id) {
+        return repository.findById(id).orElse(new Reservation());
     }
 
     private String createEmail(Client client, Appointment newAppointment, ServiceProfile serviceProfile) {
