@@ -89,7 +89,7 @@ public class ReservationService {
         List<Reservation> reservations = repository.findByClient(client);
         List<Reservation> currentReservations = new ArrayList<Reservation>();
         for (Reservation r : reservations) {
-            if (r.getAppointment().getStartDate().after(new Date())) {
+            if (r.getAppointment().getEndDate().after(new Date())) {
                 currentReservations.add(r);
             }
         }

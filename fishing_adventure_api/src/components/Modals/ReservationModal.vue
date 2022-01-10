@@ -131,10 +131,10 @@
             </div>
           </div>
           <h5 style="color: white; margin-top: 5%" v-if="totalPrice != 0">
-            <b>~ Total price: {{ totalPrice }}$ ~</b>
+            <b>~ Total price: {{ totalPrice }} $/day ~</b>
           </h5>
           <h5 style="color: white; margin-top: 5%" v-if="totalPrice == 0">
-            <b>~ Total price: {{ price }}$ ~</b>
+            <b>~ Total price: {{ price }} $/day ~</b>
           </h5>
           <h6 style="color: red">
             <b>{{ error }}</b>

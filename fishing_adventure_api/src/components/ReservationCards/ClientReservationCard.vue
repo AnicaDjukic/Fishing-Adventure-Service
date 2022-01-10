@@ -83,7 +83,7 @@
                   "
                   v-on:click="emitReview"
                   data-bs-toggle="modal"
-                  :data-bs-target="'#reviewAccount'"
+                  :data-bs-target="'#review'"
                 >
                   Review
                 </button>
@@ -91,12 +91,16 @@
 
               <div class="manageReservation shadow-none">
                 <button
-                  v-if="current == false"
+                  v-if="!current"
+                  :disabled="hasComplaint"
                   class="btn btn-primary shadow-none mb-2"
                   style="
                     background-color: rgb(94 23 30);
                     border-color: rgb(94 23 30);
                   "
+                  v-on:click="emitReview"
+                  data-bs-toggle="modal"
+                  :data-bs-target="'#complaint'"
                 >
                   Complaint
                 </button>
@@ -132,6 +136,7 @@ export default {
       endDate: {},
       price: 0.0,
       persons: 0,
+      hasComplaint: false,
     };
   },
   mounted: function () {
@@ -145,6 +150,18 @@ export default {
       .then((res) => {
         this.client = res.data;
       });
+
+    axios
+      .get("http://localhost:8080/compliant/exists/" + this.reservation.id, {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.hasComplaint = res.data;
+      });
+
     this.startDate = moment(this.reservation.startDate).format(
       "DD MMM YYYY hh:mm a"
     );

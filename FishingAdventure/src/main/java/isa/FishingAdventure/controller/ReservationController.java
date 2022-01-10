@@ -78,6 +78,7 @@ public class ReservationController {
             dto.setPersons(reservations.get(i).getAppointment().getMaxPersons());
             dto.setPrice(reservations.get(i).getAppointment().getPrice());
             dto.setChosenServices(new ArrayList<>(reservations.get(i).getAppointment().getChosenServices()));
+            dto.setServiceId(serviceProfiles.get(i).getId());
             dto.setServiceName(serviceProfiles.get(i).getName());
             for(Image im : serviceProfiles.get(i).getImages()){
                 if(im.isCoverImage()) {

@@ -62,15 +62,17 @@
       ></ClientReservationCard>
     </div>
   </div>
-  <ReviewModal id="reviewAccount" :reservation="reservation"></ReviewModal>
+  <ReviewModal id="review" :reservation="reservation"></ReviewModal>
+  <ComplaintModal id="complaint" :reservation="reservation"></ComplaintModal>
 </template>
 
 <script>
 import ClientReservationCard from "@/components/ReservationCards/ClientReservationCard.vue";
 import ReviewModal from "@/components/Modals/ReviewModal.vue";
+import ComplaintModal from "@/components/Modals/ComplaintModal.vue";
 import axios from "axios";
 export default {
-  components: { ClientReservationCard, ReviewModal },
+  components: { ClientReservationCard, ReviewModal, ComplaintModal },
   data: function () {
     return {
       numberOfPersons: "",
