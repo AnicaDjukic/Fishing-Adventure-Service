@@ -14,9 +14,34 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    public Review(String content, int rating) {
+    @Column(name = "isApproved", nullable = false)
+    private boolean isApproved;
+
+    @Column(name = "isRejected", nullable = false)
+    private boolean isRejected;
+
+    @OneToOne(targetEntity = Reservation.class, cascade = CascadeType.MERGE)
+    private Reservation reservation;
+
+    @Column(name = "serviceId", nullable = false)
+    private Integer serviceId;
+
+    public Review(Integer id, String content, int rating, boolean isApproved, boolean isRejected, Reservation reservation, Integer serviceId) {
+        this.id = id;
         this.content = content;
         this.rating = rating;
+        this.isApproved = isApproved;
+        this.isRejected = isRejected;
+        this.reservation = reservation;
+        this.serviceId = serviceId;
+    }
+
+    public Review(String content, int rating, Integer serviceId, boolean isApproved, boolean isRejected) {
+        this.content = content;
+        this.rating = rating;
+        this.isApproved = isApproved;
+        this.isRejected = isRejected;
+        this.serviceId = serviceId;
     }
 
     public Review() {
@@ -44,5 +69,37 @@ public class Review {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
+
+    public boolean isRejected() {
+        return isRejected;
+    }
+
+    public void setRejected(boolean rejected) {
+        isRejected = rejected;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+    public Integer getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
     }
 }

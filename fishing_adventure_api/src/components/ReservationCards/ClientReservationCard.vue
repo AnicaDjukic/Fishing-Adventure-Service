@@ -74,8 +74,8 @@
 
               <div class="manageReservation shadow-none">
                 <button
-                  v-if="current == false"
-                  :disabled="reservation.reviewId != null"
+                  v-if="!current"
+                  :disabled="hasReview"
                   class="btn btn-primary shadow-none mb-2"
                   style="
                     background-color: rgb(0 102 102);
@@ -137,6 +137,7 @@ export default {
       price: 0.0,
       persons: 0,
       hasComplaint: false,
+      hasReview: false
     };
   },
   mounted: function () {
@@ -160,6 +161,17 @@ export default {
       })
       .then((res) => {
         this.hasComplaint = res.data;
+      });
+
+    axios
+      .get("http://localhost:8080/review/exists/" + this.reservation.id, {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.hasReview = res.data;
       });
 
     this.startDate = moment(this.reservation.startDate).format(

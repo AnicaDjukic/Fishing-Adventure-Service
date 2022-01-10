@@ -1,5 +1,6 @@
 package isa.FishingAdventure.service;
 
+import isa.FishingAdventure.model.Complaint;
 import isa.FishingAdventure.model.Reservation;
 import isa.FishingAdventure.model.Review;
 import isa.FishingAdventure.repository.ReviewRepository;
@@ -17,9 +18,17 @@ public class ReviewService {
     private ReservationService reservationService;
 
     public void addNewReview(Review newReview, Integer reservationId) {
-        repository.save(newReview);
         Reservation reservation = reservationService.findById(reservationId);
-        reservation.setReview(newReview);
-        reservationService.save(reservation);
+        newReview.setReservation(reservation);
+        repository.save(newReview);
+    }
+
+    public boolean exists(Integer reservationId) {
+        for(Review review : repository.findAll()){
+            if(review.getReservation().getReservationId().equals(reservationId))
+                return true;
+        }
+
+        return false;
     }
 }

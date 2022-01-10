@@ -85,10 +85,6 @@ public class ReservationController {
                     dto.setImagePath(im.getPath());
                 }
             }
-            if(reservations.get(i).getReview() != null)
-                dto.setReviewId(reservations.get(i).getReview().getId());
-            else
-                dto.setReviewId(null);
             reservationDtos.add(dto);
         }
         return reservationDtos;

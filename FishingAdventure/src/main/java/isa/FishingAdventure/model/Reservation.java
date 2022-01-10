@@ -14,9 +14,6 @@ public class Reservation {
     @ManyToOne(targetEntity = Client.class, cascade = CascadeType.MERGE)
     private Client client;
 
-    @OneToOne(targetEntity = Review.class, cascade = CascadeType.MERGE)
-    private Review review;
-
     @Column(name = "isCanceled", nullable = false)
     private Boolean isCanceled;
 
@@ -52,14 +49,6 @@ public class Reservation {
 
     public void setClient(Client client) {
         this.client = client;
-    }
-
-    public Review getReview() {
-        return review;
-    }
-
-    public void setReview(Review review) {
-        this.review = review;
     }
 
     public Boolean getCanceled() {

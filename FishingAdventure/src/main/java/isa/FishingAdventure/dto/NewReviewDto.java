@@ -6,12 +6,15 @@ public class NewReviewDto {
 
     private String content;
 
-    private  Integer rate;
+    private Integer rate;
 
-    public NewReviewDto(Integer reservationId, String content, Integer rate) {
+    private Integer serviceId;
+
+    public NewReviewDto(Integer reservationId, String content, Integer rate, Integer serviceId) {
         this.reservationId = reservationId;
         this.content = content;
         this.rate = rate;
+        this.serviceId = serviceId;
     }
 
     public NewReviewDto() {
@@ -39,5 +42,13 @@ public class NewReviewDto {
 
     public void setRate(Integer rate) {
         this.rate = rate;
+    }
+
+    public Integer getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
     }
 }

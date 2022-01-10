@@ -129,6 +129,7 @@ export default {
         reservationId: this.reservation.id,
         content: this.content,
         rate: this.rate,
+        serviceId: this.reservation.serviceId
       };
       console.log(review);
       axios
