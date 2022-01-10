@@ -6,6 +6,7 @@ import isa.FishingAdventure.dto.OfferDto;
 import isa.FishingAdventure.model.AdditionalService;
 import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.ServiceProfile;
+import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.ServiceProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,13 +23,16 @@ import java.util.List;
 public class ServiceProfileController {
 
     @Autowired
+    private TokenUtils tokenUtils;
+
+    @Autowired
     private ServiceProfileService serviceProfileService;
 
     @GetMapping(value = "/getAdditionalServicesByName/{name}")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
-    public ResponseEntity<List<AdditionalServiceDto>> getAdditionalServicesByName(@PathVariable String name) {
-        System.out.println(name);
-        ServiceProfile profile = serviceProfileService.getByName(name);
+    public ResponseEntity<List<AdditionalServiceDto>> getAdditionalServicesByName(@RequestHeader("Authorization") String token, @PathVariable String name) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        ServiceProfile profile = serviceProfileService.getByNameForAdvertiser(name, email);
         List<AdditionalServiceDto> dtos = new ArrayList<>();
         for (AdditionalService service : profile.getAdditionalServices()) {
             dtos.add(new AdditionalServiceDto(service));
@@ -39,8 +43,9 @@ public class ServiceProfileController {
 
     @GetMapping(value = "/getServiceInfoForOfferByName/{name}")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
-    public ResponseEntity<OfferDto> getServiceInfoForOfferByName(@PathVariable String name) {
-        ServiceProfile profile = serviceProfileService.getByName(name);
+    public ResponseEntity<OfferDto> getServiceInfoForOfferByName(@RequestHeader("Authorization") String token, @PathVariable String name) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        ServiceProfile profile = serviceProfileService.getByNameForAdvertiser(name, email);
         OfferDto dto = new OfferDto(profile);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
