@@ -63,6 +63,8 @@ public class FishingAdventureService {
     private boolean areAdventuresOverlaping(Date start, Date end, List<Appointment> appointments) {
         boolean isOverlaping = false;
         for (Appointment appointment : appointments) {
+            if(appointment.getCancelled().equals(true))
+                continue;
             if (!reservationService.isReservationCanceled(appointment.getAppointmentId())) {
                 if ((start.after(appointment.getStartDate()) && start.before(appointment.getEndDate())) ||
                         (end.after(appointment.getStartDate()) && end.before(appointment.getEndDate())) ||

@@ -58,6 +58,7 @@
         v-for="reservation in nonCancellable"
         :key="reservation.id"
         :reservation="reservation"
+        v-on:refresh="refresh"
       ></ClientReservationCard>
       <ClientReservationCard
         :review="true"
@@ -65,6 +66,7 @@
         v-for="reservation in reservations"
         :key="reservation.id"
         :reservation="reservation"
+        v-on:refresh="refresh"
       ></ClientReservationCard>
     </div>
   </div>
@@ -110,7 +112,14 @@ export default {
       { duration: 5000 }
     );
   },
-  methods: {},
+  methods: {
+    refresh: function (cancelled) {
+      const index = this.reservations.indexOf(cancelled);
+        if (index > -1) {
+          this.reservations.splice(index, 1);
+        }
+    },
+  },
 };
 </script>
 

@@ -6,19 +6,23 @@ import isa.FishingAdventure.dto.NewReservationDto;
 import isa.FishingAdventure.dto.ReservationDto;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.security.util.TokenUtils;
+import isa.FishingAdventure.service.ClientService;
 import isa.FishingAdventure.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.time.Duration;
 import java.util.*;
 
 @RestController
 @RequestMapping(value = "reservation")
+@CrossOrigin
 public class ReservationController {
 
     @Autowired
@@ -105,6 +109,7 @@ public class ReservationController {
         newAppointment.setPlace("");
         newAppointment.setDiscount(0.0);
         newAppointment.setReserved(true);
+        newAppointment.setCancelled(false);
         newAppointment.setDateCreated(new Date());
         newAppointment.setStartDate(dto.getStartDate());
         newAppointment.setEndDate(dto.getEndDate());
@@ -131,5 +136,23 @@ public class ReservationController {
         List<AdvertiserReservationDto> reservationDtos = reservationService.findAllReservationsByAdvertiser(email, role);
 
         return new ResponseEntity<>(reservationDtos, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/cancel")
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    public ResponseEntity<Boolean> cancelReservation(@RequestBody String id) {
+        boolean cancellationSuccess  = reservationService.cancelReservation(Integer.parseInt(id));
+        return new ResponseEntity<>(cancellationSuccess, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/cancelled")
+    @Transactional
+    public ResponseEntity hadCancelledReservation(@RequestHeader("Authorization") String token, @RequestParam("serviceId") Integer serviceId, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+                                                @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
+
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        List<Reservation> serviceProfileReservations = reservationService.getClientReservationsForServiceProfile(email, serviceId);
+        boolean hadCancelled = reservationService.overlapsWithDateRange(serviceProfileReservations, start, end);
+        return new ResponseEntity(hadCancelled, HttpStatus.OK);
     }
 }

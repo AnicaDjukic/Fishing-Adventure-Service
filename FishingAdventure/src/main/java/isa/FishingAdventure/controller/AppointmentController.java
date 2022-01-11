@@ -38,7 +38,7 @@ public class AppointmentController {
     @GetMapping(value = "/getOffersByServiceId/{id}")
     @Transactional
     public ResponseEntity<List<AppointmentDto>> getOffersByServiceId(@PathVariable String id) {
-        return new ResponseEntity<>(createAppointmentDtos(appointmentService.getOffersByServiceId(id)), HttpStatus.OK);
+        return new ResponseEntity<>(createAppointmentDtos(appointmentService.getOffersByServiceId(Integer.parseInt(id))), HttpStatus.OK);
     }
 
     private List<AppointmentDto> createAppointmentDtos(List<Appointment> appointments) {
@@ -75,6 +75,7 @@ public class AppointmentController {
         newAppointment.setMaxPersons(dto.getMaxPersons());
         newAppointment.setPrice(dto.getPrice());
         newAppointment.setOwnerPresence(false);
+        newAppointment.setCancelled(false);
 
         newAppointment.setStartDate(dto.getStartDate());
         newAppointment.setEndDate(dto.getEndDate());

@@ -125,13 +125,13 @@ export default {
           },
         })
         .then(() => {
+          this.$emit('refresh', this.offer);
           this.$toast.show(
             "Thank you for your reservation!",
             {
               duration: 2000,
             }
           );
-          window.location.reload();
         });
     }
   }

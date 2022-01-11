@@ -71,22 +71,11 @@ export default {
       });
   },
   methods: {
-    refresh: function () {
-      this.refreshData();
-      this.refreshData();
-      this.refreshData();
-    },
-    refreshData: function () {
-      axios
-        .get("http://localhost:8080/client/subscriptions", {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
-            Authorization: "Bearer " + localStorage.refreshToken,
-          },
-        })
-        .then((res) => {
-          this.subscriptions = res.data;
-        });
+    refresh: function (unsubscribed) {
+      const index = this.subscriptions.indexOf(unsubscribed);
+        if (index > -1) {
+          this.subscriptions.splice(index, 1);
+        }
     },
     search: function () {
       if (

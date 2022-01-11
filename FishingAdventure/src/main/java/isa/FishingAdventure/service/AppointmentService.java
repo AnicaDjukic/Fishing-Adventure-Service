@@ -97,9 +97,18 @@ public class AppointmentService {
         return validAppointments;
     }
 
-    public List<Appointment> getOffersByServiceId(String id) {
-        ServiceProfile serviceProfile = serviceProfileService.getById(Integer.parseInt(id));
+    public List<Appointment> getOffersByServiceId(Integer id) {
+        ServiceProfile serviceProfile = serviceProfileService.getById(id);
         return new ArrayList<>(getValidAppointements(new ArrayList<>(serviceProfile.getAppointments())));
+    }
+
+    public Appointment findById(Integer id) {
+        return appointmentRepository.findById(id).orElse(new Appointment());
+    }
+
+    public List<Appointment> getAppointmentsByServiceId(Integer id) {
+        ServiceProfile serviceProfile = serviceProfileService.getById(id);
+        return new ArrayList<>(new ArrayList<>(serviceProfile.getAppointments()));
     }
 
 
@@ -360,9 +369,5 @@ public class AppointmentService {
                 "</html>");
 
         return content.toString();
-    }
-
-    public Appointment findById(Integer id) {
-        return appointmentRepository.findById(id).orElse(new Appointment());
     }
 }

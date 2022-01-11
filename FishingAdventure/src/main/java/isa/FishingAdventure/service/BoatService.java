@@ -83,6 +83,8 @@ public class BoatService {
                 continue;
 
             for (Appointment ap : boat.getAppointments()) {
+                if(ap.getCancelled().equals(true))
+                    continue;
                 if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
                     available = false;
                     break;
@@ -125,8 +127,8 @@ public class BoatService {
             return false;
 
         for (Appointment ap : boat.getAppointments()) {
-            System.out.println(start + " " + ap.getStartDate());
-            System.out.println(end + " " + ap.getEndDate());
+            if(ap.getCancelled().equals(true))
+                continue;
             if (start.equals(ap.getStartDate()) || end.equals(ap.getEndDate()) || (start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
                 available = false;
                 break;

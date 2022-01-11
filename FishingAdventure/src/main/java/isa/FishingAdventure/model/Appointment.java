@@ -44,7 +44,10 @@ public class Appointment {
     @Column(name = "owner_presence", nullable = false)
     private Boolean ownerPresence;
 
-    public Appointment(Integer appointmentId, double discount, boolean isReserved, Date startDate, Date endDate, Duration duration, int maxPersons, double price, Set<AdditionalService> chosenServices, boolean ownerPresence) {
+    @Column(name = "is_cancelled", nullable = false)
+    private Boolean isCancelled;
+
+    public Appointment(Integer appointmentId, double discount, boolean isReserved, Date startDate, Date endDate, Duration duration, int maxPersons, double price, Set<AdditionalService> chosenServices, boolean ownerPresence, boolean isCancelled) {
         this.appointmentId = appointmentId;
         this.discount = discount;
         this.isReserved = isReserved;
@@ -56,6 +59,7 @@ public class Appointment {
         this.chosenServices = chosenServices;
         this.dateCreated = new Date();
         this.ownerPresence = ownerPresence;
+        this.isCancelled = isCancelled;
     }
 
     public Appointment() {
@@ -155,5 +159,13 @@ public class Appointment {
 
     public void setOwnerPresence(Boolean ownerPresence) {
         this.ownerPresence = ownerPresence;
+    }
+
+    public Boolean getCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(Boolean cancelled) {
+        isCancelled = cancelled;
     }
 }

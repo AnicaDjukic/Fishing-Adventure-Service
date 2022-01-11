@@ -12,7 +12,9 @@
         <div class="col-md-8 shadow-none" name="main-col">
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
-              <h5 class="card-title shadow-none">{{ reservation.serviceName }}</h5>
+              <h5 class="card-title shadow-none">
+                {{ reservation.serviceName }}
+              </h5>
             </div>
             <div
               class="card-text shadow-none"
@@ -23,7 +25,10 @@
                   <p class="card-text text-left shadow-none col-md-4">
                     Client:
                   </p>
-                  <p class="advertiserTitle shadow-none col-md-6" style="margin-left: 11px;">
+                  <p
+                    class="advertiserTitle shadow-none col-md-6"
+                    style="margin-left: 11px"
+                  >
                     {{ client.email }}
                   </p>
                 </div>
@@ -108,6 +113,7 @@
                   class="btn btn-primary shadow-none"
                   v-if="current == true"
                   :disabled="review != true"
+                  v-on:click="cancelReservation"
                   style="
                     background-color: rgb(94 23 30);
                     border-color: rgb(94 23 30);
@@ -137,7 +143,7 @@ export default {
       price: 0.0,
       persons: 0,
       hasComplaint: false,
-      hasReview: false
+      hasReview: false,
     };
   },
   mounted: function () {
@@ -184,10 +190,34 @@ export default {
     this.persons = this.reservation.persons;
   },
   methods: {
-    emitReview: function() {
-      this.$emit('emitReview', this.reservation);
-    }
-  }
+    emitReview: function () {
+      this.$emit("emitReview", this.reservation);
+    },
+    cancelReservation: function () {
+      axios
+        .put(
+          "http://localhost:8080/reservation/cancel", this.reservation.id,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.data) {
+            this.$emit("refresh", this.reservation);
+            this.$toast.show("Reservation successfully cancelled!", {
+              duration: 2000,
+            });
+          } else {
+            this.$toast.show("Unsuccessful cancellation! Try again, later!", {
+              duration: 2000,
+            });
+          }
+        });
+    },
+  },
 };
 </script>
 <style scoped>

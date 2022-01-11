@@ -89,6 +89,8 @@ public class ReservationService {
         List<Reservation> reservations = repository.findByClient(client);
         List<Reservation> currentReservations = new ArrayList<Reservation>();
         for (Reservation r : reservations) {
+            if(r.getCanceled().equals(true))
+                continue;
             if (r.getAppointment().getEndDate().after(new Date())) {
                 currentReservations.add(r);
             }
@@ -100,6 +102,8 @@ public class ReservationService {
         List<ServiceProfile> serviceProfiles = new ArrayList<ServiceProfile>();
         System.out.println(reservations.size());
         for (Reservation r : reservations) {
+            if(r.getCanceled().equals(true))
+                continue;
             for (ServiceProfile s : serviceProfileService.findAll()) {
                 if (s.getAppointments().contains(r.getAppointment())) {
                     System.out.print(s.getId());
@@ -118,6 +122,8 @@ public class ReservationService {
         List<Reservation> reservations = repository.findByClient(client);
         List<Reservation> currentReservations = new ArrayList<Reservation>();
         for (Reservation r : reservations) {
+            if(r.getCanceled().equals(true))
+                continue;
             if (r.getAppointment().getEndDate().before(new Date())) {
                 currentReservations.add(r);
             }
@@ -479,5 +485,52 @@ public class ReservationService {
                 " </body>\n" +
                 "</html>");
         return content.toString();
+    }
+
+    public boolean cancelReservation(Integer id) {
+        for (Reservation r: findAll()) {
+            if(r.getReservationId().equals(id)){
+                r.setCanceled(true);
+                r.getAppointment().setCancelled(true);
+                appointmentService.save(r.getAppointment());
+                save(r);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Reservation> getClientCancelledReservations(String email) {
+        List<Reservation> clientReservations = new ArrayList<Reservation>();
+        for(Reservation reservation: findAll()){
+            if(reservation.getClient().getEmail().equals(email) && reservation.getCanceled().equals(true))
+                clientReservations.add(reservation);
+        }
+        return clientReservations;
+    }
+
+    public List<Reservation> getClientReservationsForServiceProfile(String email, Integer serviceId) {
+        List<Reservation> reservations = new ArrayList<Reservation>();
+        for(Appointment ap: appointmentService.getAppointmentsByServiceId(serviceId)){
+            for(Reservation r : findAll()){
+                if(r.getAppointment().getAppointmentId().equals(ap.getAppointmentId()) && r.getClient().getEmail().equals(email)){
+                    reservations.add(r);
+                    break;
+                }
+            }
+        }
+
+        return reservations;
+    }
+
+    public boolean overlapsWithDateRange(List<Reservation> reservations, Date start, Date end) {
+        for(Reservation r : reservations){
+            if(r.getCanceled().equals(false))
+                continue;
+            if(start.equals(r.getAppointment().getStartDate()) || end.equals(r.getAppointment().getEndDate()) || (start.after(r.getAppointment().getStartDate()) && start.before(r.getAppointment().getEndDate())) || (end.after(r.getAppointment().getStartDate()) && end.before(r.getAppointment().getEndDate())) || (start.before(r.getAppointment().getStartDate()) && end.after(r.getAppointment().getEndDate())))
+                return true;
+        }
+
+        return false;
     }
 }

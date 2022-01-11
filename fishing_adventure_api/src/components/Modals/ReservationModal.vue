@@ -200,6 +200,7 @@ export default {
       chosenServices: [],
       maxPersons: 0,
       availableForDateRange: true,
+      cancelled: false,
       boat: false,
       boatOwner: false,
       boatOwnerAvailable: true,
@@ -392,7 +393,7 @@ export default {
           this.availableForDateRange = response.data;
         })
         .finally(() => {
-          this.saveReservation();
+          this.checkClientReservations();
         });
     },
     checkBoatAvailability: function () {
@@ -439,7 +440,7 @@ export default {
           }
         })
         .finally(() => {
-          this.saveReservation();
+          this.checkClientReservations();
         });
     },
     checkAdventureAvailability: function () {
@@ -461,12 +462,42 @@ export default {
           }
         )
         .then((res) => {
-          if (!res.data) {
-            this.error = "Chosen date is not available.";
-            this.available = false;
+          this.checkAdventureAvailability = res.data;
+          this.checkClientReservations();
+        });
+    },
+    checkClientReservations: function () {
+      let startDate = {};
+      let endDate = {};
+
+      if (window.location.href.includes("adventure")) {
+        startDate = this.selectedDate;
+        endDate = new Date(startDate.getTime() + this.duration * 60000);
+      } else {
+        startDate = this.selectedDateRange[0];
+        endDate = this.selectedDateRange[1];
+      }
+
+      axios
+        .get(
+          "http://localhost:8080/reservation/cancelled?serviceId=" +
+            this.serviceId +
+            "&start=" +
+            moment(startDate).format("yyyy-MM-DD HH:mm:ss.SSS") +
+            "&end=" +
+            moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"),
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.data) {
+            this.cancelled = true;
           } else {
-            this.available = true;
-            this.error = "";
+            this.cancelled = false;
           }
           this.saveReservation();
         });
@@ -475,7 +506,7 @@ export default {
       if (
         this.maxPersons >= this.numOfPersons &&
         this.availableForDateRange &&
-        this.boatOwnerAvailable
+        this.boatOwnerAvailable && !this.cancelled
       ) {
         let startDate = {};
         let endDate = {};
@@ -509,9 +540,10 @@ export default {
       } else {
         if (this.maxPersons < this.numOfPersons)
           this.error = "Maximum number of people is " + this.maxPersons + ".";
-        else if (this.availableForDateRange == false)
+        else if (!this.availableForDateRange || !this.checkAdventureAvailability)
           this.error = "Not available for selected date range!";
-        else this.error = "Boat owner is not available";
+        else if(!this.boatOwnerAvailable)this.error = "Boat owner is not available";
+        else this.error = "Already cancelled reservation in this period!"
       }
     },
     closeModal: function () {

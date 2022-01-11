@@ -379,6 +379,12 @@ export default {
       });
   },
   methods: {
+    refresh: function (reserved) {
+      const index = this.offers.indexOf(reserved);
+        if (index > -1) {
+          this.offers.splice(index, 1);
+        }
+    },
     isSubscribed: function () {
       axios
         .get("http://localhost:8080/users/getRole", {

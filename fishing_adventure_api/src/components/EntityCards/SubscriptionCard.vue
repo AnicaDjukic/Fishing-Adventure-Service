@@ -98,7 +98,7 @@ export default {
         .then();
 
       this.$nextTick(() => {
-          this.$emit('refresh');
+          this.$emit('refresh', this.subscription);
       });
     },
     open: function () {

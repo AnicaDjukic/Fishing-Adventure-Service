@@ -255,8 +255,9 @@
 
       <div class="special-offers-fa">
         <div class="so-title-fa">
-          <h2 style="margin-top: 2rem">Special Offers</h2>
+          <h2>Special Offers</h2>
         </div>
+        <p style="font-size: 24px">There are no special offers currently</p>
       </div>
 
       <OffersCardNoImage
@@ -264,6 +265,7 @@
         :key="offer.offerId"
         :offer="offer"
         :loggedInRole="loggedInRole"
+        v-on:refresh="refresh"
       ></OffersCardNoImage>
 
       <div class="special-offers-fa">
@@ -399,6 +401,12 @@ export default {
   },
   name: "FishingAdventure",
   methods: {
+    refresh: function (reserved) {
+      const index = this.offers.indexOf(reserved);
+      if (index > -1) {
+        this.offers.splice(index, 1);
+      }
+    },
     isSubscribed: function () {
       axios
         .get("http://localhost:8080/users/getRole", {
