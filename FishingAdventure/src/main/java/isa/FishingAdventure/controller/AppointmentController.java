@@ -43,9 +43,11 @@ public class AppointmentController {
 
     private List<AppointmentDto> createAppointmentDtos(List<Appointment> appointments) {
         List<AppointmentDto> appointmentDtos = new ArrayList<>();
-        for (Appointment appointment : appointments) {
-            ServiceProfile profile = serviceProfileService.getByAppointmentsIsContaining(appointment);
-            appointmentDtos.add(new AppointmentDto(appointment, profile));
+        if (appointments != null) {
+            for (Appointment appointment : appointments) {
+                ServiceProfile profile = serviceProfileService.getByAppointmentsIsContaining(appointment);
+                appointmentDtos.add(new AppointmentDto(appointment, profile));
+            }
         }
         return appointmentDtos;
     }
