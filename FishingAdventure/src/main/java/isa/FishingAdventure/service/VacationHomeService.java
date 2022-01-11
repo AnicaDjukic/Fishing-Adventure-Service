@@ -155,4 +155,9 @@ public class VacationHomeService {
         }
         return appointmentDtos;
     }
+
+    public int getMaxPersons(Integer id) {
+        VacationHome vacationHome = homeRepository.findById(id).orElse(new VacationHome());
+        return vacationHome.getPersons();
+    }
 }

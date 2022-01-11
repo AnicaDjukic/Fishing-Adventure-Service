@@ -22,8 +22,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <h6 style="color: white; margin-top: 5%">
+          <h6 v-if="!adventure" style="color: white; margin-top: 5%">
             <b>Select date range:</b>
+          </h6>
+          <h6 v-if="adventure" style="color: white; margin-top: 5%">
+            <b>Select date and time:</b>
           </h6>
           <Datepicker
             style="
@@ -34,7 +37,7 @@
             "
             dark
             id="picker"
-            v-if="selectedDateRange == undefined"
+            v-if="selectedDateRange == undefined && !adventure"
             v-model="dateRange"
             v-on:click="selectDate"
             range
@@ -50,9 +53,25 @@
             "
             dark
             id="picker"
-            v-if="selectedDateRange != undefined"
+            v-if="selectedDateRange != undefined && !adventure"
             v-model="selectedDateRange"
             range
+            calendar-button="false"
+            :enableTimePicker="true"
+          ></Datepicker>
+
+          <Datepicker
+            style="
+              width: 100%;
+              margin-right: 10px;
+              border: 1px solid white;
+              border-radius: 5px;
+              text-align: center;
+            "
+            dark
+            id="picker"
+            v-if="adventure"
+            v-model="selectedDate"
             calendar-button="false"
             :enableTimePicker="true"
           ></Datepicker>
@@ -159,23 +178,32 @@ import axios from "axios";
 import moment from "moment";
 export default {
   components: {},
-  props: ["serviceId", "date", "persons", "additionalServices", "price"],
+  props: [
+    "duration",
+    "serviceId",
+    "date",
+    "persons",
+    "additionalServices",
+    "price",
+  ],
   name: "RegisterModal",
   data: function () {
     return {
       addServices: [],
       dateRange: [],
       selectedDateRange: undefined,
+      selectedDate: new Date(),
       numberOfPersons: 1,
       numOfPersons: undefined,
       totalPrice: 0,
       active: false,
       chosenServices: [],
-      availableForPersons: true,
+      maxPersons: 0,
       availableForDateRange: true,
       boat: false,
       boatOwner: false,
       boatOwnerAvailable: true,
+      adventure: false,
       error: "",
     };
   },
@@ -188,8 +216,9 @@ export default {
   beforeUpdate: function () {
     this.addServices = this.additionalServices;
     if (window.location.href.includes("boat")) this.boat = true;
+    if (window.location.href.includes("adventure")) this.adventure = true;
 
-    if (this.date != "undefined") {
+    if (this.date !== "undefined" && !this.adventure) {
       this.dateRange.push(new Date(Date.parse(this.date.split(",")[0])));
       this.dateRange.push(new Date(Date.parse(this.date.split(",")[1])));
     } else {
@@ -199,7 +228,7 @@ export default {
       this.dateRange.push(new Date());
       this.dateRange.push(new Date());
     }
-    if (this.persons != "undefined") {
+    if (this.persons !== "undefined" && !this.adventure) {
       if (this.persons != 0) this.numberOfPersons = this.persons;
     }
   },
@@ -274,15 +303,14 @@ export default {
         this.checkPersonsForCottage();
       } else if (window.location.href.includes("boat")) {
         this.checkPersonsForBoat();
+      } else {
+        this.checkPersonsForAdventure();
       }
     },
     checkPersonsForCottage: function () {
       axios
         .get(
-          "http://localhost:8080/vacationHome/available/persons?id=" +
-            this.serviceId +
-            "&number=" +
-            this.numOfPersons,
+          "http://localhost:8080/vacationHome/persons?id=" + this.serviceId,
           {
             headers: {
               "Access-Control-Allow-Origin": "http://localhost:8080",
@@ -291,17 +319,25 @@ export default {
           }
         )
         .then((response) => {
-          this.availableForPersons = response.data;
-          console.log(this.availableForPersons);
+          this.maxPersons = response.data;
         });
     },
     checkPersonsForBoat: function () {
       axios
+        .get("http://localhost:8080/boat/persons?id=" + this.serviceId, {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((response) => {
+          this.maxPersons = response.data;
+        });
+    },
+    checkPersonsForAdventure: function () {
+      axios
         .get(
-          "http://localhost:8080/boat/available/persons?id=" +
-            this.serviceId +
-            "&number=" +
-            this.numOfPersons,
+          "http://localhost:8080/fishingAdventure/persons?id=" + this.serviceId,
           {
             headers: {
               "Access-Control-Allow-Origin": "http://localhost:8080",
@@ -310,8 +346,7 @@ export default {
           }
         )
         .then((response) => {
-          this.availableForPersons = response.data;
-          console.log(this.availableForPersons);
+          this.maxPersons = response.data;
         });
     },
     createReservation: function () {
@@ -323,7 +358,7 @@ export default {
 
       this.error = "";
 
-      if (this.selectedDateRange == null) {
+      if (this.selectedDateRange == null && !this.adventure) {
         this.error = "Select date range please";
         return;
       }
@@ -332,6 +367,8 @@ export default {
         this.checkCottageAvailability();
       } else if (window.location.href.includes("boat")) {
         this.checkBoatAvailability();
+      } else {
+        this.checkAdventureAvailability();
       }
     },
     checkCottageAvailability: function () {
@@ -408,16 +445,57 @@ export default {
           this.saveReservation();
         });
     },
+    checkAdventureAvailability: function () {
+      let startDate = this.selectedDate;
+      let endDate = new Date(startDate.getTime() + this.duration * 60000);
+      axios
+        .get(
+          "http://localhost:8080/fishingAdventure/isAdventureInstructorAvailable?id=" +
+            this.serviceId +
+            "&start=" +
+            moment(startDate).format("yyyy-MM-DD HH:mm:ss.SSS") +
+            "&end=" +
+            moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"),
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then((res) => {
+          if (!res.data) {
+            this.error = "Chosen date is not available.";
+            this.available = false;
+          } else {
+            this.available = true;
+            this.error = "";
+          }
+          this.saveReservation();
+        });
+    },
     saveReservation: function () {
       if (
-        this.availableForPersons &&
+        this.maxPersons >= this.numOfPersons &&
         this.availableForDateRange &&
         this.boatOwnerAvailable
       ) {
+
+        let startDate = {};
+        let endDate = {};
+        
+        if(window.location.href.includes("adventure")) {
+          startDate = this.selectedDate;
+          endDate = new Date(startDate.getTime() + this.duration * 60000);
+        } else {
+          startDate = this.selectedDateRange[0];
+          endDate = this.selectedDateRange[1];
+        }
+        
         let reservation = {
           serviceId: this.serviceId,
-          startDate: this.selectedDateRange[0],
-          endDate: this.selectedDateRange[1],
+          startDate: startDate,
+          endDate: endDate,
           persons: this.numOfPersons,
           chosenServices: this.chosenServices,
           price: this.totalPrice,
@@ -434,8 +512,8 @@ export default {
           })
           .then(window.location.reload());
       } else {
-        if (this.availableForPersons == false)
-          this.error = "Not available for " + this.numOfPersons + " persons!";
+        if (this.maxPersons < this.numOfPersons)
+          this.error = "Maximum number of people is " + this.maxPersons + ".";
         else if (this.availableForDateRange == false)
           this.error = "Not available for selected date range!";
         else this.error = "Boat owner is not available";

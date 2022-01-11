@@ -82,11 +82,10 @@ public class VacationHomeController {
         return new ResponseEntity<>(additionalServiceDtos, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/available/persons")
-    public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer id, @RequestParam("number") int persons) throws ParseException {
-
-        boolean availability = homeService.isCottageAvailableForPersons(id, persons);
-        return new ResponseEntity(availability, HttpStatus.OK);
+    @GetMapping(value = "/persons")
+    public ResponseEntity getCottageMaxPersons(@RequestParam("id") Integer id) {
+        int maxPersons = homeService.getMaxPersons(id);
+        return new ResponseEntity(maxPersons, HttpStatus.OK);
     }
 
     @GetMapping(value = "/available/dateRange")

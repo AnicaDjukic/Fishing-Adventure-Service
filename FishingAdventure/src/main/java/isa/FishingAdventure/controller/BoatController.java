@@ -201,11 +201,10 @@ public class BoatController {
         return new ResponseEntity<>(boatDtos, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/available/persons")
-    public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer id, @RequestParam("number") int persons) throws ParseException {
-
-        boolean availability = boatService.isBoatAvailableForPersons(id, persons);
-        return new ResponseEntity(availability, HttpStatus.OK);
+    @GetMapping(value = "/persons")
+    public ResponseEntity getBoatMaxPersons(@RequestParam("id") Integer id) {
+        int maxPersons = boatService.getMaxPersons(id);
+        return new ResponseEntity(maxPersons, HttpStatus.OK);
     }
 
     @GetMapping(value = "/available/dateRange")

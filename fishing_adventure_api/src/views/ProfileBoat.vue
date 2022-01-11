@@ -9,7 +9,7 @@
         </h2>
         <button
           data-bs-toggle="modal"
-          :data-bs-target="'#cottage'"
+          :data-bs-target="'#boat'"
           class="book-btn"
         >
           Book a boat
@@ -305,7 +305,7 @@
     </div>
   </div>
   <ReservationModal
-    :id="'cottage'"
+    :id="'boat'"
     v-bind:serviceId="entity.id"
     v-bind:date="date"
     v-bind:persons="persons"

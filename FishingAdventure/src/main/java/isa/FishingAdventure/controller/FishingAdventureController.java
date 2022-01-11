@@ -109,4 +109,19 @@ public class FishingAdventureController{
 
 		return new ResponseEntity(available, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/isAdventureInstructorAvailable")
+	public ResponseEntity isAdventureInstructorAvailable(@RequestParam("id") Integer adventureId, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+												@RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) {
+		FishingInstructor fishingInstructor = adventureService.findById(adventureId).getFishingInstructor();
+		boolean available = adventureService.isInstructorAvailable(fishingInstructor, start, end);
+
+		return new ResponseEntity(available, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/persons")
+	public ResponseEntity getAdventureMaxPersons(@RequestParam("id") Integer id) {
+		int maxPersons = adventureService.getMaxPersons(id);
+		return new ResponseEntity(maxPersons, HttpStatus.OK);
+	}
 }

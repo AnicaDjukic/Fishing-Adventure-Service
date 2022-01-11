@@ -95,4 +95,9 @@ public class FishingAdventureService{
 		}
 		return appointmentDtos;
 	}
+
+	public int getMaxPersons(Integer id) {
+		FishingAdventure fishingAdventure = adventureRepository.findById(id).orElse(new FishingAdventure());
+		return fishingAdventure.getPersons();
+	}
 }

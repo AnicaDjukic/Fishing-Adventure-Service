@@ -7,13 +7,23 @@
           Start your adventure <br />
           today!
         </h2>
-        <button class="book-btn">Book an adventure</button>
+        <button
+          class="book-btn"
+          data-bs-toggle="modal"
+          :data-bs-target="'#adventure'"
+        >
+          Book an adventure
+        </button>
       </div>
       <div class="tagline-subscribe-fa" v-if="loggedInRole == 'ROLE_CLIENT'">
         <button class="subscribe-btn" v-if="!subscribed" v-on:click="subscribe">
           <i class="fas fa-bell" style="margin-right: 1.1rem"></i> Subscribe
         </button>
-        <button class="unsubscribe-btn" v-if="subscribed" v-on:click="unsubscribe">
+        <button
+          class="unsubscribe-btn"
+          v-if="subscribed"
+          v-on:click="unsubscribe"
+        >
           <i class="far fa-bell-slash" style="margin-right: 1.1rem"></i>
           Unsubscribe
         </button>
@@ -280,11 +290,23 @@
       </div>
     </div>
   </div>
+  <ReservationModal
+    :id="'adventure'"
+    v-bind:duration="entity.duration"
+    v-bind:serviceId="entity.id"
+    v-bind:date="date"
+    v-bind:persons="persons"
+    v-bind:additionalServices="entity.additionalServices"
+    v-bind:price="entity.price"
+    v-if="loggedInRole == 'ROLE_CLIENT'"
+  ></ReservationModal>
 </template>
 
 <script>
 import axios from "axios";
+import ReservationModal from "@/components/Modals/ReservationModal.vue";
 export default {
+  components: { ReservationModal },
   name: "FishingAdventure",
   data() {
     return {
@@ -431,29 +453,29 @@ export default {
       }
     },
     subscribe: function () {
-    axios
-      .get("http://localhost:8080/client/subscribe/" + this.entity.id, {
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
-          Authorization: "Bearer " + localStorage.refreshToken,
-        },
-      })
-      .then((res) => {
-        if (res.data == true) this.subscribed = true;
-      });
-  },
-  unsubscribe: function () {
-    axios
-      .get("http://localhost:8080/client/unsubscribe/" + this.entity.id, {
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
-          Authorization: "Bearer " + localStorage.refreshToken,
-        },
-      })
-      .then((res) => {
-        if (res.data == true) this.subscribed = false;
-      });
-  },
+      axios
+        .get("http://localhost:8080/client/subscribe/" + this.entity.id, {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          if (res.data == true) this.subscribed = true;
+        });
+    },
+    unsubscribe: function () {
+      axios
+        .get("http://localhost:8080/client/unsubscribe/" + this.entity.id, {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          if (res.data == true) this.subscribed = false;
+        });
+    },
   },
 };
 </script>

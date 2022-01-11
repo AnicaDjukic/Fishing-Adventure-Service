@@ -157,4 +157,9 @@ public class BoatService {
         }
         return boats;
     }
+
+    public int getMaxPersons(Integer id) {
+        Boat boat = boatRepository.findById(id).orElse(new Boat());
+        return boat.getPersons();
+    }
 }
