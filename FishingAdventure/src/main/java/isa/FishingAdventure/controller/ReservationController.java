@@ -1,6 +1,7 @@
 package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.AdvertiserReservationDto;
+import isa.FishingAdventure.dto.AppointmentDto;
 import isa.FishingAdventure.dto.NewReservationDto;
 import isa.FishingAdventure.dto.ReservationDto;
 import isa.FishingAdventure.model.*;
@@ -35,6 +36,15 @@ public class ReservationController {
         boolean success = reservationService.createReservation(email, newAppointment, dto.getServiceId());
         if (!success)
             return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/new/specialOffer")
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @Transactional
+    public ResponseEntity<AppointmentDto> reserveSpecialOffer(@RequestHeader("Authorization") String token, @RequestBody AppointmentDto dto) {
+        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+        reservationService.reserveSpecialOffer(email, dto.getOfferId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

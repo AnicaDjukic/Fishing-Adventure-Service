@@ -347,4 +347,7 @@ public class AppointmentService {
         return content.toString();
     }
 
+    public Appointment findById(Integer id) {
+        return appointmentRepository.findById(id).orElse(new Appointment());
+    }
 }

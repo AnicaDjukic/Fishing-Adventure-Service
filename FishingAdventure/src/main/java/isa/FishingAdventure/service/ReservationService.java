@@ -197,6 +197,18 @@ public class ReservationService {
         return reservationStatus;
     }
 
+    public void reserveSpecialOffer(String email, Integer offerId) {
+        Client client = clientService.findByEmail(email);
+        Appointment appointment = appointmentService.findById(offerId);
+        appointment.setReserved(true);
+        appointmentService.save(appointment);
+        Reservation newReservation = new Reservation();
+        newReservation.setClient(client);
+        newReservation.setAppointment(appointment);
+        newReservation.setCanceled(false);
+        save(newReservation);
+    }
+
     public Reservation findById(Integer id) {
         return repository.findById(id).orElse(new Reservation());
     }

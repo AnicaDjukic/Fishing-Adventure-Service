@@ -66,6 +66,7 @@
                   v-if="loggedInRole == 'ROLE_CLIENT'"
                   class="btn btn-outline-primary shadow-none mb-2"
                   style="width: 8rem"
+                  v-on:click="createReservation"
                 >
                   Book now
                 </button>
@@ -80,6 +81,7 @@
 
 <script>
 import moment from "moment";
+import axios from "axios";
 export default {
   props: ["offer", "loggedInRole"],
   name: "SpecialOffersCardNoImage",
@@ -110,6 +112,28 @@ export default {
       this.durationString = days + "d " + hours + "h " + minutes + "m";
     }
   },
+  methods: {
+    createReservation: function() {
+      axios
+        .post("http://localhost:8080/reservation/new/specialOffer/" , 
+        this.offer,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then(() => {
+          this.$toast.show(
+            "Thank you for your reservation!",
+            {
+              duration: 2000,
+            }
+          );
+          window.location.reload();
+        });
+    }
+  }
 };
 </script>
 <style scoped>
