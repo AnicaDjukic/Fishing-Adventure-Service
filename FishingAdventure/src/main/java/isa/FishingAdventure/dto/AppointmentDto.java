@@ -2,6 +2,8 @@ package isa.FishingAdventure.dto;
 
 import isa.FishingAdventure.model.AdditionalService;
 import isa.FishingAdventure.model.Appointment;
+import isa.FishingAdventure.model.Image;
+import isa.FishingAdventure.model.ServiceProfile;
 
 import java.time.Duration;
 import java.util.Date;
@@ -57,6 +59,26 @@ public class AppointmentDto {
         this.chosenServices = appointment.getChosenServices();
         this.dateCreated = appointment.getDateCreated();
         this.duration = appointment.getDuration();
+    }
+
+    public AppointmentDto(Appointment appointment, ServiceProfile profile) {
+        this.offerId = appointment.getAppointmentId();
+        this.discount = appointment.getDiscount();
+        this.startDate = appointment.getStartDate();
+        this.endDate = appointment.getEndDate();
+        this.maxPersons = appointment.getMaxPersons();
+        this.price = appointment.getPrice();
+        this.chosenServices = appointment.getChosenServices();
+        this.dateCreated = appointment.getDateCreated();
+        this.duration = appointment.getDuration();
+        this.serviceProfileName = profile.getName();
+        this.serviceProfileId = profile.getId();
+        for (Image img : profile.getImages()) {
+            if (img.isCoverImage()) {
+                this.coverImage = img.getPath();
+                break;
+            }
+        }
     }
 
     public Integer getOfferId() {

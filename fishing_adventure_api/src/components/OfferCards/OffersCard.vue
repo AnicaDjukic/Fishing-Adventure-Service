@@ -73,6 +73,7 @@
                 <div class="row shadow-none" style="margin-left: 1%">
                   <p
                     class="additionalServices shadow-none"
+                    style="text-align: center"
                     v-if="offer.chosenServices.length == 0"
                   >
                     Not included

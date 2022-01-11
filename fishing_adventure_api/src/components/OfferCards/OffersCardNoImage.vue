@@ -48,6 +48,7 @@
                   <p
                     class="additionalServices shadow-none"
                     v-if="offer.chosenServices.length == 0"
+                    style="text-align: center"
                   >
                     Not included
                   </p>

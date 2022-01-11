@@ -140,6 +140,12 @@
           <h6 style="color: red; margin-top: 1rem">
             <b>{{ error }}</b>
           </h6>
+          <h6
+            style="color: red"
+            v-if="error == 'Chosen date is not available.'"
+          >
+            <b>(Check availability dates)</b>
+          </h6>
         </div>
         <div class="modal-footer steps-div">
           <button
@@ -157,11 +163,13 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 export default {
   components: {},
   name: "OfferModal",
   data: function () {
     return {
+      available: false,
       serviceProfileId: "",
       persons: 1,
       maxPersons: "",
@@ -215,9 +223,8 @@ export default {
             .then((res) => {
               this.selectData = res.data;
             });
-        } else if(loggedInRole == "ROLE_FISHING_INSTRUCTOR"){
-          this.entityType = 'adventure';
-
+        } else if (loggedInRole == "ROLE_FISHING_INSTRUCTOR") {
+          this.entityType = "adventure";
         } else {
           window.location.href = "/";
         }
@@ -276,6 +283,7 @@ export default {
         this.offerEndDate = undefined;
         this.priceForPeriod = 0;
         this.priceForServices = 0;
+        this.available = false;
       }
       this.priceForServices = 0;
       this.dateRangeChanged();
@@ -285,7 +293,7 @@ export default {
         let duration = this.dateRange[1] - this.dateRange[0];
         let days = duration / (1000 * 3600 * 24);
         days = parseInt(days, 10);
-        let hours = (duration / (1000 * 3600)) - days * 24;
+        let hours = duration / (1000 * 3600) - days * 24;
         hours = parseInt(hours, 10);
         if (hours > 12) {
           days += 1;
@@ -295,7 +303,36 @@ export default {
         this.originalTotalPrice = this.priceForPeriod + this.priceForServices;
         this.priceField = this.originalTotalPrice;
         this.recalculatePrice();
+        this.checkAvailability();
       }
+    },
+    checkAvailability: function () {
+      let startDate = this.dateRange[0];
+      let endDate = this.dateRange[1];
+      axios
+        .get(
+          "http://localhost:8080/serviceProfile/isServiceAvailableForDateRange?id=" +
+            this.serviceProfileId +
+            "&start=" +
+            moment(startDate).format("yyyy-MM-DD HH:mm:ss.SSS") +
+            "&end=" +
+            moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"),
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then((res) => {
+          if (!res.data) {
+            this.error = "Chosen date is not available.";
+            this.available = false;
+          } else {
+            this.available = true;
+            this.error = "";
+          }
+        });
     },
     check: function (additionalService) {
       var checkBox = document.getElementById(additionalService.id);
@@ -331,7 +368,9 @@ export default {
       this.discount = (100 - percentage).toFixed(2);
     },
     createOffer: function () {
-      if (
+      if (!this.available) {
+        this.error = "Chosen date is not available.";
+      } else if (
         this.offerEndDate == undefined ||
         this.dateRange[0] == undefined ||
         document.getElementsByTagName("select")[0].value == ""
@@ -339,39 +378,37 @@ export default {
         this.error = "All fields must be filled.";
       } else {
         this.error = "";
-      }
 
-      let now = new Date();
-      let offerDuration = this.offerEndDate - now;
-      console.log(offerDuration);
-      console.log(this.offerEndDate);
-      let offerDto = {
-        serviceProfileId: this.serviceProfileId,
-        discount: this.discount,
-        startDate: this.dateRange[0],
-        endDate: this.dateRange[1],
-        maxPersons: this.persons,
-        price: this.priceField,
-        chosenServices: this.chosenServices,
-        duration: offerDuration,
-      };
-      axios
-        .post("http://localhost:8080/appointment/create", offerDto, {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
-            Authorization: "Bearer " + localStorage.refreshToken,
-          },
-        })
-        .then(() => {
-          //window.location.reload();
-        });
+        let now = new Date();
+        let offerDuration = this.offerEndDate - now;
+        let offerDto = {
+          serviceProfileId: this.serviceProfileId,
+          discount: this.discount,
+          startDate: this.dateRange[0],
+          endDate: this.dateRange[1],
+          maxPersons: this.persons,
+          price: this.priceField,
+          chosenServices: this.chosenServices,
+          duration: offerDuration,
+        };
+        axios
+          .post("http://localhost:8080/appointment/create", offerDto, {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          })
+          .then(() => {
+            window.location.reload();
+          });
+      }
     },
     closeModal: function () {
+      document.getElementsByTagName("select")[0].value = "";
       this.persons = 1;
       this.maxPersons = 1;
       this.priceField = "";
       this.originalPricePerDay = "";
-      this.selectData = "";
       this.entityType = "";
       this.discount = 0;
       this.additionalServices = [];
@@ -380,6 +417,7 @@ export default {
       this.error = "";
       this.priceForPeriod = 0;
       this.priceForServices = 0;
+      this.offerEndDate = undefined;
     },
   },
 };

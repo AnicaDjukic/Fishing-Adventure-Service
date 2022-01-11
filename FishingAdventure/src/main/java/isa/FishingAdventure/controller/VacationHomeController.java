@@ -1,6 +1,9 @@
 package isa.FishingAdventure.controller;
 
-import isa.FishingAdventure.dto.*;
+import isa.FishingAdventure.dto.AdditionalServiceDto;
+import isa.FishingAdventure.dto.NewHomeDto;
+import isa.FishingAdventure.dto.ServiceNameDto;
+import isa.FishingAdventure.dto.VacationHomeDto;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.*;
@@ -205,13 +208,6 @@ public class VacationHomeController {
         oldHome.setDescription(dto.getDescription());
         homeService.save(oldHome);
         return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/getServiceOffersById/{id}")
-    @Transactional
-    public ResponseEntity<List<AppointmentDto>> getServiceOffersById(@PathVariable String id) {
-        VacationHome home = homeService.getById(Integer.parseInt(id));
-        return new ResponseEntity<>(homeService.getAppointmentDtos(home), HttpStatus.OK);
     }
 
 }

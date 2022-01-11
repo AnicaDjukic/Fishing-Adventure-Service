@@ -342,20 +342,18 @@ export default {
           (this.center.lng = response.data.location.longitude),
           (this.markers[0].position.lat = response.data.location.latitude);
         this.markers[0].position.lng = response.data.location.longitude;
-        console.log(response.data);
       })
       .finally(() => {
         this.isSubscribed();
       });
 
     if (this.$route.query.id != undefined) {
-      console.log(this.$route.query.id);
       this.date = this.$route.query.date;
       this.persons = this.$route.query.persons;
     }
     axios
       .get(
-        "http://localhost:8080/vacationHome/getServiceOffersById/" +
+        "http://localhost:8080/appointment/getOffersByServiceId/" +
           this.$route.query.id,
         {
           headers: {

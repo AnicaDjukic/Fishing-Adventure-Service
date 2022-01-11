@@ -1,7 +1,12 @@
 package isa.FishingAdventure.controller;
 
-import isa.FishingAdventure.dto.*;
-import isa.FishingAdventure.model.*;
+import isa.FishingAdventure.dto.BoatDto;
+import isa.FishingAdventure.dto.NewBoatDto;
+import isa.FishingAdventure.dto.ServiceNameDto;
+import isa.FishingAdventure.model.Appointment;
+import isa.FishingAdventure.model.Boat;
+import isa.FishingAdventure.model.BoatOwner;
+import isa.FishingAdventure.model.Image;
 import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,16 +186,9 @@ public class BoatController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getServiceOffersById/{id}")
-    @Transactional
-    public ResponseEntity<List<AppointmentDto>> getServiceOffersById(@PathVariable String id) {
-        Boat boat = boatService.getById(Integer.parseInt(id));
-        return new ResponseEntity<>(boatService.getAppointmentDtos(boat), HttpStatus.OK);
-    }
-
     @GetMapping(value = "/search")
     public ResponseEntity<List<BoatDto>> getSearchedVacationHomes(@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-                                                                          @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end, @RequestParam("persons") int persons) throws ParseException {
+                                                                  @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end, @RequestParam("persons") int persons) throws ParseException {
         List<Boat> boats = boatService.findAllAvailableBoats(start, end, persons);
         List<BoatDto> boatDtos = new ArrayList<BoatDto>();
         for (Boat b : boats) {

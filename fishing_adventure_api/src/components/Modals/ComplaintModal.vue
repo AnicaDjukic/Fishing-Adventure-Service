@@ -71,9 +71,8 @@ export default {
       let complaint = {
         reservationId: this.reservation.id,
         content: this.content,
-        serviceId: this.reservation.serviceId
+        serviceId: this.reservation.serviceId,
       };
-      console.log(complaint);
       axios
         .post("http://localhost:8080/compliant/new", complaint, {
           headers: {

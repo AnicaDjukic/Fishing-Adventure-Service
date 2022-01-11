@@ -78,7 +78,6 @@ export default {
           result = false;
         }
       }
-      console.log(result);
 
       let retVal = {
         data: this.newRooms,

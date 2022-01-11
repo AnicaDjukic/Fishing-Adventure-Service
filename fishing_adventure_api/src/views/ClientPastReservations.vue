@@ -94,14 +94,13 @@ export default {
         },
       })
       .then((res) => {
-        console.log(res.data);
         this.pastReservations = res.data;
       });
   },
   methods: {
-    reviewForService: function(reservation){
+    reviewForService: function (reservation) {
       this.reservation = reservation;
-    }
+    },
   },
 };
 </script>

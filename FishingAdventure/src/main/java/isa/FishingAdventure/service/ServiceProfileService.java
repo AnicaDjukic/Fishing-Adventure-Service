@@ -1,13 +1,11 @@
 package isa.FishingAdventure.service;
 
-import isa.FishingAdventure.model.Boat;
-import isa.FishingAdventure.model.FishingAdventure;
-import isa.FishingAdventure.model.ServiceProfile;
-import isa.FishingAdventure.model.VacationHome;
+import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.ServiceProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +35,10 @@ public class ServiceProfileService {
 
     public ServiceProfile getById(int id) {
         return profileRepository.getById(id);
+    }
+
+    public ServiceProfile getByAppointmentsIsContaining(Appointment appointment) {
+        return profileRepository.getByAppointmentsIsContaining(appointment);
     }
 
     public ServiceProfile getByNameForAdvertiser(String name, String email) {
@@ -90,5 +92,21 @@ public class ServiceProfileService {
 
     public List<ServiceProfile> findAll() {
         return profileRepository.findAll();
+    }
+
+    public Boolean isServiceAvailableForDateRange(Integer id, Date start, Date end) {
+        Optional<VacationHome> home = homeService.findByIdIfExists(id);
+        Optional<Boat> boat = boatService.findByIdIfExists(id);
+        Optional<FishingAdventure> adventure = adventureService.findByIdIfExists(id);
+
+        Boolean isAvailable = true;
+        if (home.isPresent()) {
+            isAvailable = homeService.isCottageAvailableForDateRange(id, start, end);
+        } else if (boat.isPresent()) {
+            isAvailable = boatService.isBoatAvailableForDateRange(id, start, end);
+        } else {
+            isAvailable = adventureService.isInstructorAvailable(adventure.get().getFishingInstructor(), start, end);
+        }
+        return isAvailable;
     }
 }

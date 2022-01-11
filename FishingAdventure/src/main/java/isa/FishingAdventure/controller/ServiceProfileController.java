@@ -9,12 +9,14 @@ import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.ServiceProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -62,5 +64,11 @@ public class ServiceProfileController {
             dtos.add(dto);
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/isServiceAvailableForDateRange")
+    public ResponseEntity<Boolean> isServiceAvailableForDateRange(@RequestParam("id") Integer id, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+                                                                  @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) {
+        return new ResponseEntity<>(serviceProfileService.isServiceAvailableForDateRange(id, start, end), HttpStatus.OK);
     }
 }

@@ -11,7 +11,9 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="height: 40.5rem">
         <div class="modal-header">
-          <h3 style="font-size: 23px">New reservation for {{clientName}} {{clientSurname}} </h3>
+          <h3 style="font-size: 23px">
+            New reservation for {{ clientName }} {{ clientSurname }}
+          </h3>
           <button
             type="button"
             class="btn-close"
@@ -217,8 +219,8 @@ export default {
             .then((res) => {
               this.selectData = res.data;
             });
-        } else if(loggedInRole == "ROLE_FISHING_INSTRUCTOR"){
-          this.entityType = 'adventure';
+        } else if (loggedInRole == "ROLE_FISHING_INSTRUCTOR") {
+          this.entityType = "adventure";
           axios
             .get("http://localhost:8080/fishingAdventure/getNamesByUser", {
               headers: {
@@ -227,7 +229,7 @@ export default {
               },
             })
             .then((res) => {
-              console
+              console;
               this.selectData = res.data;
             });
         }
@@ -277,7 +279,7 @@ export default {
               this.persons = this.maxPersons;
             }
 
-            if (this.entityType == 'adventure') {
+            if (this.entityType == "adventure") {
               axios
                 .get(
                   "http://localhost:8080/fishingAdventure/getDurationById/" +
@@ -317,7 +319,7 @@ export default {
         let duration = this.dateRange[1] - this.dateRange[0];
         let days = duration / (1000 * 3600 * 24);
         days = parseInt(days, 10);
-        let hours = (duration / (1000 * 3600)) - days * 24;
+        let hours = duration / (1000 * 3600) - days * 24;
         hours = parseInt(hours, 10);
         if (hours > 12) {
           days += 1;
@@ -326,25 +328,29 @@ export default {
 
         this.originalTotalPrice = this.priceForPeriod + this.priceForServices;
         this.priceField = this.originalTotalPrice;
-      }
-      else if (this.adventureReservationDate != undefined) {
+      } else if (this.adventureReservationDate != undefined) {
         let startDate = this.adventureReservationDate;
-        let endDate = new Date(startDate.getTime() + this.adventureDurationInMins*60000);
+        let endDate = new Date(
+          startDate.getTime() + this.adventureDurationInMins * 60000
+        );
         axios
-          .get("http://localhost:8080/fishingAdventure/isInstructorAvailable?start=" +
+          .get(
+            "http://localhost:8080/fishingAdventure/isInstructorAvailable?start=" +
               moment(startDate).format("yyyy-MM-DD HH:mm:ss.SSS") +
-              "&end=" + moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"), {
-            headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
-              Authorization: "Bearer " + localStorage.refreshToken,
-            },
-          })
+              "&end=" +
+              moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"),
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            }
+          )
           .then((res) => {
             if (!res.data) {
               this.error = "Chosen date is not available.";
               this.available = false;
-            }
-            else {
+            } else {
               this.available = true;
               this.error = "";
             }
@@ -372,40 +378,43 @@ export default {
     createReservation: function () {
       if (!this.available) {
         this.error = "Chosen date is not available.";
-      } 
-      else if (this.maxPersons < this.persons) {
+      } else if (this.maxPersons < this.persons) {
         this.error = "Maximum number of people is " + this.maxPersons + ".";
-      }
-      else {
+      } else {
         let startDate = [];
         let endDate = [];
-        let ownerPresence = []
-        if (this.entityType == 'adventure') {
+        let ownerPresence = [];
+        if (this.entityType == "adventure") {
           startDate = this.adventureReservationDate;
           ownerPresence = true;
-          endDate = new Date(startDate.getTime() + this.adventureDurationInMins*60000);
+          endDate = new Date(
+            startDate.getTime() + this.adventureDurationInMins * 60000
+          );
         }
 
         let reservation = {
-            serviceId: this.serviceProfileId,
-            startDate: startDate,
-            endDate: endDate,
-            persons: this.persons,
-            chosenServices: this.chosenServices,
-            price: this.priceField,
-            ownersPresence: ownerPresence,
-            clientEmail: this.clientEmail
-          };
-          console.log(reservation);
+          serviceId: this.serviceProfileId,
+          startDate: startDate,
+          endDate: endDate,
+          persons: this.persons,
+          chosenServices: this.chosenServices,
+          price: this.priceField,
+          ownersPresence: ownerPresence,
+          clientEmail: this.clientEmail,
+        };
 
-          axios
-            .post("http://localhost:8080/reservation/newByAdvertiser", reservation, {
+        axios
+          .post(
+            "http://localhost:8080/reservation/newByAdvertiser",
+            reservation,
+            {
               headers: {
                 "Access-Control-Allow-Origin": "http://localhost:8080",
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
-            })
-            .then(window.location.reload());
+            }
+          )
+          .then(window.location.reload());
       }
     },
     closeModal: function () {
@@ -424,7 +433,7 @@ export default {
       this.priceForServices = 0;
       this.originalTotalPrice = 0;
       this.available = false;
-    }, 
+    },
   },
 };
 </script>

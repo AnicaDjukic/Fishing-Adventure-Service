@@ -1,6 +1,5 @@
 package isa.FishingAdventure.service;
 
-import isa.FishingAdventure.dto.AppointmentDto;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.VacationHomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VacationHomeService {
@@ -88,6 +88,10 @@ public class VacationHomeService {
         return homeRepository.findById(id).orElse(new VacationHome());
     }
 
+    public Optional<VacationHome> findByIdIfExists(Integer id) {
+        return homeRepository.findById(id);
+    }
+
     public List<AdditionalService> findAdditionalServicesByVacationHomeId(Integer id) {
         VacationHome vacationHome = findById(id);
         return new ArrayList<>(vacationHome.getAdditionalServices());
@@ -113,7 +117,7 @@ public class VacationHomeService {
             return false;
 
         for (Appointment ap : vacationHome.getAppointments()) {
-            if (start.equals (ap.getStartDate()) || end.equals(ap.getEndDate()) || (start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
+            if (start.equals(ap.getStartDate()) || end.equals(ap.getEndDate()) || (start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
                 available = false;
                 break;
             }
@@ -126,34 +130,14 @@ public class VacationHomeService {
         return homeRepository.findById(id).isPresent();
     }
 
-    // TODO: add getOffersByAdvertiser and getAppointmentDtos to FishingAdvenureService
-    public List<AppointmentDto> getOffersByAdvertiser(String email) {
+    public List<Appointment> getOffersByAdvertiser(String email) {
         VacationHomeOwner owner = ownerService.findByEmail(email);
 
-        List<AppointmentDto> appointmentDtos = new ArrayList<>();
+        List<Appointment> appointments = new ArrayList<>();
         for (VacationHome home : findByVacationHomeOwner(owner)) {
-            appointmentDtos.addAll(getAppointmentDtos(home));
+            appointments.addAll(home.getAppointments());
         }
-        return appointmentDtos;
-    }
-
-    public List<AppointmentDto> getAppointmentDtos(VacationHome home) {
-        List<AppointmentDto> appointmentDtos = new ArrayList<>();
-        for (Appointment appointment : home.getAppointments()) {
-            if (!appointment.isReserved() && Date.from(appointment.getDateCreated().toInstant().plusMillis(appointment.getDuration().toMillis() / 1000)).after(new Date())) {
-                AppointmentDto dto = new AppointmentDto(appointment);
-                dto.setServiceProfileName(home.getName());
-                dto.setServiceProfileId(home.getId());
-                for (Image img : home.getImages()) {
-                    if (img.isCoverImage()) {
-                        dto.setCoverImage(img.getPath());
-                        break;
-                    }
-                }
-                appointmentDtos.add(dto);
-            }
-        }
-        return appointmentDtos;
+        return appointments;
     }
 
     public int getMaxPersons(Integer id) {

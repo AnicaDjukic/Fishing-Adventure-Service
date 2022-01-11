@@ -300,8 +300,6 @@ export default {
             "";
         }
       } else if (this.mode == "2") {
-        console.log(this.images);
-        console.log(this.files);
         if (!this.images && !this.files) {
           document.getElementById(
             "cottageImagesErr" + this.cottageId
@@ -531,7 +529,6 @@ export default {
           persons: this.persons,
         };
 
-        console.log(home);
         axios
           .post("http://localhost:8080/vacationHome/newHome", home, {
             headers: {

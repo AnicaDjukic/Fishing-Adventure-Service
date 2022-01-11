@@ -129,9 +129,8 @@ export default {
         reservationId: this.reservation.id,
         content: this.content,
         rate: this.rate,
-        serviceId: this.reservation.serviceId
+        serviceId: this.reservation.serviceId,
       };
-      console.log(review);
       axios
         .post("http://localhost:8080/review/new", review, {
           headers: {
@@ -140,12 +139,9 @@ export default {
           },
         })
         .then(() => {
-          this.$toast.show(
-            "Thank you for your review!",
-            {
-              duration: 2000,
-            }
-          );
+          this.$toast.show("Thank you for your review!", {
+            duration: 2000,
+          });
 
           window.location.reload();
         });

@@ -97,7 +97,6 @@ export default {
         },
       })
       .then((res) => {
-        console.log(res.data);
         var currentDate = new Date();
         currentDate.setDate(currentDate.getDate() + 3);
         for (let d of res.data) {
@@ -106,9 +105,10 @@ export default {
           else this.reservations.push(d);
         }
       });
-      this.$toast.show(
-          "You can cancel your reservation up to 3 days before it is scheduled.", {duration: 5000}
-        );
+    this.$toast.show(
+      "You can cancel your reservation up to 3 days before it is scheduled.",
+      { duration: 5000 }
+    );
   },
   methods: {},
 };

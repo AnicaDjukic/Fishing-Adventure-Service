@@ -78,7 +78,11 @@
             <span class="input-group-text">Rating</span>
             <div
               class="rating-div form-control"
-              style="min-width: fit-content; min-height: fit-content; padding: 3px"
+              style="
+                min-width: fit-content;
+                min-height: fit-content;
+                padding: 3px;
+              "
               v-on:click="searchCottage"
             >
               <div class="rating" style="height: 0">
@@ -98,7 +102,13 @@
         </div>
         <button
           class="btn btn-primary shadow-none mb-2"
-          style="background-color: rgb(0 51 51); border-color: rgb(0 51 51); width: 10%; margin-bottom:0!important; min-width: fit-content;"
+          style="
+            background-color: rgb(0 51 51);
+            border-color: rgb(0 51 51);
+            width: 10%;
+            margin-bottom: 0 !important;
+            min-width: fit-content;
+          "
           v-on:click="search"
         >
           Search
@@ -236,7 +246,6 @@ export default {
       this.reservationInfo = info;
     },
     updateDatePicker(value) {
-      console.log("updating datepicker value");
       this.date = value;
     },
     search: function () {

@@ -1,6 +1,5 @@
 package isa.FishingAdventure.service;
 
-import isa.FishingAdventure.dto.AppointmentDto;
 import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.model.User;
@@ -68,25 +67,41 @@ public class AppointmentService {
         return savedAppointment.getAppointmentId();
     }
 
-    // TODO: add for FishingInstructor
-    public List<AppointmentDto> getOffersByAdvertiser(String token) {
+    public List<Appointment> getOffersByAdvertiser(String token) {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         User owner = userService.findByEmail(email);
 
-        List<AppointmentDto> dtos = new ArrayList<>();
+        List<Appointment> appointments = new ArrayList<>();
         switch (owner.getUserType().getName()) {
             case "ROLE_VACATION_HOME_OWNER":
-                dtos = vacationHomeService.getOffersByAdvertiser(owner.getEmail());
+                appointments = getValidAppointements(vacationHomeService.getOffersByAdvertiser(owner.getEmail()));
                 break;
             case "ROLE_BOAT_OWNER":
-                dtos = boatService.getOffersByAdvertiser(owner.getEmail());
+                appointments = getValidAppointements(boatService.getOffersByAdvertiser(owner.getEmail()));
                 break;
             default:
+                appointments = null; // TODO: implement getOffersByAdvertiser in adventure service
                 break;
         }
 
-        return dtos;
+        return appointments;
     }
+
+    public List<Appointment> getValidAppointements(List<Appointment> appointments) {
+        List<Appointment> validAppointments = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            if (!appointment.isReserved() && Date.from(appointment.getDateCreated().toInstant().plusMillis(appointment.getDuration().toMillis() / 1000)).after(new Date())) {
+                validAppointments.add(appointment);
+            }
+        }
+        return validAppointments;
+    }
+
+    public List<Appointment> getOffersByServiceId(String id) {
+        ServiceProfile serviceProfile = serviceProfileService.getById(Integer.parseInt(id));
+        return new ArrayList<>(getValidAppointements(new ArrayList<>(serviceProfile.getAppointments())));
+    }
+
 
     private String createEmail(User client, Appointment newAppointment, ServiceProfile serviceProfile) {
         StringBuilder content = new StringBuilder();

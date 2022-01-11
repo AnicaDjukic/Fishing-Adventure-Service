@@ -291,7 +291,6 @@ export default {
         )
         .then((response) => {
           this.availableForDateRange = response.data;
-          console.log(this.availableForDateRange);
         });
     },
     changePersons: function () {
@@ -391,7 +390,6 @@ export default {
         )
         .then((response) => {
           this.availableForDateRange = response.data;
-          console.log(this.availableForDateRange);
         })
         .finally(() => {
           this.saveReservation();
@@ -417,7 +415,6 @@ export default {
         )
         .then((response) => {
           this.availableForDateRange = response.data;
-          console.log(this.availableForDateRange);
           if (this.boatOwner == true) {
             axios
               .get(
@@ -480,18 +477,17 @@ export default {
         this.availableForDateRange &&
         this.boatOwnerAvailable
       ) {
-
         let startDate = {};
         let endDate = {};
-        
-        if(window.location.href.includes("adventure")) {
+
+        if (window.location.href.includes("adventure")) {
           startDate = this.selectedDate;
           endDate = new Date(startDate.getTime() + this.duration * 60000);
         } else {
           startDate = this.selectedDateRange[0];
           endDate = this.selectedDateRange[1];
         }
-        
+
         let reservation = {
           serviceId: this.serviceId,
           startDate: startDate,
@@ -501,7 +497,6 @@ export default {
           price: this.totalPrice,
           ownersPresence: this.boatOwner,
         };
-        console.log(reservation);
 
         axios
           .post("http://localhost:8080/reservation/new", reservation, {

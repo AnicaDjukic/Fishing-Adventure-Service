@@ -510,7 +510,6 @@ export default {
           });
         }
 
-        console.log(this.equipment);
         let fishingEqFinal = [];
         for (let equip of this.equipment) {
           fishingEqFinal.push({ name: equip.name });

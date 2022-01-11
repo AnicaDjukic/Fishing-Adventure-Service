@@ -342,7 +342,6 @@ export default {
         },
       })
       .then((response) => {
-        console.log(response.data);
         this.entity = response.data;
         this.location = response.data.location;
         this.address = this.location.address;
@@ -361,13 +360,12 @@ export default {
       });
 
     if (this.$route.query.id != undefined) {
-      console.log(this.$route.query.id);
       this.date = this.$route.query.date;
       this.persons = this.$route.query.persons;
     }
     axios
       .get(
-        "http://localhost:8080/fishingAdventure/getServiceOffersById/" +
+        "http://localhost:8080/appointment/getOffersByServiceId/" +
           this.$route.query.id,
         {
           headers: {
