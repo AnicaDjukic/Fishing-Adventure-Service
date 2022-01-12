@@ -85,9 +85,9 @@
         <thead>
           <tr>
             <th>Advertiser type</th>
-            <th v-on:click="sortByDate" id="name-th">
+            <!-- <th v-on:click="sortByDate" id="name-th">
               Date of request <i class="fa fa-sort"></i>
-            </th>
+            </th> -->
             <th v-on:click="sortByName" id="name-th">
               Name <i class="fa fa-sort"></i>
             </th>
@@ -109,39 +109,39 @@
           >
             <td>
               <i
-                v-if="user.userType == 'CLIENT'"
+                v-if="user.userType == 'ROLE_CLIENT'"
                 class="fas fa-user fa-lg"
                 style="color: #003148"
                 aria-hidden="true"
               ></i>
               <i
-                v-else-if="user.userType == 'ADMINISTRATOR'"
+                v-else-if="user.userType == 'ROLE_ADMIN'"
                 class="fas fa-cog fa-lg"
                 style="color: #003148"
                 aria-hidden="true"
               ></i>
               <i
-                v-else-if="user.userType == 'FISHING_INSTRUCTOR'"
+                v-else-if="user.userType == 'ROLE_FISHING_INSTRUCTOR'"
                 class="fas fa-fish fa-lg"
                 style="color: #003148"
                 aria-hidden="true"
               ></i>
               <i
-                v-else-if="user.userType == 'COTTAGE_OWNER'"
+                v-else-if="user.userType == 'ROLE_VACATION_HOME_OWNER'"
                 class="fas fa-home fa-lg"
                 style="color: #003148"
                 aria-hidden="true"
               ></i>
               <i
-                v-else-if="user.userType == 'BOAT_OWNER'"
+                v-else-if="user.userType == 'ROLE_BOAT_OWNER'"
                 class="fas fa-anchor fa-lg"
                 style="color: #003148"
                 aria-hidden="true"
               ></i>
             </td>
-            <td>
+            <!-- <td>
               {{ user.date }}
-            </td>
+            </td> -->
             <td>{{ user.name }}</td>
             <td>{{ user.surname }}</td>
             <td>{{ user.email }}</td>
@@ -162,6 +162,7 @@
 
 <script>
 import RequestForRegistration from "@/components/Admin/RequestForRegistration.vue";
+import axios from "axios";
 
 export default {
   components: { "registration-request": RequestForRegistration },
@@ -170,7 +171,7 @@ export default {
       searchText: "",
       searchResults: [],
       selectedUser: undefined,
-      users: [
+      users: [`
         {
           id: "1",
           name: "Curtis",
@@ -213,8 +214,21 @@ export default {
           reason_for_registration:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum ut lectus et efficitur.",
         },
-      ],
+      `],
     };
+  },
+  mounted: function () {
+    axios
+      .get("http://localhost:8080/users/getAllRegistrationRequests", {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.users = res.data;
+        console.log(this.users)
+      });
   },
   methods: {
     searchUsers: function () {},

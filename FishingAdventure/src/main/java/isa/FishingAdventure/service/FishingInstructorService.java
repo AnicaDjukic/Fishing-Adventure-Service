@@ -37,12 +37,14 @@ public class FishingInstructorService{
 		u.setPhoneNumber(userDto.getPhoneNumber());
 		u.setEmail(userDto.getEmail());
 		u.setAddress(userDto.getAddress());
+		u.setBiography(userDto.getBiography());
+		u.setDeleted(false);
 
-		
+
+
 		List<UserType> roles = userTypeService.findByName("ROLE_FISHING_INSTRUCTOR");
 		u.setUserType(roles.get(0));
 		u.setPoints(0.0);
-		u.setBiography("");
 		
 		return this.fishingInstructorRepository.save(u);
 	}

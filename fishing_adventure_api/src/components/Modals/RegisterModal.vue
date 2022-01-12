@@ -214,6 +214,7 @@
           </div>
         </div>
         <div class="modal-footer">
+          <p id="msg"></p>
           <button
             type="button"
             v-if="mode == 'logIn'"
@@ -252,7 +253,6 @@
           >
             Next <i class="fas fa-chevron-right fa-xs"></i>
           </button>
-          <p id="msg"></p>
         </div>
       </div>
     </div>
@@ -381,7 +381,7 @@ export default {
           country: this.user.country,
           zipCode: 0
         },
-        biography: ''
+        biography: this.registerReasons,
       };
 
       let path;
@@ -408,10 +408,16 @@ export default {
         })
         .then((res) => {
           if (res != null) {
-            document.getElementById("msg").innerHTML =
-              "Varification mail is sent to your email address.";
-            document.getElementById("create-btn").style.visibility = "hidden";
-            document.getElementById("back-btn").style.visibility = "hidden";
+            if (this.chosenRole == "ROLE_CLIENT") {
+              document.getElementById("msg").innerHTML =
+              "A verification mail has been sent to your email address.";
+            }
+            else {
+              document.getElementById("msg").innerHTML =
+              "Your registration has been sent to an admin and is awaiting approval.";
+            }
+            document.getElementById("create-btn").style.visibility = "collapse";
+            document.getElementById("back-btn").style.visibility = "collapse";
           }
         });
     },

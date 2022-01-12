@@ -6,7 +6,6 @@ import isa.FishingAdventure.dto.NewReservationDto;
 import isa.FishingAdventure.dto.ReservationDto;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.security.util.TokenUtils;
-import isa.FishingAdventure.service.ClientService;
 import isa.FishingAdventure.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

@@ -3,6 +3,8 @@ package isa.FishingAdventure.service;
 import isa.FishingAdventure.model.User;
 import isa.FishingAdventure.repository.ClientRepository;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import isa.FishingAdventure.repository.UserRepository;
@@ -38,12 +40,30 @@ public class UserService implements UserDetailsService {
 		return repository.findByEmail(email);
 	}
 
+	public List<User> findAllUnactivatedAdvertisers() {
+		List<User> users = new ArrayList<>();
+		for (User user : findAllNotDeleted()) {
+			if (!user.isActivated()
+					&& !user.getUserType().getName().equals("ROLE_CLIENT")
+							&& !user.getUserType().getName().equals("ROLE_ADMIN")) {
+					users.add(user);
+			}
+		}
+		return users;
+	}
+
 	public User findById(Integer id) throws AccessDeniedException {
 		return repository.findById(id).orElseGet(null);
 	}
 
-	public List<User> findAll() throws AccessDeniedException {
-		return repository.findAll();
+	public List<User> findAllNotDeleted() throws AccessDeniedException {
+		List<User> users = new ArrayList<>();
+		for (User user : repository.findAll()) {
+			if (!user.getDeleted()) {
+				users.add(user);
+			}
+		}
+		return users;
 	}
 
 	public void save(User user) {

@@ -38,14 +38,14 @@
                     <div>
                         <div class="rr-row"><span class="rr-right"> {{user.email}} </span></div>
                         <div class="rr-row"><span class="rr-right">  {{user.name}}  {{user.surname}} </span></div>
-                        <div class="rr-row"><span class="rr-right">  {{user.telephone}} </span></div>
+                        <div class="rr-row"><span class="rr-right">  {{user.phoneNumber}} </span></div>
                         <div class="rr-row"><span class="rr-right">  {{user.country}} </span></div>
                         <div class="rr-row"><span class="rr-right">  {{user.street}},  {{user.city}} </span></div>
                     </div>
 
                 </div>
                     <div class="rr-row">Reason for joining:</div>
-                <div class="rr-reason-txt">{{user.reason_for_registration}}</div>
+                <div class="rr-reason-txt">{{user.description}}</div>
           </div>
         </div>
         <div class="modal-body" v-if="mode === 'registerRole'">

@@ -1,14 +1,15 @@
 package isa.FishingAdventure.controller;
 
-import isa.FishingAdventure.model.VacationHomeOwner;
+import isa.FishingAdventure.dto.RegistrationRequestDto;
 import isa.FishingAdventure.security.util.TokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import isa.FishingAdventure.dto.ChangePasswordDto;
@@ -17,6 +18,9 @@ import isa.FishingAdventure.dto.UserInfoDto;
 import isa.FishingAdventure.model.User;
 import isa.FishingAdventure.service.EmailService;
 import isa.FishingAdventure.service.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,6 +86,18 @@ public class UserController {
 		
 		userService.save(user);
 		return dto;
+	}
+
+	@GetMapping(value="getAllRegistrationRequests")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<List<RegistrationRequestDto>> getAllRegistrationRequests() {
+		List<RegistrationRequestDto> requests = new ArrayList<>();
+		for (User user : userService.findAllUnactivatedAdvertisers()) {
+			RegistrationRequestDto request = new RegistrationRequestDto(user);
+			requests.add(request);
+		}
+
+		return new ResponseEntity<>(requests, HttpStatus.OK);
 	}
 
 }
