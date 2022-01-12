@@ -2,6 +2,7 @@ package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.AvailableDateRangeDto;
 import isa.FishingAdventure.model.AvailabilityDateRange;
+import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.service.AvailabilityDateRangeService;
 import isa.FishingAdventure.service.ServiceProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ public class AvailabilityDateRangeController {
     private ServiceProfileService serviceProfileService;
 
     @GetMapping(value = "/getByServiceProfile/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
-    public ResponseEntity<List<AvailableDateRangeDto>> getNamesByUser(@PathVariable String id) {
+    @PreAuthorize("hasAnyRole('ROLE_VACATION_HOME_OWNER','ROLE_BOAT_OWNER')")
+    public ResponseEntity<List<AvailableDateRangeDto>> getByServiceProfile(@PathVariable String id) {
         List<AvailabilityDateRange> dates = availabilityDateRangeService.getAllByServiceProfileId(Integer.parseInt(id));
 
         List<AvailableDateRangeDto> dtos = new ArrayList<>();
@@ -38,20 +39,18 @@ public class AvailabilityDateRangeController {
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/update/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
+    @PutMapping(value = "/update/{dateRangeId}/{serviceId}")
+    @PreAuthorize("hasAnyRole('ROLE_VACATION_HOME_OWNER','ROLE_BOAT_OWNER')")
     @Transactional
-    public ResponseEntity<AvailableDateRangeDto> update(@PathVariable String id, @RequestBody AvailableDateRangeDto dto) {
-        AvailabilityDateRange date = availabilityDateRangeService.getById(Integer.parseInt(id));
-
-        date.setEndDate(dto.getEnd());
-        date.setStartDate(dto.getStart());
-        availabilityDateRangeService.save(date);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+    public ResponseEntity<List<AvailableDateRangeDto>> update(@PathVariable String dateRangeId, @PathVariable String serviceId, @RequestBody AvailableDateRangeDto dto) {
+        AvailabilityDateRange date = availabilityDateRangeService.getById(Integer.parseInt(dateRangeId));
+        ServiceProfile profile = serviceProfileService.getById(Integer.parseInt(serviceId));
+        List<AvailabilityDateRange> dateRanges = availabilityDateRangeService.updateAvailabilityDate(date, dto.getStart(), dto.getEnd(), profile.getId());
+        return new ResponseEntity<>(createAvailabilityDateRangeDtos(dateRanges, profile), HttpStatus.OK);
     }
 
     @PostMapping(value = "/save/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_VACATION_HOME_OWNER','ROLE_BOAT_OWNER')")
     @Transactional
     public ResponseEntity<AvailableDateRangeDto> save(@PathVariable String id, @RequestBody AvailableDateRangeDto dto) {
         AvailabilityDateRange date = new AvailabilityDateRange();
@@ -63,11 +62,20 @@ public class AvailabilityDateRangeController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER')")
+    @DeleteMapping(value = "/{dateRangeId}/{serviceId}")
+    @PreAuthorize("hasAnyRole('ROLE_VACATION_HOME_OWNER','ROLE_BOAT_OWNER')")
     @Transactional
-    public ResponseEntity<String> save(@PathVariable String id) {
-        availabilityDateRangeService.delete(Integer.parseInt(id));
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+    public ResponseEntity<List<AvailableDateRangeDto>> delete(@PathVariable String dateRangeId, @PathVariable String serviceId) {
+        ServiceProfile profile = serviceProfileService.getById(Integer.parseInt(serviceId));
+        List<AvailabilityDateRange> dateRanges = availabilityDateRangeService.delete(Integer.parseInt(dateRangeId), Integer.parseInt(serviceId));
+        return new ResponseEntity<>(createAvailabilityDateRangeDtos(dateRanges, profile), HttpStatus.OK);
+    }
+
+    private List<AvailableDateRangeDto> createAvailabilityDateRangeDtos(List<AvailabilityDateRange> dateRanges, ServiceProfile profile) {
+        List<AvailableDateRangeDto> dateRangeDtos = new ArrayList<>();
+        for (AvailabilityDateRange dateRange : dateRanges) {
+            dateRangeDtos.add(new AvailableDateRangeDto(dateRange.getId(), profile.getName(), dateRange.getStartDate(), dateRange.getEndDate()));
+        }
+        return dateRangeDtos;
     }
 }

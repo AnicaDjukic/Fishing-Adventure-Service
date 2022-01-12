@@ -7,7 +7,7 @@
         <div style="margin: 2rem 0">
           <div class="element">
             <h4>Select {{ entityType }}</h4>
-            <select id="selectEl">
+            <select id="selectEl" :disabled="selectDisabled">
               <option value=""></option>
               <option
                 v-for="data of selectData"
@@ -30,6 +30,18 @@
               minutesIncrement="15"
               :minDate="new Date()"
             ></Datepicker>
+            <Datepicker
+              class="datePricker"
+              dark
+              id="disabledStartPicker"
+              v-model="startDate"
+              placeholder="Select date"
+              :enableTimePicker="true"
+              minutesIncrement="15"
+              :minDate="new Date()"
+              v-if="disabledPickers"
+              disabled
+            ></Datepicker>
           </div>
           <div class="element">
             <h4>Available to:</h4>
@@ -43,6 +55,18 @@
               minutesIncrement="15"
               :minDate="new Date()"
             ></Datepicker>
+            <Datepicker
+              class="datePricker"
+              dark
+              id="disabledEndPicker"
+              v-model="endDate"
+              placeholder="Select date"
+              :enableTimePicker="true"
+              minutesIncrement="15"
+              :minDate="new Date()"
+              disabled
+              v-if="disabledPickers"
+            ></Datepicker>
           </div>
           <div
             style="
@@ -51,12 +75,17 @@
               justify-content: space-evenly;
             "
           >
-            <button class="btn btn-outline-primary save" v-on:click="saveDate">
+            <button
+              class="btn btn-outline-primary save"
+              v-on:click="saveDate"
+              id="saveBtn"
+            >
               Save
             </button>
             <button
               class="btn btn-outline-primary delete-btn"
               v-on:click="deleteDate"
+              id="deleteBtn"
             >
               Delete
             </button>
@@ -93,6 +122,8 @@ export default {
   },
   data() {
     return {
+      disabledPickers: false,
+      selectDisabled: false,
       currentEvent: "",
       selectData: [],
       entityType: "",
@@ -149,14 +180,18 @@ export default {
                   )
                   .then((res) => {
                     for (let newData of res.data) {
+                      console.log(newData);
                       newData.title = data.label;
-                      newData.url = "neki";
+                      newData.url = "dateRange";
+                      newData.defId = newData.id;
                       newData.startDate = new Date(newData.start);
                       newData.endDate = new Date(newData.end);
+                      newData.serviceId = data.code;
                       this.calendarOptions.events.push(newData);
                     }
                   });
               }
+              console.log(this.calendarOptions.events);
             });
         } else if (loggedInRole == "ROLE_BOAT_OWNER") {
           this.entityType = "boat";
@@ -184,7 +219,9 @@ export default {
                   .then((res) => {
                     for (let newData of res.data) {
                       newData.title = data.label;
-                      newData.url = "neki";
+                      newData.url = "dateRange";
+                      newData.defId = newData.id;
+                      newData.serviceId = data.code;
                       newData.startDate = new Date(newData.start);
                       newData.endDate = new Date(newData.end);
                       this.calendarOptions.events.push(newData);
@@ -203,9 +240,15 @@ export default {
   },
   methods: {
     clearAll: function () {
-      document.getElementsByTagName("select")[0].value = "";
+      this.selectDisabled = false;
+      this.disabledPickers = false;
       this.startDate = "";
       this.endDate = "";
+      document.getElementById("saveBtn").style.display = "block";
+      document.getElementById("deleteBtn").style.display = "block";
+      document.getElementById("startPicker").style.display = "block";
+      document.getElementById("endPicker").style.display = "block";
+      document.getElementsByTagName("select")[0].value = "";
 
       for (let ev of this.calendarOptions.events) {
         if (ev.id == this.currentEvent.id) {
@@ -217,6 +260,7 @@ export default {
       this.currentEvent = "";
     },
     event: function (info) {
+      this.selectDisabled = true;
       info.jsEvent.preventDefault(); // don't let the browser navigate
       document.getElementsByTagName("select")[0].value = info.event.title;
       this.startDate = info.event.start;
@@ -230,21 +274,43 @@ export default {
           ev.color = "";
         }
       }
+
+      if (this.endDate < new Date()) {
+        document.getElementById("saveBtn").style.display = "none";
+        document.getElementById("deleteBtn").style.display = "none";
+        document.getElementById("startPicker").style.display = "none";
+        document.getElementById("endPicker").style.display = "none";
+        this.disabledPickers = true;
+      } else {
+        document.getElementById("saveBtn").style.display = "block";
+        document.getElementById("deleteBtn").style.display = "block";
+        document.getElementById("startPicker").style.display = "block";
+        document.getElementById("endPicker").style.display = "block";
+        this.disabledPickers = false;
+      }
     },
     saveDate: function () {
       let newAvailabilityDate;
       if (this.currentEvent) {
         newAvailabilityDate = {
-          id: this.currentEvent.id,
           start: this.startDate,
           end: this.endDate,
           title: this.currentEvent.title,
         };
 
+        let profileId;
+        let profileLabel = document.getElementsByTagName("select")[0].value;
+        for (let data of this.selectData) {
+          if (data.label == profileLabel) {
+            profileId = data.code;
+          }
+        }
         axios
           .put(
             "http://localhost:8080/availabilityDate/update/" +
-              this.currentEvent.id,
+              this.currentEvent.id +
+              "/" +
+              profileId,
             newAvailabilityDate,
             {
               headers: {
@@ -253,14 +319,9 @@ export default {
               },
             }
           )
-          .then(() => {
-            for (let ev of this.calendarOptions.events) {
-              if (ev.id == this.currentEvent.id) {
-                ev.start = this.startDate;
-                ev.end = this.endDate;
-                break;
-              }
-            }
+          .then((res) => {
+            this.copyOldAndSaveNewData(res, profileId, profileLabel);
+            this.clearAll();
           });
       } else {
         newAvailabilityDate = {
@@ -288,15 +349,25 @@ export default {
             }
           )
           .then((res) => {
-            res.data.title = profileLabel;
-            this.calendarOptions.events.push(res.data);
+            this.pushOneData(res.data, profileId, profileLabel);
+            this.clearAll();
           });
       }
     },
     deleteDate: function () {
+      let profileLabel = document.getElementsByTagName("select")[0].value;
+      let profileId;
+      for (let data of this.selectData) {
+        if (data.label == profileLabel) {
+          profileId = data.code;
+        }
+      }
       axios
         .delete(
-          "http://localhost:8080/availabilityDate/" + this.currentEvent.id,
+          "http://localhost:8080/availabilityDate/" +
+            this.currentEvent.extendedProps.defId +
+            "/" +
+            profileId,
           {
             headers: {
               "Access-Control-Allow-Origin": "http://localhost:8080",
@@ -304,14 +375,42 @@ export default {
             },
           }
         )
-        .then(() => {
-          for (let ev of this.calendarOptions.events) {
-            if (ev.id == this.currentEvent.id) {
-              this.calendarOptions.events.pop(ev);
-              break;
+        .then((res) => {
+          this.copyOldAndSaveNewData(res, profileId, profileLabel);
+          this.clearAll();
+
+          this.$toast.show(
+            "Availability dates that include reserved appointments cannot be deleted.",
+            {
+              duration: 4000,
             }
-          }
+          );
         });
+    },
+    pushOneData: function (newData, profileId, profileLabel) {
+      newData.title = profileLabel;
+      newData.url = "dateRange";
+      newData.defId = newData.id;
+      newData.serviceId = profileId;
+      newData.startDate = new Date(newData.start);
+      newData.endDate = new Date(newData.end);
+    },
+    copyOldAndSaveNewData: function (res, profileId, profileLabel) {
+      let copyEvents = [];
+      for (let ev of this.calendarOptions.events) {
+        copyEvents.push(ev);
+      }
+      this.calendarOptions.events.length = 0;
+      for (let ev of copyEvents) {
+        if (ev.serviceId != profileId) {
+          console.log(ev);
+          this.calendarOptions.events.push(ev);
+        }
+      }
+      for (let newData of res.data) {
+        this.pushOneData(newData, profileId, profileLabel);
+        this.calendarOptions.events.push(newData);
+      }
     },
   },
 };

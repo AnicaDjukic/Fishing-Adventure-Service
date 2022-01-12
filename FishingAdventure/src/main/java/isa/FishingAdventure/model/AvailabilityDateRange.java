@@ -29,6 +29,12 @@ public class AvailabilityDateRange {
     public AvailabilityDateRange() {
     }
 
+    public AvailabilityDateRange(Date startDate, Date endDate, ServiceProfile serviceProfile) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.serviceProfile = serviceProfile;
+    }
+
     public ServiceProfile getServiceProfile() {
         return serviceProfile;
     }
