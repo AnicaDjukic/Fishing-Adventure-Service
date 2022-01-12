@@ -20,7 +20,7 @@
               <div class="shadow-none" style="width: 100%">
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">
-                    Offer active:
+                    Offer ends in:
                   </p>
                   <p class="card-text text-left shadow-none col-md-4">
                     {{ durationString }}
@@ -29,7 +29,7 @@
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">Price:</p>
                   <p class="card-text text-left shadow-none col-md-4">
-                    {{ offer.price }} <i class="fas fa-dollar-sign"></i>/day
+                     <i class="fas fa-dollar-sign shadow-none"></i>{{ offer.price }}/day
                   </p>
                 </div>
                 <div class="row shadow-none">

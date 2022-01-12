@@ -18,6 +18,9 @@ public class FishingAdventureService {
     private FishingAdventureRepository adventureRepository;
 
     @Autowired
+    private FishingInstructorService instructorService;
+
+    @Autowired
     private AvailabilityDateRangeService dateRangeService;
 
     @Autowired
@@ -37,6 +40,16 @@ public class FishingAdventureService {
 
     public Optional<FishingAdventure> findByIdIfExists(Integer id) {
         return adventureRepository.findById(id);
+    }
+
+    public List<Appointment> getOffersByAdvertiser(String email) {
+        FishingInstructor instructor = instructorService.findByEmail(email);
+
+        List<Appointment> appointments = new ArrayList<>();
+        for (FishingAdventure adventure : findByFishingInstructor(instructor)) {
+            appointments.addAll(adventure.getAppointments());
+        }
+        return appointments;
     }
 
     public boolean isInstructorAvailable(FishingInstructor instructor, Date start, Date end) {

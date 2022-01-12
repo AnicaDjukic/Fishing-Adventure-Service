@@ -42,6 +42,9 @@ public class AppointmentService {
     @Autowired
     private BoatService boatService;
 
+    @Autowired
+    private FishingAdventureService adventureService;
+
     public Appointment save(Appointment newAppointment) {
         return appointmentRepository.save(newAppointment);
     }
@@ -69,18 +72,18 @@ public class AppointmentService {
 
     public List<Appointment> getOffersByAdvertiser(String token) {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-        User owner = userService.findByEmail(email);
+        User advertiser = userService.findByEmail(email);
 
         List<Appointment> appointments = new ArrayList<>();
-        switch (owner.getUserType().getName()) {
+        switch (advertiser.getUserType().getName()) {
             case "ROLE_VACATION_HOME_OWNER":
-                appointments = getValidAppointements(vacationHomeService.getOffersByAdvertiser(owner.getEmail()));
+                appointments = getValidAppointements(vacationHomeService.getOffersByAdvertiser(advertiser.getEmail()));
                 break;
             case "ROLE_BOAT_OWNER":
-                appointments = getValidAppointements(boatService.getOffersByAdvertiser(owner.getEmail()));
+                appointments = getValidAppointements(boatService.getOffersByAdvertiser(advertiser.getEmail()));
                 break;
             default:
-                appointments = null; // TODO: implement getOffersByAdvertiser in adventure service
+                appointments = getValidAppointements(adventureService.getOffersByAdvertiser(advertiser.getEmail()));
                 break;
         }
 

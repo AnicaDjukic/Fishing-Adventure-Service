@@ -53,25 +53,48 @@
             placeholder="Select date.."
             v-model="offerEndDate"
             :enableTimePicker="true"
+            :minDate="new Date()"
           ></Datepicker>
 
-          <h6 style="color: white; margin: 5% 0">Reservation dates:</h6>
+          <span v-if="entityType != 'adventure'">
+            <h6 style="color: white; margin: 5% 0">Reservation dates:</h6>
 
-          <Datepicker
-            style="
-              width: 100%;
-              margin-right: 10px;
-              border: 1px solid white;
-              border-radius: 5px;
-            "
-            dark
-            id="picker"
-            v-model="dateRange"
-            @closed="dateRangeChanged"
-            placeholder="Select dates.."
-            range
-            :enableTimePicker="true"
-          ></Datepicker>
+            <Datepicker
+              style="
+                width: 100%;
+                margin-right: 10px;
+                border: 1px solid white;
+                border-radius: 5px;
+              "
+              dark
+              id="picker"
+              v-model="dateRange"
+              @closed="dateRangeChanged"
+              placeholder="Select dates.."
+              range
+              :enableTimePicker="true"
+              :minDate="new Date()"
+            ></Datepicker>
+          </span>
+
+          <span v-if="entityType == 'adventure'">
+            <h6 style="color: white; margin: 5% 0">Reservation date:</h6>
+
+            <Datepicker
+              style="
+                width: 100%;
+                margin-right: 10px;
+                border: 1px solid white;
+                border-radius: 5px;
+              "
+              dark
+              v-model="adventureReservationDate"
+              @closed="dateRangeChanged"
+              placeholder="Select date.."
+              :enableTimePicker="true"
+              :minDate="new Date()"
+            ></Datepicker>
+          </span>
 
           <h6 style="color: white; margin: 5% 0">
             Select additional services:
@@ -186,6 +209,8 @@ export default {
       originalTotalPrice: "",
       priceForPeriod: 0,
       priceForServices: 0,
+      adventureReservationDate: undefined,
+      adventureDurationInMins: [],
     };
   },
   mounted: function () {
@@ -225,6 +250,16 @@ export default {
             });
         } else if (loggedInRole == "ROLE_FISHING_INSTRUCTOR") {
           this.entityType = "adventure";
+          axios
+            .get("http://localhost:8080/fishingAdventure/getNamesByUser", {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            })
+            .then((res) => {
+              this.selectData = res.data;
+            });
         } else {
           window.location.href = "/";
         }
@@ -268,6 +303,23 @@ export default {
             if (this.persons > this.maxPersons) {
               this.persons = this.maxPersons;
             }
+
+            if (this.entityType == "adventure") {
+              axios
+                .get(
+                  "http://localhost:8080/fishingAdventure/getDurationById/" +
+                    this.serviceProfileId,
+                  {
+                    headers: {
+                      "Access-Control-Allow-Origin": "http://localhost:8080",
+                      Authorization: "Bearer " + localStorage.refreshToken,
+                    },
+                  }
+                )
+                .then((res) => {
+                  this.adventureDurationInMins = res.data;
+                });
+            }
           });
       } else {
         this.serviceProfileId = "";
@@ -284,6 +336,7 @@ export default {
         this.priceForPeriod = 0;
         this.priceForServices = 0;
         this.available = false;
+        this.adventureReservationDate = undefined;
       }
       this.priceForServices = 0;
       this.dateRangeChanged();
@@ -304,11 +357,30 @@ export default {
         this.priceField = this.originalTotalPrice;
         this.recalculatePrice();
         this.checkAvailability();
+      } else if (this.adventureReservationDate != undefined) {
+
+        this.priceForPeriod = this.originalPricePerDay;
+        this.originalTotalPrice = this.priceForPeriod + this.priceForServices;
+        this.priceField = this.originalTotalPrice;
+        this.checkAvailability();
+        this.recalculatePrice();
       }
+      
     },
     checkAvailability: function () {
-      let startDate = this.dateRange[0];
-      let endDate = this.dateRange[1];
+      let startDate = [];
+      let endDate = [];
+      if (this.entityType != "adventure") {
+        startDate = this.dateRange[0];
+        endDate = this.dateRange[1];
+      }
+      else {
+        startDate = this.adventureReservationDate;
+        endDate = new Date(
+          startDate.getTime() + this.adventureDurationInMins * 60000
+        );
+      }
+      
       axios
         .get(
           "http://localhost:8080/serviceProfile/isServiceAvailableForDateRange?id=" +
@@ -355,7 +427,7 @@ export default {
       let duration = this.dateRange[1] - this.dateRange[0];
       let days = duration / (1000 * 3600 * 24);
       days = parseInt(days, 10);
-      let hours = duration - days * 24;
+      let hours = duration / (1000 * 3600) - days * 24;
       hours = parseInt(hours, 10);
       if (hours > 12) {
         days += 1;
@@ -366,26 +438,49 @@ export default {
         this.originalTotalPrice
       ).toFixed(2);
       this.discount = (100 - percentage).toFixed(2);
+
+      if (this.discount == "NaN")
+        this.discount = 0;
     },
     createOffer: function () {
       if (!this.available) {
         this.error = "Chosen date is not available.";
       } else if (
         this.offerEndDate == undefined ||
-        this.dateRange[0] == undefined ||
+        (this.dateRange[0] == undefined && this.entityType != "adventure") ||
+        (this.adventureReservationDate == undefined && this.entityType == "adventure") ||
         document.getElementsByTagName("select")[0].value == ""
       ) {
         this.error = "All fields must be filled.";
       } else {
         this.error = "";
 
+        let startDate = [];
+        let endDate = [];
+        //let ownerPresence = [];
+        if (this.entityType == "adventure") {
+          startDate = this.adventureReservationDate;
+          //ownerPresence = true;
+          endDate = new Date(
+            startDate.getTime() + this.adventureDurationInMins * 60000
+          );
+        }
+        else {
+          startDate = this.dateRange[0];
+          endDate = this.dateRange[1];
+        }
+
+        if (this.offerEndDate > endDate) {
+          this.error = "Offer cannot cannot last longer than the chosen reservation.";
+        }
+        else {
         let now = new Date();
         let offerDuration = this.offerEndDate - now;
         let offerDto = {
           serviceProfileId: this.serviceProfileId,
           discount: this.discount,
-          startDate: this.dateRange[0],
-          endDate: this.dateRange[1],
+          startDate: startDate,
+          endDate: endDate,
           maxPersons: this.persons,
           price: this.priceField,
           chosenServices: this.chosenServices,
@@ -401,6 +496,7 @@ export default {
           .then(() => {
             window.location.reload();
           });
+        }
       }
     },
     closeModal: function () {
@@ -418,6 +514,7 @@ export default {
       this.priceForPeriod = 0;
       this.priceForServices = 0;
       this.offerEndDate = undefined;
+      this.adventureReservationDate = undefined;
     },
   },
 };

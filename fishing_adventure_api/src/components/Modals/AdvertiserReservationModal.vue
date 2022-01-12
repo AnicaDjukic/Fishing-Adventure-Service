@@ -229,7 +229,6 @@ export default {
               },
             })
             .then((res) => {
-              console;
               this.selectData = res.data;
             });
         }
