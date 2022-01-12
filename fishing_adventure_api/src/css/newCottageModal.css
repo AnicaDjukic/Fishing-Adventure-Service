@@ -232,15 +232,15 @@ option {
     justify-content: center;
     width: fit-content;
     transform: rotateY(180deg);
-  }
-  
-  .rating label {
+}
+
+.rating label {
     display: block;
     cursor: pointer;
     background-color: transparent;
-  }
-  
-  .rating label::before {
+}
+
+.rating label::before {
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     content: "\f005";
@@ -248,9 +248,9 @@ option {
     display: block;
     color: white;
     font-size: 3vh;
-  }
-  
-  .rating label::after {
+}
+
+.rating label::after {
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     content: "\f005";
@@ -262,20 +262,39 @@ option {
     top: 0vh;
     transition: 0.5s;
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  }
-  
-  .rating label:hover:after,
-  .rating label:hover ~ label:after,
-  .rating input:checked ~ label:after {
+}
+
+.rating label:hover:after,
+.rating label:hover~label:after,
+.rating input:checked~label:after {
     opacity: 1;
-  }
-  
-  .rating-div label {
+}
+
+.rating-div label {
     color: white;
     font-size: 18px;
     margin-bottom: 2%;
-  }
-  
-  input[type="radio"] {
+}
+
+input[type="radio"] {
     display: none;
-  }
+}
+
+.active {
+    color: white!important;
+    background: #313435!important;
+}
+
+.ownerPresence {
+    color: #ffffff61;
+    background: #212121;
+    width: 100%;
+    padding: 0.3rem;
+    cursor: pointer;
+}
+
+.ownerPresence:hover {
+    color: #ffffff;
+    background: #666666;
+    transition: 0.5s;
+}

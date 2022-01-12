@@ -138,6 +138,34 @@
               v-on:change="recalculatePrice"
             />
           </div>
+          <div
+            class="input-group"
+            style="margin-top: 1rem"
+            v-if="entityType == 'boat'"
+          >
+            <span class="input-group-text" style="width: 9rem"
+              >Owner presence:</span
+            >
+            <div
+              class="form-control"
+              style="display: flex; justify-content: space-around; padding: 0"
+            >
+              <div
+                class="ownerPresence"
+                v-on:click="changeOwnerPresence"
+                id="yesOwnerPresence"
+              >
+                YES
+              </div>
+              <div
+                class="ownerPresence"
+                v-on:click="changeOwnerPresence"
+                id="noOwnerPresence"
+              >
+                NO
+              </div>
+            </div>
+          </div>
 
           <h6 style="color: red; margin-top: 1rem">
             <b>{{ error }}</b>
@@ -183,6 +211,7 @@ export default {
       priceForServices: 0,
       adventureDurationInMins: [],
       available: false,
+      ownerPresence: "",
     };
   },
   mounted: function () {
@@ -197,45 +226,33 @@ export default {
         let loggedInRole = res.data;
         if (loggedInRole == "ROLE_VACATION_HOME_OWNER") {
           this.entityType = "cottage";
-          axios
-            .get("http://localhost:8080/vacationHome/getNamesByUser", {
-              headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
-                Authorization: "Bearer " + localStorage.refreshToken,
-              },
-            })
-            .then((res) => {
-              this.selectData = res.data;
-            });
+          this.getServiceProfileByHomeOwner();
         } else if (loggedInRole == "ROLE_BOAT_OWNER") {
           this.entityType = "boat";
-          axios
-            .get("http://localhost:8080/boat/getNamesByUser", {
-              headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
-                Authorization: "Bearer " + localStorage.refreshToken,
-              },
-            })
-            .then((res) => {
-              this.selectData = res.data;
-            });
+          this.getServiceProfileByBoatOwner();
         } else if (loggedInRole == "ROLE_FISHING_INSTRUCTOR") {
           this.entityType = "adventure";
-          axios
-            .get("http://localhost:8080/fishingAdventure/getNamesByUser", {
-              headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
-                Authorization: "Bearer " + localStorage.refreshToken,
-              },
-            })
-            .then((res) => {
-              console;
-              this.selectData = res.data;
-            });
+          this.getServiceProfileByFishingInstructor();
         }
       });
   },
   methods: {
+    getAdditionalServicesByName: function (selectedEntity) {
+      axios
+        .get(
+          "http://localhost:8080/serviceProfile/getAdditionalServicesByName/" +
+            selectedEntity,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then((res) => {
+          this.additionalServices = res.data;
+        });
+    },
     changeSelect: function () {
       let selectedEntity = document.getElementById("entitySelectAR").value;
       this.priceForPeriod = 0;
@@ -244,21 +261,7 @@ export default {
       this.originalTotalPrice = 0;
 
       if (selectedEntity != "") {
-        axios
-          .get(
-            "http://localhost:8080/serviceProfile/getAdditionalServicesByName/" +
-              selectedEntity,
-            {
-              headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
-                Authorization: "Bearer " + localStorage.refreshToken,
-              },
-            }
-          )
-          .then((res) => {
-            this.additionalServices = res.data;
-          });
-
+        this.getAdditionalServicesByName(selectedEntity);
         axios
           .get(
             "http://localhost:8080/serviceProfile/getServiceInfoForOfferByName/" +
@@ -329,30 +332,61 @@ export default {
         this.originalTotalPrice = this.priceForPeriod + this.priceForServices;
         this.priceField = this.originalTotalPrice;
 
-        axios
-          .get(
-            "http://localhost:8080/vacationHome/available/dateRange?id=" +
-              this.serviceProfileId +
-              "&start=" +
-              moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
-              "&end=" +
-              moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
-            {
-              headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
-                Authorization: "Bearer " + localStorage.refreshToken,
-              },
-            }
-          )
-          .then((res) => {
-            if (!res.data) {
-              this.error = "Chosen date is not available.";
-              this.available = false;
-            } else {
-              this.available = true;
-              this.error = "";
-            }
-          });
+        if (this.entityType == "cottage") {
+          axios
+            .get(
+              "http://localhost:8080/vacationHome/available/dateRange?id=" +
+                this.serviceProfileId +
+                "&start=" +
+                moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
+                "&end=" +
+                moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
+              {
+                headers: {
+                  "Access-Control-Allow-Origin": "http://localhost:8080",
+                  Authorization: "Bearer " + localStorage.refreshToken,
+                },
+              }
+            )
+            .then((res) => {
+              if (!res.data) {
+                this.error = "Chosen date is not available.";
+                this.available = false;
+              } else {
+                this.available = true;
+                this.error = "";
+              }
+            });
+        } else {
+          axios
+            .get(
+              "http://localhost:8080/boat/available/dateRange?id=" +
+                this.serviceProfileId +
+                "&start=" +
+                moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
+                "&end=" +
+                moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
+              {
+                headers: {
+                  "Access-Control-Allow-Origin": "http://localhost:8080",
+                  Authorization: "Bearer " + localStorage.refreshToken,
+                },
+              }
+            )
+            .then((res) => {
+              if (!res.data) {
+                this.error = "Chosen date is not available.";
+                this.available = false;
+              } else {
+                if (this.ownerPresence) {
+                  this.checkBoatOwnerAvailability();
+                } else {
+                  this.available = true;
+                  this.error = "";
+                }
+              }
+            });
+        }
       } else if (this.adventureReservationDate != undefined) {
         let startDate = this.adventureReservationDate;
         let endDate = new Date(
@@ -385,6 +419,21 @@ export default {
         this.priceField = this.originalTotalPrice;
       }
     },
+    changeOwnerPresence: function (event) {
+      let checkedPresence = event.target.innerHTML;
+      if (checkedPresence.includes("YES")) {
+        document.getElementById("noOwnerPresence").classList.remove("active");
+        document.getElementById("yesOwnerPresence").classList.add("active");
+        this.ownerPresence = true;
+        if (this.serviceProfileId != "") {
+          this.checkBoatOwnerAvailability();
+        }
+      } else {
+        document.getElementById("yesOwnerPresence").classList.remove("active");
+        document.getElementById("noOwnerPresence").classList.add("active");
+        this.ownerPresence = false;
+      }
+    },
     check: function (additionalService) {
       var checkBox = document.getElementById(additionalService.id);
       if (checkBox.checked === true) {
@@ -402,7 +451,8 @@ export default {
     },
     createReservation: function () {
       if (!this.available) {
-        this.error = "Chosen date is not available.";
+        if (this.entityType != "boat")
+          this.error = "Chosen date is not available.";
       } else if (this.maxPersons < this.persons) {
         this.error = "Maximum number of people is " + this.maxPersons + ".";
       } else {
@@ -421,7 +471,7 @@ export default {
           if (this.entityType == "cottage") {
             ownerPresence = true;
           } else {
-            ownerPresence = null;
+            ownerPresence = this.ownerPresence;
           }
         }
 
@@ -455,7 +505,6 @@ export default {
       this.maxPersons = 1;
       this.priceField = "";
       this.pricePerTimeFrame = "";
-      this.selectData = "";
       this.entityType = "";
       this.additionalServices = [];
       this.dateRange = [];
@@ -466,6 +515,71 @@ export default {
       this.priceForServices = 0;
       this.originalTotalPrice = 0;
       this.available = false;
+      document.getElementById("entitySelectAR").value = "";
+    },
+    getServiceProfileByHomeOwner: function () {
+      axios
+        .get("http://localhost:8080/vacationHome/getNamesByUser", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          this.selectData = res.data;
+        });
+    },
+    getServiceProfileByBoatOwner: function () {
+      axios
+        .get("http://localhost:8080/boat/getNamesByUser", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          document.getElementById("noOwnerPresence").classList.add("active");
+          this.selectData = res.data;
+        });
+    },
+    getServiceProfileByFishingInstructor: function () {
+      axios
+        .get("http://localhost:8080/fishingAdventure/getNamesByUser", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          console;
+          this.selectData = res.data;
+        });
+    },
+    checkBoatOwnerAvailability: function () {
+      axios
+        .get(
+          "http://localhost:8080/boatOwner/available/dateRange?id=" +
+            this.serviceProfileId +
+            "&start=" +
+            moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
+            "&end=" +
+            moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:8080",
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then((res) => {
+          if (!res.data) {
+            this.error = "Boat owner is not available.";
+            this.available = false;
+          } else {
+            this.available = true;
+            this.error = "";
+          }
+        });
     },
   },
 };
