@@ -105,19 +105,16 @@ public class ReservationService {
 
     public List<ServiceProfile> getServiceProfiles(List<Reservation> reservations) {
         List<ServiceProfile> serviceProfiles = new ArrayList<ServiceProfile>();
-        System.out.println(reservations.size());
         for (Reservation r : reservations) {
             if (r.getCanceled().equals(true))
                 continue;
             for (ServiceProfile s : serviceProfileService.findAll()) {
                 if (s.getAppointments().contains(r.getAppointment())) {
-                    System.out.print(s.getId());
                     serviceProfiles.add(s);
                     break;
                 }
             }
         }
-        System.out.println(serviceProfiles.size());
         return serviceProfiles;
     }
 
@@ -141,9 +138,9 @@ public class ReservationService {
         if (role.equals("ROLE_FISHING_INSTRUCTOR"))
             reservationDtos = findAllReservationsForInstructor(email);
         else if (role.equals("ROLE_VACATION_HOME_OWNER"))
-            reservationDtos = null; // TODO: implement findAllReservationsForHomeOwner(email);
+            reservationDtos = findAllReservationsForHomeOwner(email);
         else
-            reservationDtos = null; // TODO: implement findAllReservationsForBoatOwner(email);
+            reservationDtos = findAllReservationsForBoatOwner(email);
 
         return reservationDtos;
     }
@@ -156,6 +153,50 @@ public class ReservationService {
             for (AdvertiserReservationDto reservationDto : resDtos) {
                 reservationDto.setName(adventure.getName());
                 for (Image img : adventure.getImages()) {
+                    if (img.isCoverImage()) {
+                        reservationDto.setImagePath(img.getPath());
+                        break;
+                    }
+                }
+                reservationDto
+                        .setStatus(checkReservationStatus(reservationDto.getIsReportFilled(),
+                                reservationDto.getStartDate(), reservationDto.getEndDate()));
+            }
+            reservationDtos.addAll(resDtos);
+        }
+        return reservationDtos;
+    }
+
+    private List<AdvertiserReservationDto> findAllReservationsForHomeOwner(String email) {
+        VacationHomeOwner homeOwner = homeOwnerService.findByEmail(email);
+        List<AdvertiserReservationDto> reservationDtos = new ArrayList<>();
+        for (VacationHome home : vacationHomeService.findByVacationHomeOwner(homeOwner)) {
+            List<AdvertiserReservationDto> resDtos = getReservationsFromAppointments(home.getAppointments());
+            for (AdvertiserReservationDto reservationDto : resDtos) {
+                reservationDto.setName(home.getName());
+                for (Image img : home.getImages()) {
+                    if (img.isCoverImage()) {
+                        reservationDto.setImagePath(img.getPath());
+                        break;
+                    }
+                }
+                reservationDto
+                        .setStatus(checkReservationStatus(reservationDto.getIsReportFilled(),
+                                reservationDto.getStartDate(), reservationDto.getEndDate()));
+            }
+            reservationDtos.addAll(resDtos);
+        }
+        return reservationDtos;
+    }
+
+    private List<AdvertiserReservationDto> findAllReservationsForBoatOwner(String email) {
+        BoatOwner boatOwner = boatOwnerService.findByEmail(email);
+        List<AdvertiserReservationDto> reservationDtos = new ArrayList<>();
+        for (Boat boat : boatService.findByBoatOwner(boatOwner)) {
+            List<AdvertiserReservationDto> resDtos = getReservationsFromAppointments(boat.getAppointments());
+            for (AdvertiserReservationDto reservationDto : resDtos) {
+                reservationDto.setName(boat.getName());
+                for (Image img : boat.getImages()) {
                     if (img.isCoverImage()) {
                         reservationDto.setImagePath(img.getPath());
                         break;

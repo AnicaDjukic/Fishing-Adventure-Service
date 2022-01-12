@@ -5,7 +5,6 @@ import isa.FishingAdventure.model.*;
 import java.util.Date;
 import java.util.Set;
 
-
 public class NewHomeDto {
 
     private Integer id;
@@ -46,7 +45,9 @@ public class NewHomeDto {
         this.rooms = rooms;
     }
 
-    public NewHomeDto(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, Set<Image> images, Set<Room> rooms, VacationHomeOwner vacationHomeOwner, String imagePath, int persons) {
+    public NewHomeDto(Integer id, String name, String description, double cancellationRule, double rating,
+            Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, Set<Image> images,
+            Set<Room> rooms, VacationHomeOwner vacationHomeOwner, String imagePath, int persons) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -176,7 +177,6 @@ public class NewHomeDto {
         this.pricePerDay = home.getPricePerDay();
         this.hasAppointments = false;
         for (Appointment appointment : home.getAppointments()) {
-            System.out.println(appointment.getEndDate().toString());
             if (appointment.isReserved() && appointment.getEndDate().after(new Date())) {
                 this.hasAppointments = true;
                 break;

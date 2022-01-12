@@ -65,7 +65,6 @@ public class BoatService {
 
         boolean available = true;
         ArrayList<Boat> availableBoats = new ArrayList<Boat>();
-        System.out.println(findAll().size());
         for (Boat boat : findAll()) {
 
             if (boat.getPersons() < persons)
@@ -83,15 +82,16 @@ public class BoatService {
                 continue;
 
             for (Appointment ap : boat.getAppointments()) {
-                if(ap.getCancelled().equals(true))
+                if (ap.getCancelled().equals(true))
                     continue;
-                if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
+                if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
+                        || (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
+                        || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
                     available = false;
                     break;
                 }
             }
 
-            System.out.println(available);
             if (available)
                 availableBoats.add(boat);
         }
@@ -127,9 +127,12 @@ public class BoatService {
             return false;
 
         for (Appointment ap : boat.getAppointments()) {
-            if(ap.getCancelled().equals(true))
+            if (ap.getCancelled().equals(true))
                 continue;
-            if (start.equals(ap.getStartDate()) || end.equals(ap.getEndDate()) || (start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
+            if (start.equals(ap.getStartDate()) || end.equals(ap.getEndDate())
+                    || (start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
+                    || (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
+                    || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
                 available = false;
                 break;
             }

@@ -272,6 +272,7 @@ export default {
           )
           .then((res) => {
             this.pricePerTimeFrame = res.data.price;
+            this.originalPricePerDay = res.data.price;
             this.maxPersons = res.data.persons;
             this.serviceProfileId = res.data.serviceProfileId;
 
@@ -325,9 +326,33 @@ export default {
           days += 1;
         }
         this.priceForPeriod = days * this.originalPricePerDay;
-
         this.originalTotalPrice = this.priceForPeriod + this.priceForServices;
         this.priceField = this.originalTotalPrice;
+
+        axios
+          .get(
+            "http://localhost:8080/vacationHome/available/dateRange?id=" +
+              this.serviceProfileId +
+              "&start=" +
+              moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
+              "&end=" +
+              moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            }
+          )
+          .then((res) => {
+            if (!res.data) {
+              this.error = "Chosen date is not available.";
+              this.available = false;
+            } else {
+              this.available = true;
+              this.error = "";
+            }
+          });
       } else if (this.adventureReservationDate != undefined) {
         let startDate = this.adventureReservationDate;
         let endDate = new Date(
@@ -390,6 +415,14 @@ export default {
           endDate = new Date(
             startDate.getTime() + this.adventureDurationInMins * 60000
           );
+        } else {
+          startDate = this.dateRange[0];
+          endDate = this.dateRange[1];
+          if (this.entityType == "cottage") {
+            ownerPresence = true;
+          } else {
+            ownerPresence = null;
+          }
         }
 
         let reservation = {

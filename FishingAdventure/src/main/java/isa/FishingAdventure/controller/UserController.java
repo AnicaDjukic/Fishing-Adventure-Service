@@ -48,9 +48,6 @@ public class UserController {
 
 	@RequestMapping(value = "update", method = RequestMethod.PUT)
 	public @ResponseBody UserInfoDto update(@RequestBody UserInfoDto dto) {
-
-		System.out.println(dto.getEmail());
-
 		User user = userService.findByEmail(dto.getEmail());
 
 		user.setName(dto.getName());

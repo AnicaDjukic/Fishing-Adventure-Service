@@ -54,7 +54,7 @@ public class ReservationController {
     }
 
     @PostMapping(value = "/newByAdvertiser")
-    @PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')") // TODO: add other roles
+    @PreAuthorize("hasAnyRole('ROLE_FISHING_INSTRUCTOR', 'ROLE_VACATION_HOME_OWNER', 'ROLE_BOAT_OWNER')")
     @Transactional
     public ResponseEntity<NewReservationDto> saveNewAppointmentByAdvertiser(@RequestBody NewReservationDto dto) {
         boolean success = reservationService.createReservation(dto.getClientEmail(), getNewAppointment(dto),
