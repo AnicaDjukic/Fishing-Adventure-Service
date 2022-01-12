@@ -29,7 +29,7 @@
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">Price:</p>
                   <p class="card-text text-left shadow-none col-md-4">
-                     <i class="fas fa-dollar-sign shadow-none"></i>{{ offer.price }}/day
+                     <i class="fas fa-dollar-sign shadow-none" style="font-size: 80%"></i>{{ offer.price  }}  <span class="shadow-none" v-if="this.entityType != 'adventure'">/day</span>
                   </p>
                 </div>
                 <div class="row shadow-none">
@@ -84,7 +84,7 @@
 import moment from "moment";
 import axios from "axios";
 export default {
-  props: ["offer", "loggedInRole"],
+  props: ["offer", "loggedInRole", "entityType"],
   name: "SpecialOffersCardNoImage",
   data: function () {
     return {

@@ -55,7 +55,7 @@
                 <div class="row shadow-none">
                   <p class="card-text text-left shadow-none col-md-4">Price:</p>
                   <p class="card-text text-left shadow-none col-md-8">
-                    <i class="fas fa-dollar-sign shadow-none"></i>{{ offer.price }}/day
+                    <i class="fas fa-dollar-sign shadow-none" style="font-size: 80%"></i>{{ offer.price }} <span class="shadow-none" v-if="this.entityType != 'adventure'">/day</span>
                   </p>
                 </div>
                 <div class="row shadow-none">
@@ -104,7 +104,7 @@
 <script>
 import moment from "moment";
 export default {
-  props: ["offer"],
+  props: ["offer", "entityType"],
   data: function () {
     return {
       date: "12/20/2021 - 12/25/2021",

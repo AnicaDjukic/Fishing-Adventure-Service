@@ -57,6 +57,7 @@
         v-for="offer of offers"
         :key="offer.offerId"
         :offer="offer"
+        :entityType="entityType"
       ></OffersCard>
     </div>
   </div>
@@ -74,19 +75,40 @@ export default {
       numberOfPersons: "",
       date: "",
       offers: "",
+      entityType: "",
     };
   },
   mounted() {
-    axios
-      .get("http://localhost:8080/appointment/getOffersByAdvertiser", {
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
-          Authorization: "Bearer " + localStorage.refreshToken,
-        },
-      })
-      .then((res) => {
-        this.offers = res.data;
-      });
+     axios
+        .get("http://localhost:8080/users/getRole", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          let loggedInRole = res.data;
+
+          if (loggedInRole == "ROLE_FISHING_INSTRUCTOR") {
+            this.entityType = "adventure";
+          } else if (loggedInRole == "ROLE_VACATION_HOME_OWNER") {
+            this.entityType = "home";
+          } else {
+            this.entityType = "boat";
+          }
+
+
+          axios
+            .get("http://localhost:8080/appointment/getOffersByAdvertiser", {
+              headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            })
+            .then((res) => {
+              this.offers = res.data;
+            });
+        });
   },
   methods: {},
 };

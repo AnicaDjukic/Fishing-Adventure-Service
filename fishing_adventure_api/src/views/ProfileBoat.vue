@@ -265,6 +265,7 @@
         :key="offer.offerId"
         :offer="offer"
         :loggedInRole="loggedInRole"
+        :entityType="entityType"
         v-on:refresh="refresh"
       ></OffersCardNoImage>
 
@@ -326,6 +327,7 @@ export default {
   data: function () {
     return {
       offers: "",
+      entityType: "boat",
       subscribed: false,
       loggedInRole: "",
       date: [],
