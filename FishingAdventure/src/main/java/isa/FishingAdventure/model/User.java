@@ -13,13 +13,13 @@ import java.util.Collection;
 @Entity
 @Inheritance(strategy = TABLE_PER_CLASS)
 public abstract class User implements UserDetails {
-    @Id
-    @SequenceGenerator(name = "mySeqGenV1", sequenceName = "mySeqV1", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGenV1")
-    private Integer userId;
+	@Id
+	@SequenceGenerator(name = "mySeqGenV1", sequenceName = "mySeqV1", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGenV1")
+	private Integer userId;
 
-    @Column(name = "email", nullable = false)
-    private String email;
+	@Column(name = "email", nullable = false)
+	private String email;
 
 	@Column(name = "is_deleted", nullable = false)
 	private Boolean isDeleted;
@@ -30,37 +30,37 @@ public abstract class User implements UserDetails {
 	@Column(name = "surname", nullable = false)
 	private String surname;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+	@Column(name = "password", nullable = false)
+	private String password;
 
-    @Column(name = "phoneNumber", nullable = false)
-    private String phoneNumber;
+	@Column(name = "phoneNumber", nullable = false)
+	private String phoneNumber;
 
 	@Column(name = "biography", nullable = false, length = 1024)
 	private String biography;
 
-    @OneToOne(targetEntity = UserType.class, cascade = CascadeType.MERGE)
-    private UserType userType;
+	@OneToOne(targetEntity = UserType.class, cascade = CascadeType.MERGE)
+	private UserType userType;
 
 	@Column(name = "points", nullable = false)
-    private double points;
+	private double points;
 
-    @ManyToOne(targetEntity = UserCategory.class,cascade = CascadeType.MERGE)
-    private UserCategory category;
+	@ManyToOne(targetEntity = UserCategory.class, cascade = CascadeType.MERGE)
+	private UserCategory category;
 
-    @Column(name = "activated", nullable = false)
-    private boolean activated;
+	@Column(name = "activated", nullable = false)
+	private boolean activated;
 
-    @OneToOne(targetEntity = Address.class,cascade = CascadeType.ALL)
-    public Address address;
-    
-    @Column(name = "last_password_reset_date")
-    private Timestamp lastPasswordResetDate;
-    
-    public User() {
-    }
-    
-    public User(Integer userId, String email, String password, String name, String surname, String phoneNumber,
+	@OneToOne(targetEntity = Address.class, cascade = CascadeType.ALL)
+	public Address address;
+
+	@Column(name = "last_password_reset_date")
+	private Timestamp lastPasswordResetDate;
+
+	public User() {
+	}
+
+	public User(Integer userId, String email, String password, String name, String surname, String phoneNumber,
 			UserType userType, double points, UserCategory category, boolean activated, Address address,
 			Timestamp lastPasswordResetDate) {
 		super();
@@ -129,75 +129,71 @@ public abstract class User implements UserDetails {
 	}
 
 	public Integer getUserId() {
-        return this.userId;
-    }
+		return this.userId;
+	}
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 
-    public String getEmail() {
-        return this.email;
-    }
+	public String getEmail() {
+		return this.email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getPassword() {
-        return this.password;
-    }
+	public String getPassword() {
+		return this.password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getName() {
-        return this.name;
-    }
+	public String getName() {
+		return this.name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getSurname() {
-        return this.surname;
-    }
+	public String getSurname() {
+		return this.surname;
+	}
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
 
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
+	public String getPhoneNumber() {
+		return this.phoneNumber;
+	}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public double getPoints() {
-        return this.points;
-    }
+	public double getPoints() {
+		return this.points;
+	}
 
-    public void setPoints(double points) {
-        this.points = points;
-    }
-    
+	public void setPoints(double points) {
+		this.points = points;
+	}
 
 	public Timestamp getLastPasswordResetDate() {
 		return lastPasswordResetDate;
 	}
 
-
 	public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
 		this.lastPasswordResetDate = lastPasswordResetDate;
 	}
 
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
 		ArrayList<UserType> userTypes = new ArrayList<UserType>();
 		userTypes.add(userType);
 		return userTypes;
@@ -205,35 +201,26 @@ public abstract class User implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
-
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
 		return true;
 	}
-
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
-
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
-
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
 		return email;
 	}
 

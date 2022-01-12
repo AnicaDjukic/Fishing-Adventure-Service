@@ -1,8 +1,6 @@
 package isa.FishingAdventure.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class NavigationEquipment {
@@ -37,6 +35,5 @@ public class NavigationEquipment {
     public void setName(String name) {
         this.name = name;
     }
-
 
 }

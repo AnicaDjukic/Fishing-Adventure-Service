@@ -17,11 +17,15 @@ public class Reservation {
     @Column(name = "isCanceled", nullable = false)
     private Boolean isCanceled;
 
+    @Column(name = "isReportFilled", nullable = false)
+    private Boolean isReportFilled;
+
     public Reservation(Integer reservationId, Appointment appointment, Client client) {
         this.reservationId = reservationId;
         this.appointment = appointment;
         this.client = client;
         this.isCanceled = false;
+        this.isReportFilled = false;
     }
 
     public Reservation() {
@@ -57,5 +61,13 @@ public class Reservation {
 
     public void setCanceled(Boolean canceled) {
         isCanceled = canceled;
+    }
+
+    public Boolean getReportFilled() {
+        return isReportFilled;
+    }
+
+    public void setReportFilled(Boolean reportFilled) {
+        isReportFilled = reportFilled;
     }
 }

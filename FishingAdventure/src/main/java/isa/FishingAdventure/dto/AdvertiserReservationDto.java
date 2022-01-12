@@ -36,10 +36,12 @@ public class AdvertiserReservationDto {
 
     private String place;
 
+    private Boolean isReportFilled;
+
     public AdvertiserReservationDto(Integer reservationId, Integer appointmentId, String name, String clientName,
-                                    String clientSurname, String clientEmail, int persons, Date startDate, Date endDate,
-                                    double price, List<AdditionalService> additionalServices, String status,
-                                    String imagePath, String place) {
+            String clientSurname, String clientEmail, int persons, Date startDate, Date endDate,
+            double price, List<AdditionalService> additionalServices, String status,
+            String imagePath, String place, Boolean isReportFilled) {
         this.reservationId = reservationId;
         this.appointmentId = appointmentId;
         this.name = name;
@@ -54,6 +56,7 @@ public class AdvertiserReservationDto {
         this.status = status;
         this.imagePath = imagePath;
         this.place = place;
+        this.isReportFilled = isReportFilled;
     }
 
     public AdvertiserReservationDto(Reservation reservation) {
@@ -62,13 +65,15 @@ public class AdvertiserReservationDto {
         this.clientName = reservation.getClient().getName();
         this.clientSurname = reservation.getClient().getSurname();
         this.clientEmail = reservation.getClient().getEmail();
-        this.persons = reservation.getAppointment().getMaxPersons();    //TODO: replace with field for the number of people
+        this.persons = reservation.getAppointment().getMaxPersons(); // TODO: replace with field for the number of
+                                                                     // people
         this.startDate = reservation.getAppointment().getStartDate();
         this.endDate = reservation.getAppointment().getEndDate();
         this.price = reservation.getAppointment().getPrice();
         this.additionalServices = new ArrayList<>(reservation.getAppointment().getChosenServices());
         this.status = "";
         this.place = reservation.getAppointment().getPlace();
+        this.isReportFilled = reservation.getReportFilled();
     }
 
     public Integer getReservationId() {
@@ -182,4 +187,13 @@ public class AdvertiserReservationDto {
     public void setPlace(String place) {
         this.place = place;
     }
+
+    public Boolean getIsReportFilled() {
+        return this.isReportFilled;
+    }
+
+    public void setIsReportFilled(Boolean isReportFilled) {
+        this.isReportFilled = isReportFilled;
+    }
+
 }

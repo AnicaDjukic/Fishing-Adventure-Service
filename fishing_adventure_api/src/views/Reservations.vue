@@ -43,6 +43,7 @@
               <option value="1">Upcoming</option>
               <option value="2">Current</option>
               <option value="3">Finished</option>
+              <option value="4">Report filled</option>
             </select>
           </div>
         </div>
@@ -54,24 +55,34 @@
         :key="entity.id"
         v-bind:entity="entity"
         @createReservation="createReservation"
+        @createReport="createReport"
       ></AdvertiserReservationCard>
     </div>
     <AdvertiserReservationModal
-    id="AdvertiserReservationModal"
-    :clientEmail="clientEmail"
-    :clientName="clientName"
-    :clientSurname="clientSurname"
-  ></AdvertiserReservationModal>
+      id="AdvertiserReservationModal"
+      :clientEmail="clientEmail"
+      :clientName="clientName"
+      :clientSurname="clientSurname"
+    ></AdvertiserReservationModal>
+    <AdvertiserReportModal
+      id="AdvertiserReportModal"
+      :reportDto="reportDto"
+    ></AdvertiserReportModal>
   </div>
 </template>
 
 <script>
 import AdvertiserReservationCard from "@/components/ReservationCards/AdvertiserReservationCard.vue";
 import AdvertiserReservationModal from "@/components/Modals/AdvertiserReservationModal.vue";
+import AdvertiserReportModal from "@/components/Modals/AdvertiserReportModal.vue";
 
 import axios from "axios";
 export default {
-  components: { AdvertiserReservationCard, AdvertiserReservationModal },
+  components: {
+    AdvertiserReservationCard,
+    AdvertiserReservationModal,
+    AdvertiserReportModal,
+  },
   data: function () {
     return {
       numberOfPersons: "",
@@ -84,8 +95,9 @@ export default {
       searchResults: [],
       entities: [],
       clientEmail: "",
-      clientNane: "",
+      clientName: "",
       clientSurname: "",
+      reportDto: "",
     };
   },
   mounted: function () {
@@ -107,6 +119,12 @@ export default {
       this.clientName = clientName;
       this.clientSurname = clientSurname;
       var myModal = document.getElementById("AdvertiserReservationModal");
+      var modal = window.bootstrap.Modal.getOrCreateInstance(myModal);
+      modal.show();
+    },
+    createReport(reportDto) {
+      this.reportDto = reportDto;
+      var myModal = document.getElementById("AdvertiserReportModal");
       var modal = window.bootstrap.Modal.getOrCreateInstance(myModal);
       modal.show();
     },

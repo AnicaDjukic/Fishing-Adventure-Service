@@ -31,7 +31,9 @@ public class VacationHomeDto {
 
     private double pricePerDay;
 
-    public VacationHomeDto(int id, String name, String description, double rating, Location location, String imagePath, Date availabilityStart, Date availabilityEnd, VacationHomeOwner vacationHomeOwner, int persons, double pricePerDay) {
+    public VacationHomeDto(int id, String name, String description, double rating, Location location, String imagePath,
+            Date availabilityStart, Date availabilityEnd, VacationHomeOwner vacationHomeOwner, int persons,
+            double pricePerDay) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -64,7 +66,6 @@ public class VacationHomeDto {
 
     public VacationHomeDto() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public int getId() {

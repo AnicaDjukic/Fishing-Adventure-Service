@@ -1,6 +1,5 @@
 package isa.FishingAdventure.service;
 
-import isa.FishingAdventure.model.Complaint;
 import isa.FishingAdventure.model.Reservation;
 import isa.FishingAdventure.model.Review;
 import isa.FishingAdventure.repository.ReviewRepository;
@@ -10,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReviewService {
-	
-	@Autowired
-	private ReviewRepository repository;
+
+    @Autowired
+    private ReviewRepository repository;
 
     @Autowired
     private ReservationService reservationService;
@@ -24,8 +23,8 @@ public class ReviewService {
     }
 
     public boolean exists(Integer reservationId) {
-        for(Review review : repository.findAll()){
-            if(review.getReservation().getReservationId().equals(reservationId))
+        for (Review review : repository.findAll()) {
+            if (review.getReservation().getReservationId().equals(reservationId))
                 return true;
         }
 

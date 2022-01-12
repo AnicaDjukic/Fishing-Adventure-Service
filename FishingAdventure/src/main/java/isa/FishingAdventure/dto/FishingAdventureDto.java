@@ -6,23 +6,23 @@ import isa.FishingAdventure.model.Image;
 import isa.FishingAdventure.model.Location;
 
 public class FishingAdventureDto {
-	
+
 	private int id;
-	
+
 	private String name;
-	
+
 	private String description;
-	
+
 	private double rating;
 
 	private Location location;
-	
+
 	public String imagePath;
-	
+
 	public FishingInstructor fishingInstructor;
 
 	public FishingAdventureDto(int id, String name, String description, double rating, Location location,
-							   String imagePath, FishingInstructor fishingInstructor) {
+			String imagePath, FishingInstructor fishingInstructor) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -39,7 +39,7 @@ public class FishingAdventureDto {
 		this.description = fishingAdventure.getDescription();
 		this.rating = fishingAdventure.getRating();
 		this.location = fishingAdventure.getLocation();
-		for(Image img : fishingAdventure.getImages()) {
+		for (Image img : fishingAdventure.getImages()) {
 			if (img.isCoverImage()) {
 				this.imagePath = img.getPath();
 				break;
@@ -50,7 +50,6 @@ public class FishingAdventureDto {
 
 	public FishingAdventureDto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getId() {

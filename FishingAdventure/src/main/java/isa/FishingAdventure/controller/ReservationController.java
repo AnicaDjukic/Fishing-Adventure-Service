@@ -6,7 +6,6 @@ import isa.FishingAdventure.dto.NewReservationDto;
 import isa.FishingAdventure.dto.ReservationDto;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.security.util.TokenUtils;
-import isa.FishingAdventure.service.ClientService;
 import isa.FishingAdventure.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,7 +33,8 @@ public class ReservationController {
     @PostMapping(value = "/new")
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @Transactional
-    public ResponseEntity<NewReservationDto> saveNewAppointment(@RequestHeader("Authorization") String token, @RequestBody NewReservationDto dto) {
+    public ResponseEntity<NewReservationDto> saveNewAppointment(@RequestHeader("Authorization") String token,
+            @RequestBody NewReservationDto dto) {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         Appointment newAppointment = getNewAppointment(dto);
         boolean success = reservationService.createReservation(email, newAppointment, dto.getServiceId());
@@ -46,17 +46,19 @@ public class ReservationController {
     @PostMapping(value = "/new/specialOffer")
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @Transactional
-    public ResponseEntity<AppointmentDto> reserveSpecialOffer(@RequestHeader("Authorization") String token, @RequestBody AppointmentDto dto) {
+    public ResponseEntity<AppointmentDto> reserveSpecialOffer(@RequestHeader("Authorization") String token,
+            @RequestBody AppointmentDto dto) {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         reservationService.reserveSpecialOffer(email, dto.getOfferId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping(value = "/newByAdvertiser")
-    @PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')")   //TODO: add other roles
+    @PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')") // TODO: add other roles
     @Transactional
     public ResponseEntity<NewReservationDto> saveNewAppointmentByAdvertiser(@RequestBody NewReservationDto dto) {
-        boolean success = reservationService.createReservation(dto.getClientEmail(), getNewAppointment(dto), dto.getServiceId());
+        boolean success = reservationService.createReservation(dto.getClientEmail(), getNewAppointment(dto),
+                dto.getServiceId());
         if (!success)
             return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -65,7 +67,8 @@ public class ReservationController {
     @GetMapping(value = "/client/current")
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @Transactional
-    public ResponseEntity<List<ReservationDto>> getClientCurrentReservations(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<ReservationDto>> getClientCurrentReservations(
+            @RequestHeader("Authorization") String token) {
         List<Reservation> reservations = reservationService.getClientCurrentReservations(token);
         List<ServiceProfile> serviceProfiles = reservationService.getServiceProfiles(reservations);
         List<ReservationDto> reservationDtos = createReservationDtos(reservations, serviceProfiles);
@@ -75,14 +78,16 @@ public class ReservationController {
     @GetMapping(value = "/client/past")
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @Transactional
-    public ResponseEntity<List<ReservationDto>> getClientPastReservations(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<ReservationDto>> getClientPastReservations(
+            @RequestHeader("Authorization") String token) {
         List<Reservation> reservations = reservationService.getClientPastReservations(token);
         List<ServiceProfile> serviceProfiles = reservationService.getServiceProfiles(reservations);
         List<ReservationDto> reservationDtos = createReservationDtos(reservations, serviceProfiles);
         return new ResponseEntity<>(reservationDtos, HttpStatus.OK);
     }
 
-    private List<ReservationDto> createReservationDtos(List<Reservation> reservations, List<ServiceProfile> serviceProfiles) {
+    private List<ReservationDto> createReservationDtos(List<Reservation> reservations,
+            List<ServiceProfile> serviceProfiles) {
         List<ReservationDto> reservationDtos = new ArrayList<>();
         for (int i = 0; i < reservations.size(); i++) {
             ReservationDto dto = new ReservationDto();
@@ -94,8 +99,8 @@ public class ReservationController {
             dto.setChosenServices(new ArrayList<>(reservations.get(i).getAppointment().getChosenServices()));
             dto.setServiceId(serviceProfiles.get(i).getId());
             dto.setServiceName(serviceProfiles.get(i).getName());
-            for(Image im : serviceProfiles.get(i).getImages()){
-                if(im.isCoverImage()) {
+            for (Image im : serviceProfiles.get(i).getImages()) {
+                if (im.isCoverImage()) {
                     dto.setImagePath(im.getPath());
                 }
             }
@@ -130,10 +135,12 @@ public class ReservationController {
 
     @GetMapping(value = "/allByAdvertiser")
     @PreAuthorize("hasAnyRole('ROLE_FISHING_INSTRUCTOR', 'ROLE_VACATION_HOME_OWNER', 'ROLE_BOAT_OWNER')")
-    public ResponseEntity<List<AdvertiserReservationDto>> findAllReservationsForInstructor(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<AdvertiserReservationDto>> findAllReservationsForInstructor(
+            @RequestHeader("Authorization") String token) {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         String role = tokenUtils.getRoleFromToken(token.split(" ")[1]);
-        List<AdvertiserReservationDto> reservationDtos = reservationService.findAllReservationsByAdvertiser(email, role);
+        List<AdvertiserReservationDto> reservationDtos = reservationService.findAllReservationsByAdvertiser(email,
+                role);
 
         return new ResponseEntity<>(reservationDtos, HttpStatus.OK);
     }
@@ -141,17 +148,20 @@ public class ReservationController {
     @PutMapping(value = "/cancel")
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     public ResponseEntity<Boolean> cancelReservation(@RequestBody String id) {
-        boolean cancellationSuccess  = reservationService.cancelReservation(Integer.parseInt(id));
+        boolean cancellationSuccess = reservationService.cancelReservation(Integer.parseInt(id));
         return new ResponseEntity<>(cancellationSuccess, HttpStatus.OK);
     }
 
     @GetMapping(value = "/cancelled")
     @Transactional
-    public ResponseEntity hadCancelledReservation(@RequestHeader("Authorization") String token, @RequestParam("serviceId") Integer serviceId, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-                                                @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
+    public ResponseEntity hadCancelledReservation(@RequestHeader("Authorization") String token,
+            @RequestParam("serviceId") Integer serviceId,
+            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
 
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-        List<Reservation> serviceProfileReservations = reservationService.getClientReservationsForServiceProfile(email, serviceId);
+        List<Reservation> serviceProfileReservations = reservationService.getClientReservationsForServiceProfile(email,
+                serviceId);
         boolean hadCancelled = reservationService.overlapsWithDateRange(serviceProfileReservations, start, end);
         return new ResponseEntity(hadCancelled, HttpStatus.OK);
     }

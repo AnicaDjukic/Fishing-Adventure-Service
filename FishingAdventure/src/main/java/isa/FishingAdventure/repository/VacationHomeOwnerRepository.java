@@ -1,6 +1,5 @@
 package isa.FishingAdventure.repository;
 
-import isa.FishingAdventure.dto.UserDto;
 import isa.FishingAdventure.model.VacationHomeOwner;
 import org.springframework.stereotype.Repository;
 

@@ -1,12 +1,10 @@
 package isa.FishingAdventure.dto;
 
-import isa.FishingAdventure.model.Address;
 import isa.FishingAdventure.model.User;
-import isa.FishingAdventure.model.UserType;
 
 public class UserInfoDto {
 	private Integer id;
-	
+
 	private String email;
 
 	private String password;
@@ -18,14 +16,15 @@ public class UserInfoDto {
 	private String phoneNumber;
 
 	private String street;
-	
+
 	private String city;
-	
+
 	private String country;
 
 	private String biography;
 
-	public UserInfoDto() {}
+	public UserInfoDto() {
+	}
 
 	public UserInfoDto(Integer id, String email, String password, String name, String surname, String phoneNumber,
 			String street, String city, String country, String biography) {
@@ -41,7 +40,7 @@ public class UserInfoDto {
 		this.country = country;
 		this.biography = biography;
 	}
-	
+
 	public UserInfoDto(User user) {
 		this.id = user.getUserId();
 		this.email = user.getEmail();

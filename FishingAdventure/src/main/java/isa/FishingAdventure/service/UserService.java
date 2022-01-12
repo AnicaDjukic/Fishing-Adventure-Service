@@ -1,7 +1,6 @@
 package isa.FishingAdventure.service;
 
 import isa.FishingAdventure.model.User;
-import isa.FishingAdventure.repository.ClientRepository;
 
 import java.util.List;
 
@@ -11,8 +10,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -50,7 +47,7 @@ public class UserService implements UserDetailsService {
 		repository.save(user);
 	}
 
-	public Boolean isEmailRegistered(String email){
+	public Boolean isEmailRegistered(String email) {
 		return findByEmail(email) != null;
 	}
 }

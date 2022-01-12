@@ -14,22 +14,33 @@
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
               <h5 class="card-title shadow-none">{{ entity.name }}</h5>
-              <p class="reservationStatus shadow-none" style="background-color: #A28800" v-if=" entity.status == 'Upcoming'">
+              <p
+                class="reservationStatus shadow-none"
+                style="background-color: #a28800"
+                v-if="entity.status == 'Upcoming'"
+              >
                 <b class="shadow-none">Upcoming</b>
               </p>
               <p
                 class="reservationStatus shadow-none"
-                style="background-color: #41005F"
+                style="background-color: #41005f"
                 v-if="entity.status == 'Finished'"
               >
                 <b class="shadow-none">Finished</b>
               </p>
               <p
                 class="reservationStatus shadow-none"
-                style="background-color: #0C442A"
+                style="background-color: #0c442a"
                 v-if="entity.status == 'Current'"
               >
                 <b class="shadow-none">Current</b>
+              </p>
+              <p
+                class="reservationStatus shadow-none"
+                style="background-color: rgb(33 22 143)"
+                v-if="entity.status == 'Report filled'"
+              >
+                <b class="shadow-none">Report filled</b>
               </p>
             </div>
             <div
@@ -41,7 +52,10 @@
                   <p class="card-text text-left shadow-none col-md-4">
                     Client:
                   </p>
-                  <p class="advertiserTitle shadow-none col-md-6" style="margin-left: 11px;">
+                  <p
+                    class="advertiserTitle shadow-none col-md-6"
+                    style="margin-left: 11px"
+                  >
                     @{{ entity.clientName }}{{ entity.clientSurname }}
                   </p>
                 </div>
@@ -54,9 +68,7 @@
                   </p>
                 </div>
                 <div class="row shadow-none" v-else>
-                  <p class="card-text text-left shadow-none col-md-4">
-                    Date:
-                  </p>
+                  <p class="card-text text-left shadow-none col-md-4">Date:</p>
                   <p class="card-text text-left shadow-none col-md-8">
                     {{ startDate }} ({{ hours }}h)
                   </p>
@@ -71,19 +83,27 @@
                   <p class="card-text text-left shadow-none col-md-4">
                     Persons:
                   </p>
-                  <p class="card-text text-left shadow-none col-md-8"> {{ entity.persons }} </p>
+                  <p class="card-text text-left shadow-none col-md-8">
+                    {{ entity.persons }}
+                  </p>
                 </div>
                 <p class="card-text text-left shadow-none">
                   Additional services:
                 </p>
 
                 <div class="row shadow-none" style="margin-left: 1%">
-                  <p class="additionalServices shadow-none" v-if="entity.additionalServices.length == 0"
+                  <p
+                    class="additionalServices shadow-none"
+                    v-if="entity.additionalServices.length == 0"
                   >
                     Not included
                   </p>
-                  <p class="additionalServices shadow-none" v-for="service of entity.additionalServices" :key="service.id">
-                      {{ service.name }}
+                  <p
+                    class="additionalServices shadow-none"
+                    v-for="service of entity.additionalServices"
+                    :key="service.id"
+                  >
+                    {{ service.name }}
                   </p>
                 </div>
               </div>
@@ -92,7 +112,13 @@
                 <button
                   v-if="entity.status == 'Finished'"
                   class="btn btn-primary shadow-none mb-2"
-                  style="background-color: #592073; border-color: #B89FC3; width:max-content; margin-bottom: 3rem!important;"
+                  style="
+                    background-color: #592073;
+                    border-color: #b89fc3;
+                    width: max-content;
+                    margin-bottom: 3rem !important;
+                  "
+                  v-on:click="createReport"
                 >
                   Write report
                 </button>
@@ -100,7 +126,12 @@
                 <button
                   v-if="entity.status == 'Current'"
                   class="btn btn-primary shadow-none mb-2"
-                  style="background-color: #026756; border-color: #A0C6C0; width:max-content; margin-bottom: 3rem!important;"
+                  style="
+                    background-color: #026756;
+                    border-color: #a0c6c0;
+                    width: max-content;
+                    margin-bottom: 3rem !important;
+                  "
                   v-on:click="createReservation"
                 >
                   New reservation
@@ -119,7 +150,7 @@ import moment from "moment";
 import axios from "axios";
 export default {
   props: ["entity"],
-  emits: ["createReservation"],
+  emits: ["createReservation", "createReport"],
   data: function () {
     return {
       date: "12/20/2021 - 12/25/2021",
@@ -148,17 +179,40 @@ export default {
           this.entityType = "cottage";
         } else if (loggedInRole == "ROLE_BOAT_OWNER") {
           this.entityType = "boat";
-        } else if(loggedInRole == "ROLE_FISHING_INSTRUCTOR"){
-          this.entityType = 'adventure';
-          this.hours = Math.abs(this.entity.startDate - this.entity.endDate) / 36e5;
+        } else if (loggedInRole == "ROLE_FISHING_INSTRUCTOR") {
+          this.entityType = "adventure";
+          this.hours =
+            Math.abs(this.entity.startDate - this.entity.endDate) / 36e5;
         }
       });
   },
   methods: {
-    createReservation: function() {
-      this.$emit("createReservation", this.entity.clientEmail, this.entity.clientName, this.entity.clientSurname);
-    }
-  }
+    createReservation: function () {
+      this.$emit(
+        "createReservation",
+        this.entity.clientEmail,
+        this.entity.clientName,
+        this.entity.clientSurname
+      );
+    },
+    createReport: function () {
+      let dto = {
+        reservationId: this.entity.reservationId,
+        email: this.entity.clientEmail,
+        name: this.entity.name,
+        clientName: this.entity.clientName,
+        clientSurname: this.entity.clientSurname,
+        startDate: moment(new Date(this.entity.startDate)).format(
+          "MM/DD/yyyy HH:mm"
+        ),
+        endDate: moment(new Date(this.entity.endDate)).format(
+          "MM/DD/yyyy HH:mm"
+        ),
+      };
+
+      this.$emit("createReport", dto);
+    },
+  },
 };
 </script>
 <style scoped>

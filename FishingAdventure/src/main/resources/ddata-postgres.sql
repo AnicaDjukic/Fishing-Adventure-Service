@@ -611,11 +611,11 @@ VALUES (113, 105);
 -- Data for Name: reservation; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 INSERT INTO reservation
-VALUES (101, false, 101, 104);
+VALUES (101, false, false, 101, 104);
 INSERT INTO reservation
-VALUES (102, false, 102, 104);
+VALUES (102, false, false, 102, 104);
 INSERT INTO reservation
-VALUES (103, false, 103, 104);
+VALUES (103, false, false, 103, 104);
 
 --
 -- Data for Name: delete_request; Type: TABLE DATA; Schema: public; Owner: postgres

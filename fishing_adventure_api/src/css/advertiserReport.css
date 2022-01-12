@@ -1,0 +1,76 @@
+.clientDiv {
+    background-color: rgba(128, 128, 128, 0.226);
+    color: gray;
+    padding: 1px 5px;
+    border-radius: 5px;
+    margin-left: 3%;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+}
+
+.infoDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.reportOptions {
+    color: white;
+    cursor: pointer;
+    padding: 1rem;
+    border: 1px solid white;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+}
+
+.reportOptions:hover {
+    background: white;
+    color: #1e2021;
+    font-weight: bold;
+    transition: 0.5s;
+}
+
+.active {
+    background: white;
+    color: #1e2021;
+    font-weight: bold;
+}
+
+.optionsDiv {
+    margin-top: 4rem;
+}
+
+textarea {
+    height: 110px;
+    display: block;
+    background-color: transparent;
+    padding: 2px 16px;
+    color: white;
+    font-size: 17px;
+    resize: none;
+    height: 14rem;
+    border: 1px solid white;
+    border-radius: 0 0 5px 5px;
+    width: 100%;
+    transition: 0.5s;
+}
+
+.selectedOption {
+    background: #ffffffb3;
+    color: #1e2021;
+    font-weight: bold;
+    transition: 0.5s;
+    border-radius: 5px 5px 0 0;
+}
+
+.textareaDiv {
+    margin-top: 2rem;
+    transition: 0.5s;
+}
+
+.btn-close {
+    background: transparent;
+    color: black;
+}

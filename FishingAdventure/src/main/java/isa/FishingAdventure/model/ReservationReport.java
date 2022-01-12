@@ -11,12 +11,16 @@ public class ReservationReport {
     @Column(name = "report", nullable = false)
     private String report;
 
-    @OneToOne(targetEntity = Reservation.class,cascade = CascadeType.MERGE)
-    public Reservation reservation;
+    @Column(name = "waitingReview", nullable = false)
+    private Boolean waitingReview;
+
+    @OneToOne(targetEntity = Reservation.class, cascade = CascadeType.MERGE)
+    private Reservation reservation;
 
     public ReservationReport(String report, Reservation reservation) {
         this.report = report;
         this.reservation = reservation;
+        this.waitingReview = false;
     }
 
     public ReservationReport() {
@@ -46,4 +50,11 @@ public class ReservationReport {
         this.reservation = reservation;
     }
 
+    public Boolean getWaitingReview() {
+        return waitingReview;
+    }
+
+    public void setWaitingReview(Boolean waitingReview) {
+        this.waitingReview = waitingReview;
+    }
 }

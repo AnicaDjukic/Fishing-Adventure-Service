@@ -25,7 +25,8 @@ public class BoatDto {
 
     private int persons;
 
-    public BoatDto(int id, String name, String description, double rating, Location location, String imagePath, BoatOwner boatOwner, double pricePerDay, int persons) {
+    public BoatDto(int id, String name, String description, double rating, Location location, String imagePath,
+            BoatOwner boatOwner, double pricePerDay, int persons) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -57,7 +58,6 @@ public class BoatDto {
 
     public BoatDto() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public int getId() {
