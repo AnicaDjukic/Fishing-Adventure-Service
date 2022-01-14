@@ -1,8 +1,6 @@
 package isa.FishingAdventure.controller;
 
-import isa.FishingAdventure.dto.NewReservationDto;
 import isa.FishingAdventure.dto.NewReviewDto;
-import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.Review;
 import isa.FishingAdventure.service.ReviewService;
 
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "review")
 public class ReviewController {
-	
+
 	@Autowired
 	private ReviewService reviewService;
 

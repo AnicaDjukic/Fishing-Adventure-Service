@@ -2,6 +2,8 @@ package isa.FishingAdventure.service;
 
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.ServiceProfileRepository;
+import isa.FishingAdventure.security.util.TokenUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class ServiceProfileService {
 
     @Autowired
     private ServiceProfileRepository profileRepository;
+
+    @Autowired
+    private TokenUtils tokenUtils;
 
     @Autowired
     private UserService userService;
@@ -43,7 +48,8 @@ public class ServiceProfileService {
         return profileRepository.getByAppointmentsIsContaining(appointment);
     }
 
-    public ServiceProfile getByNameForAdvertiser(String name, String email) {
+    public ServiceProfile getByNameForAdvertiser(String name, String token) {
+        String email = tokenUtils.getEmailFromToken(token);
         ServiceProfile service;
         String role = userService.findByEmail(email).getUserType().getName();
         if (role.equals("ROLE_FISHING_INSTRUCTOR"))
