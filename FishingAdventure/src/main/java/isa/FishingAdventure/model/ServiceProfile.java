@@ -1,6 +1,7 @@
 package isa.FishingAdventure.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
@@ -49,17 +50,17 @@ public abstract class ServiceProfile {
     @Column(name = "price_per_day", nullable = false)
     private double pricePerDay;
 
-    public ServiceProfile(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Appointment> appointments, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons) {
-        this.id = id;
+    public ServiceProfile(String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons) {
         this.name = name;
         this.description = description;
         this.cancellationRule = cancellationRule;
         this.rating = rating;
         this.location = location;
-        this.appointments = appointments;
+        this.appointments = new HashSet<>();
         this.rules = rules;
         this.additionalServices = additionalServices;
         this.isDeleted = false;
+        this.images = new HashSet<>();
         this.persons = persons;
         this.pricePerDay = 0;
     }

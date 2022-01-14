@@ -28,70 +28,60 @@ import java.util.List;
 @CrossOrigin
 public class BoatController {
 
-    @Autowired
-    private ServiceProfileService serviceProfileService;
 
     @Autowired
     private BoatService boatService;
 
-    @Autowired
-    private BoatOwnerService boatOwnerService;
-
-    @Autowired
-    private TokenUtils tokenUtils;
-
-    @Autowired
-    private LocationService locationService;
-
-    @Autowired
-    private AddressService addressService;
 
     @GetMapping(value = "/all")
     public ResponseEntity<List<BoatDto>> getAllBoats() {
         List<Boat> boats = boatService.findAll();
+        return new ResponseEntity<>(createBoatDtos(boats), HttpStatus.OK);
+    }
 
-        List<BoatDto> boatDtos = new ArrayList<BoatDto>();
+    private List<BoatDto> createBoatDtos(List<Boat> boats) {
+        List<BoatDto> boatDtos = new ArrayList<>();
         for (Boat b : boats) {
             BoatDto dto = new BoatDto(b);
             boatDtos.add(dto);
         }
-
-        return new ResponseEntity<>(boatDtos, HttpStatus.OK);
+        return boatDtos;
     }
-
 
     @GetMapping(value = "/allByUser")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
     public ResponseEntity<List<NewBoatDto>> getAllBoatsByEmail(@RequestHeader("Authorization") String token) {
-        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-        BoatOwner owner = boatOwnerService.findByEmail(email);
+        List<Boat> ownerBoats = boatService.findByBoatOwnerToken(token.split(" ")[1]);
+        return new ResponseEntity<>(createNewBoatDtos(ownerBoats), HttpStatus.OK);
+    }
 
-        List<NewBoatDto> boats = new ArrayList<NewBoatDto>();
-        for (Boat boat : boatService.findByBoatOwner(owner)) {
+    private List<NewBoatDto> createNewBoatDtos(List<Boat> ownerBoats) {
+        List<NewBoatDto> boats = new ArrayList<>();
+        for (Boat boat : ownerBoats) {
             boats.add(new NewBoatDto(boat));
         }
-
-        return new ResponseEntity<>(boats, HttpStatus.OK);
+        return boats;
     }
 
     @GetMapping(value = "/getNamesByUser")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
     public ResponseEntity<List<ServiceNameDto>> getNamesByUser(@RequestHeader("Authorization") String token) {
-        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-        BoatOwner owner = boatOwnerService.findByEmail(email);
+        List<Boat> ownerBoats = boatService.findByBoatOwnerToken(token.split(" ")[1]);
+        return new ResponseEntity<>(createServiceNameDtos(ownerBoats), HttpStatus.OK);
+    }
 
-        List<ServiceNameDto> boats = new ArrayList<ServiceNameDto>();
-        for (Boat boat : boatService.findByBoatOwner(owner)) {
+    private List<ServiceNameDto> createServiceNameDtos(List<Boat> ownerBoats) {
+        List<ServiceNameDto> boats = new ArrayList<>();
+        for (Boat boat : ownerBoats) {
             boats.add(new ServiceNameDto(boat));
         }
-
-        return new ResponseEntity<>(boats, HttpStatus.OK);
+        return boats;
     }
 
     @GetMapping(value = "/deleteBoat/{id}")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
     public ResponseEntity<String> deleteBoat(@PathVariable String id) {
-        serviceProfileService.delete(Integer.parseInt(id));
+        boatService.deleteById(Integer.parseInt(id));
         return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 
@@ -99,66 +89,17 @@ public class BoatController {
     @PostMapping(value = "/newBoat")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
     public ResponseEntity<NewBoatDto> saveNewBoat(@RequestHeader("Authorization") String token, @RequestBody NewBoatDto dto) {
-        String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-        BoatOwner owner = boatOwnerService.findByEmail(email);
-        Boat newBoat = new Boat();
-        boatService.save(createBoat(newBoat, dto, owner));
+        boatService.saveNewBoat(new Boat(dto), token.split(" ")[1]);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PutMapping(value = "/update/{id}")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
     @Transactional
-    public ResponseEntity<NewBoatDto> updateBoat(@PathVariable String id, @RequestHeader("Authorization") String token, @RequestBody NewBoatDto dto) {
-        Boat oldBoat = boatService.getById(Integer.parseInt(id));
-        boatService.save(updateBoat(oldBoat, dto));
+    public ResponseEntity<NewBoatDto> updateBoat(@PathVariable String id, @RequestBody NewBoatDto dto) {
+        boatService.update(Integer.parseInt(id), dto);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-
-    private Boat updateBoat(Boat boat, NewBoatDto dto) {
-        boat.setType(dto.getType());
-        boat.setMaxSpeed(dto.getMaxSpeed());
-        boat.setLength(dto.getLength());
-        boat.setMotorNumber(dto.getMotorNumber());
-        boat.setMotorPower(dto.getMotorPower());
-        boat.setName(dto.getName());
-        boat.setDescription(dto.getDescription());
-        boat.setCancellationRule(dto.getCancellationRule());
-        boat.setAdditionalServices(dto.getAdditionalServices());
-        boat.setFishingEquipment(dto.getFishingEquipments());
-        boat.setNavigationEquipment(dto.getNavigationEquipments());
-        boat.setRules(dto.getRules());
-        boat.setPersons(dto.getPersons());
-
-        locationService.save(boat.getLocation(), dto.getLocation());
-        addressService.save(boat.getLocation().getAddress(), dto.getLocation().getAddress());
-
-        return boat;
-    }
-
-    private Boat createBoat(Boat boat, NewBoatDto dto, BoatOwner owner) {
-        boat.setType(dto.getType());
-        boat.setMaxSpeed(dto.getMaxSpeed());
-        boat.setLength(dto.getLength());
-        boat.setMotorNumber(dto.getMotorNumber());
-        boat.setMotorPower(dto.getMotorPower());
-        boat.setAppointments(new HashSet<Appointment>());
-        boat.setImages(new HashSet<Image>());
-        boat.setRating(0.0);
-        boat.setLocation(dto.getLocation());
-        boat.setAdditionalServices(dto.getAdditionalServices());
-        boat.setCancellationRule(dto.getCancellationRule());
-        boat.setFishingEquipment(dto.getFishingEquipments());
-        boat.setNavigationEquipment(dto.getNavigationEquipments());
-        boat.setRules(dto.getRules());
-        boat.setName(dto.getName());
-        boat.setDescription(dto.getDescription());
-        boat.setBoatOwner(owner);
-        boat.setDeleted(false);
-        boat.setPersons(dto.getPersons());
-        return boat;
-    }
-
 
     @Transactional
     @GetMapping(value = "/{id}")
@@ -170,7 +111,6 @@ public class BoatController {
 
     @GetMapping(value = "exists/{id}")
     public ResponseEntity<Boolean> exists(@PathVariable Integer id) {
-
         return new ResponseEntity<>(boatService.exists(id), HttpStatus.OK);
     }
 
@@ -190,13 +130,7 @@ public class BoatController {
     public ResponseEntity<List<BoatDto>> getSearchedVacationHomes(@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
                                                                   @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end, @RequestParam("persons") int persons) throws ParseException {
         List<Boat> boats = boatService.findAllAvailableBoats(start, end, persons);
-        List<BoatDto> boatDtos = new ArrayList<BoatDto>();
-        for (Boat b : boats) {
-            BoatDto dto = new BoatDto(b);
-            boatDtos.add(dto);
-        }
-
-        return new ResponseEntity<>(boatDtos, HttpStatus.OK);
+        return new ResponseEntity<>(createBoatDtos(boats), HttpStatus.OK);
     }
 
     @GetMapping(value = "/persons")
@@ -208,7 +142,6 @@ public class BoatController {
     @GetMapping(value = "/available/dateRange")
     public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer id, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
                                                 @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
-
         boolean availability = boatService.isBoatAvailableForDateRange(id, start, end);
         return new ResponseEntity(availability, HttpStatus.OK);
     }

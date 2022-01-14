@@ -1,5 +1,6 @@
 package isa.FishingAdventure.service;
 
+import isa.FishingAdventure.model.FishingEquipment;
 import isa.FishingAdventure.repository.FishingEquipmentRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,4 +10,8 @@ public class FishingEquipmentService {
 	
 	@Autowired
 	private FishingEquipmentRepository equipmentRepository;
+
+    public void save(FishingEquipment fishingEquipment) {
+        equipmentRepository.save(fishingEquipment);
+    }
 }

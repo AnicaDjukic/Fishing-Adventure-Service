@@ -2,6 +2,7 @@ package isa.FishingAdventure.model;
 
 import javax.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,11 +14,10 @@ public class VacationHome extends ServiceProfile {
 	@OneToMany(targetEntity = Room.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Set<Room> rooms;
 
-	public VacationHome(int id, String name, String description, double cancellationRule, double rating,
-			Location location, Set<Appointment> appointments, Set<Rule> rules,
-			Set<AdditionalService> additionalServices, int persons) {
-		super(id, name, description, cancellationRule, rating, location, appointments, rules, additionalServices,
-				persons);
+	public VacationHome(String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons, VacationHomeOwner vacationHomeOwner) {
+		super(name, description, cancellationRule, rating, location, rules, additionalServices, persons);
+		this.rooms = new HashSet<>();
+		this.vacationHomeOwner = vacationHomeOwner;
 	}
 
 	public VacationHome() {

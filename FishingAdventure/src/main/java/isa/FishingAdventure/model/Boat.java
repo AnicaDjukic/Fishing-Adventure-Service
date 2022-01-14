@@ -1,6 +1,10 @@
 package isa.FishingAdventure.model;
 
+import isa.FishingAdventure.dto.BoatDto;
+import isa.FishingAdventure.dto.NewBoatDto;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,13 +34,31 @@ public class Boat extends ServiceProfile {
     @ManyToMany(targetEntity = FishingEquipment.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     public Set<FishingEquipment> fishingEquipment;
 
-    public Boat(Integer id, String name, String description, double cancellationRule, double rating, Location location, Set<Appointment> appointments, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons) {
-        super(id, name, description, cancellationRule, rating, location, appointments, rules, additionalServices, persons);
-
+    public Boat(String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons, String type, int length, int motorNumber, double motorPower, double maxSpeed, BoatOwner boatOwner, Set<NavigationEquipment> navigationEquipment, Set<FishingEquipment> fishingEquipment) {
+        super(name, description, cancellationRule, rating, location, rules, additionalServices, persons);
+        this.type = type;
+        this.length = length;
+        this.motorNumber = motorNumber;
+        this.motorPower = motorPower;
+        this.maxSpeed = maxSpeed;
+        this.boatOwner = boatOwner;
+        this.navigationEquipment = navigationEquipment;
+        this.fishingEquipment = fishingEquipment;
     }
 
-
     public Boat() {
+    }
+
+    public Boat(NewBoatDto dto) {
+        super(dto.getName(), dto.getDescription(), dto.getCancellationRule(), 0.0, dto.getLocation(), dto.getRules(), dto.getAdditionalServices(), dto.getPersons());
+        this.type = dto.getType();
+        this.length = dto.getLength();
+        this.motorNumber = dto.getMotorNumber();
+        this.motorPower = dto.getMotorPower();
+        this.maxSpeed = dto.getMaxSpeed();
+        this.boatOwner = dto.getBoatOwner();
+        this.navigationEquipment = new HashSet<>(dto.getNavigationEquipments());
+        this.fishingEquipment = new HashSet<>(dto.getFishingEquipments());
     }
 
     public String getType() {

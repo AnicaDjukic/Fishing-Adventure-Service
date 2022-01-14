@@ -1,10 +1,9 @@
 package isa.FishingAdventure.service;
 
-import isa.FishingAdventure.model.Appointment;
-import isa.FishingAdventure.model.AvailabilityDateRange;
-import isa.FishingAdventure.model.Boat;
-import isa.FishingAdventure.model.BoatOwner;
+import isa.FishingAdventure.dto.NewBoatDto;
+import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.BoatRepository;
+import isa.FishingAdventure.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +19,22 @@ public class BoatService {
     private BoatRepository boatRepository;
 
     @Autowired
+    private TokenUtils tokenUtils;
+
+    @Autowired
     private BoatOwnerService ownerService;
 
     @Autowired
+    private ServiceProfileService serviceProfileService;
+
+    @Autowired
     private AvailabilityDateRangeService dateRangeService;
+
+    @Autowired
+    private FishingEquipmentService fishingEquipmentService;
+
+    @Autowired
+    private NavigationEquipmentService navigationEquipmentService;
 
     public List<Boat> findAll() {
         return boatRepository.findAll();
@@ -37,6 +48,13 @@ public class BoatService {
             }
         }
         return boats;
+    }
+
+
+    public List<Boat> findByBoatOwnerToken(String token) {
+        String email = tokenUtils.getEmailFromToken(token);
+        BoatOwner owner = ownerService.findByEmail(email);
+        return findByBoatOwner(owner);
     }
 
     public void save(Boat boat) {
@@ -154,5 +172,46 @@ public class BoatService {
     public int getMaxPersons(Integer id) {
         Boat boat = boatRepository.findById(id).orElse(new Boat());
         return boat.getPersons();
+    }
+
+    public void deleteById(int id) {
+        serviceProfileService.delete(id);
+    }
+
+    public void saveNewBoat(Boat boat, String token) {
+        String email = tokenUtils.getEmailFromToken(token);
+        BoatOwner owner = ownerService.findByEmail(email);
+        for(FishingEquipment fe: boat.getFishingEquipment()) {
+            fishingEquipmentService.save(fe);
+        }
+        for(NavigationEquipment ne: boat.getNavigationEquipment()) {
+            navigationEquipmentService.save(ne);
+        }
+        boat.setBoatOwner(owner);
+        save(boat);
+    }
+
+    public void update(Integer id, NewBoatDto dto) {
+        Boat oldBoat = getById(id);
+        save(updateBoat(oldBoat, dto));
+    }
+
+    private Boat updateBoat(Boat boat, NewBoatDto dto) {
+        boat.setType(dto.getType());
+        boat.setMaxSpeed(dto.getMaxSpeed());
+        boat.setLength(dto.getLength());
+        boat.setMotorNumber(dto.getMotorNumber());
+        boat.setMotorPower(dto.getMotorPower());
+        boat.setName(dto.getName());
+        boat.setDescription(dto.getDescription());
+        boat.setCancellationRule(dto.getCancellationRule());
+        boat.setAdditionalServices(dto.getAdditionalServices());
+        boat.setFishingEquipment(dto.getFishingEquipments());
+        boat.setNavigationEquipment(dto.getNavigationEquipments());
+        boat.setRules(dto.getRules());
+        boat.setPersons(dto.getPersons());
+        boat.setLocation(dto.getLocation());
+
+        return boat;
     }
 }

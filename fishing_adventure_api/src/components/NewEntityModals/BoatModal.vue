@@ -618,12 +618,15 @@ export default {
               zipCode: this.postal_code,
             },
           },
+          cancellationRule: 0,
           fishingEquipments: fishingEqFinal,
           navigationEquipments: navigationEqFinal,
           rules: rulesFinal,
           additionalServices: additionalServices,
           persons: this.persons,
         };
+
+        console.log(boat);
 
         axios
           .post("http://localhost:8080/boat/newBoat", boat, {
@@ -632,7 +635,7 @@ export default {
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
-          .then(window.location.reload());
+          .then();
       }
     },
   },

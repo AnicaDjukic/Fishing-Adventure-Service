@@ -19,9 +19,11 @@ public class FishingAdventure extends ServiceProfile {
     public FishingAdventure() {
     }
 
-    public FishingAdventure(Integer id, String name, String description, double cancellationRule, double rating, Location location,
-                            Set<Appointment> appointments, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons) {
-        super(id, name, description, cancellationRule, rating, location, appointments, rules, additionalServices, persons);
+    public FishingAdventure(String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons, FishingInstructor fishingInstructor, Duration adventureDuration, Set<FishingEquipment> fishingEquipment) {
+        super(name, description, cancellationRule, rating, location, rules, additionalServices, persons);
+        this.fishingInstructor = fishingInstructor;
+        this.adventureDuration = adventureDuration;
+        this.fishingEquipment = fishingEquipment;
     }
 
     public FishingInstructor getFishingInstructor() {
