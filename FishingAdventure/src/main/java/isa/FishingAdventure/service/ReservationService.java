@@ -61,8 +61,9 @@ public class ReservationService {
         return repository.findAll();
     }
 
-    public boolean createReservation(String clientEmail, Appointment newAppointment, Integer serviceProfileId) {
+    public boolean createReservation(String token, Appointment newAppointment, Integer serviceProfileId) {
         try {
+            String clientEmail = tokenUtils.getEmailFromToken(token);
             Client client = clientService.findByEmail(clientEmail);
             appointmentService.save(newAppointment);
             ServiceProfile serviceProfile = serviceProfileService.getById(serviceProfileId);
@@ -133,7 +134,10 @@ public class ReservationService {
         return currentReservations;
     }
 
-    public List<AdvertiserReservationDto> findAllReservationsByAdvertiser(String email, String role) {
+    public List<AdvertiserReservationDto> findAllReservationsByAdvertiser(String token) {
+        String email = tokenUtils.getEmailFromToken(token);
+        String role = tokenUtils.getRoleFromToken(token);
+
         List<AdvertiserReservationDto> reservationDtos = new ArrayList<>();
         if (role.equals("ROLE_FISHING_INSTRUCTOR"))
             reservationDtos = findAllReservationsForInstructor(email);
@@ -253,7 +257,8 @@ public class ReservationService {
         return reservationStatus;
     }
 
-    public void reserveSpecialOffer(String email, Integer offerId) {
+    public void reserveSpecialOffer(String token, Integer offerId) {
+        String email = tokenUtils.getEmailFromToken(token);
         Client client = clientService.findByEmail(email);
         Appointment appointment = appointmentService.findById(offerId);
         appointment.setReserved(true);
@@ -615,7 +620,8 @@ public class ReservationService {
         return clientReservations;
     }
 
-    public List<Reservation> getClientReservationsForServiceProfile(String email, Integer serviceId) {
+    public List<Reservation> getClientReservationsForServiceProfile(String token, Integer serviceId) {
+        String email = tokenUtils.getEmailFromToken(token);
         List<Reservation> reservations = new ArrayList<Reservation>();
         for (Appointment ap : appointmentService.getAppointmentsByServiceId(serviceId)) {
             for (Reservation r : findAll()) {

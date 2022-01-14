@@ -7,7 +7,6 @@ import java.util.List;
 import isa.FishingAdventure.dto.AppointmentDto;
 import isa.FishingAdventure.dto.NewAdventureDto;
 import isa.FishingAdventure.dto.ServiceNameDto;
-import isa.FishingAdventure.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,64 +27,60 @@ import isa.FishingAdventure.service.FishingInstructorService;
 @Configurable
 @CrossOrigin
 @RequestMapping(value = "/fishingAdventure", produces = MediaType.APPLICATION_JSON_VALUE)
-public class FishingAdventureController{
-
-	@Autowired
-	private TokenUtils tokenUtils;
+public class FishingAdventureController {
 
 	@Autowired
 	private FishingAdventureService adventureService;
 
 	@Autowired
 	private FishingInstructorService instructorService;
-	
+
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<FishingAdventureDto>> getAllFishingAdventures() {
 		List<FishingAdventure> fishingAdventures = adventureService.findAll();
+		List<FishingAdventureDto> fishingAdventureDtos = createFishingAdventureDtos(fishingAdventures);
+		return new ResponseEntity<>(fishingAdventureDtos, HttpStatus.OK);
+	}
 
+	private List<FishingAdventureDto> createFishingAdventureDtos(List<FishingAdventure> fishingAdventures) {
 		List<FishingAdventureDto> fishingAdventureDtos = new ArrayList<FishingAdventureDto>();
-		for (FishingAdventure fa: fishingAdventures) {
+		for (FishingAdventure fa : fishingAdventures) {
 			FishingAdventureDto dto = new FishingAdventureDto(fa);
 			fishingAdventureDtos.add(dto);
 		}
-
-		return new ResponseEntity<>(fishingAdventureDtos, HttpStatus.OK);
+		return fishingAdventureDtos;
 	}
 
 	@Transactional
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<NewAdventureDto> getById(@PathVariable String id) {
 		FishingAdventure adventure = adventureService.getById(Integer.parseInt(id));
-		NewAdventureDto dto = new NewAdventureDto(adventure);
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+		return new ResponseEntity<>(new NewAdventureDto(adventure), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/allByUser")
 	@PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')")
-	public ResponseEntity<List<FishingAdventureDto>> getAllFishingAdventuresByEmail(@RequestHeader("Authorization") String token) {
-		String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-		FishingInstructor instructor = instructorService.findByEmail(email);
-
-		List<FishingAdventureDto> fishingAdventureDtos = new ArrayList<FishingAdventureDto>();
-		for (FishingAdventure fa: adventureService.findByFishingInstructor(instructor)) {
-			FishingAdventureDto dto = new FishingAdventureDto(fa);
-			fishingAdventureDtos.add(dto);
-		}
-		return new ResponseEntity<>(fishingAdventureDtos, HttpStatus.OK);
+	public ResponseEntity<List<FishingAdventureDto>> getAllFishingAdventuresByEmail(
+			@RequestHeader("Authorization") String token) {
+		FishingInstructor instructor = instructorService.findByToken(token.split(" ")[1]);
+		return new ResponseEntity<>(createFishingAdventureDtos(adventureService.findByFishingInstructor(instructor)),
+				HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/getNamesByUser")
 	@PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')")
 	public ResponseEntity<List<ServiceNameDto>> getNamesByUser(@RequestHeader("Authorization") String token) {
-		String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-		FishingInstructor instructor = instructorService.findByEmail(email);
+		FishingInstructor instructor = instructorService.findByToken(token.split(" ")[1]);
+		List<ServiceNameDto> adventures = createServiceNameDtos(instructor);
+		return new ResponseEntity<>(adventures, HttpStatus.OK);
+	}
 
+	private List<ServiceNameDto> createServiceNameDtos(FishingInstructor instructor) {
 		List<ServiceNameDto> adventures = new ArrayList<ServiceNameDto>();
 		for (FishingAdventure adventure : adventureService.findByFishingInstructor(instructor)) {
 			adventures.add(new ServiceNameDto(adventure));
 		}
-
-		return new ResponseEntity<>(adventures, HttpStatus.OK);
+		return adventures;
 	}
 
 	@GetMapping(value = "/getServiceOffersById/{id}")
@@ -96,32 +91,34 @@ public class FishingAdventureController{
 	}
 
 	@GetMapping(value = "/getDurationById/{id}")
-	public ResponseEntity getDurationById(@PathVariable Integer id) {
+	public ResponseEntity<Long> getDurationById(@PathVariable Integer id) {
 		long duration = adventureService.findById(id).getAdventureDuration().toMinutes();
-				return new ResponseEntity(duration, HttpStatus.OK);
+		return new ResponseEntity<>(duration, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/isInstructorAvailable")
-	public ResponseEntity isInstructorAvailable(@RequestHeader("Authorization") String token, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-										   @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) {
-		String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
-		boolean available = adventureService.isInstructorAvailable(instructorService.findByEmail(email), start, end);
+	public ResponseEntity<Boolean> isInstructorAvailable(@RequestHeader("Authorization") String token,
+			@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+			@RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) {
+		FishingInstructor instructor = instructorService.findByToken(token.split(" ")[1]);
+		boolean available = adventureService.isInstructorAvailable(instructor, start, end);
 
-		return new ResponseEntity(available, HttpStatus.OK);
+		return new ResponseEntity<>(available, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/isAdventureInstructorAvailable")
-	public ResponseEntity isAdventureInstructorAvailable(@RequestParam("id") Integer adventureId, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-												@RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) {
+	public ResponseEntity<Boolean> isAdventureInstructorAvailable(@RequestParam("id") Integer adventureId,
+			@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+			@RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) {
 		FishingInstructor fishingInstructor = adventureService.findById(adventureId).getFishingInstructor();
 		boolean available = adventureService.isInstructorAvailable(fishingInstructor, start, end);
 
-		return new ResponseEntity(available, HttpStatus.OK);
+		return new ResponseEntity<>(available, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/persons")
-	public ResponseEntity getAdventureMaxPersons(@RequestParam("id") Integer id) {
+	public ResponseEntity<Integer> getAdventureMaxPersons(@RequestParam("id") Integer id) {
 		int maxPersons = adventureService.getMaxPersons(id);
-		return new ResponseEntity(maxPersons, HttpStatus.OK);
+		return new ResponseEntity<>(maxPersons, HttpStatus.OK);
 	}
 }

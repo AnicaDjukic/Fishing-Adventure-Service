@@ -1,7 +1,13 @@
 package isa.FishingAdventure.dto;
 
 import isa.FishingAdventure.model.AdditionalService;
+import isa.FishingAdventure.model.Boat;
+import isa.FishingAdventure.model.FishingAdventure;
+import isa.FishingAdventure.model.Image;
+import isa.FishingAdventure.model.Reservation;
+import isa.FishingAdventure.model.ServiceProfile;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +25,7 @@ public class ReservationDto {
 
     private Date endDate;
 
-    private int  persons;
+    private int persons;
 
     private List<AdditionalService> chosenServices;
 
@@ -29,7 +35,9 @@ public class ReservationDto {
 
     private String serviceType;
 
-    public ReservationDto(Integer id, Integer serviceId, String imagePath, String serviceName, Date startDate, Date endDate, int persons, List<AdditionalService> chosenServices, double price, Integer reviewId, String serviceType) {
+    public ReservationDto(Integer id, Integer serviceId, String imagePath, String serviceName, Date startDate,
+            Date endDate, int persons, List<AdditionalService> chosenServices, double price, Integer reviewId,
+            String serviceType) {
         this.id = id;
         this.serviceId = serviceId;
         this.imagePath = imagePath;
@@ -45,6 +53,28 @@ public class ReservationDto {
 
     public ReservationDto() {
 
+    }
+
+    public ReservationDto(Reservation reservation, ServiceProfile serviceProfile) {
+        this.id = reservation.getReservationId();
+        this.startDate = reservation.getAppointment().getStartDate();
+        this.endDate = reservation.getAppointment().getEndDate();
+        this.persons = reservation.getAppointment().getMaxPersons();
+        this.price = reservation.getAppointment().getPrice();
+        this.chosenServices = new ArrayList<>(reservation.getAppointment().getChosenServices());
+        this.serviceId = serviceProfile.getId();
+        this.serviceName = serviceProfile.getName();
+        if (serviceProfile instanceof FishingAdventure)
+            this.serviceType = "adventure";
+        else if (serviceProfile instanceof Boat)
+            this.serviceType = "boat";
+        else
+            this.serviceType = "cottage";
+        for (Image im : serviceProfile.getImages()) {
+            if (im.isCoverImage()) {
+                this.imagePath = im.getPath();
+            }
+        }
     }
 
     public Integer getId() {

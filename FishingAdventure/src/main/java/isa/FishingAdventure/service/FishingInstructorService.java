@@ -6,17 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import isa.FishingAdventure.dto.UserDto;
 import isa.FishingAdventure.model.FishingInstructor;
 import isa.FishingAdventure.model.UserType;
 import isa.FishingAdventure.repository.FishingInstructorRepository;
+import isa.FishingAdventure.security.util.TokenUtils;
 
 @Service
-public class FishingInstructorService{
-	
+public class FishingInstructorService {
+
 	@Autowired
 	private FishingInstructorRepository fishingInstructorRepository;
-	
+
+	@Autowired
+	private TokenUtils tokenUtils;
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -36,5 +39,10 @@ public class FishingInstructorService{
 
 	public List<isa.FishingAdventure.model.User> findAll() {
 		return fishingInstructorRepository.findAll();
+	}
+
+	public FishingInstructor findByToken(String token) {
+		String email = tokenUtils.getEmailFromToken(token);
+		return findByEmail(email);
 	}
 }

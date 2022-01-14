@@ -2,9 +2,7 @@ package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.AvailablityDateRangeDto;
 import isa.FishingAdventure.model.AvailabilityDateRange;
-import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.service.AvailabilityDateRangeService;
-import isa.FishingAdventure.service.ServiceProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,16 +40,19 @@ public class AvailabilityDateRangeController {
     @PutMapping(value = "/update/{dateRangeId}/{serviceId}")
     @PreAuthorize("hasAnyRole('ROLE_VACATION_HOME_OWNER','ROLE_BOAT_OWNER')")
     @Transactional
-    public ResponseEntity<List<AvailablityDateRangeDto>> update(@PathVariable String dateRangeId, @PathVariable String serviceId, @RequestBody AvailablityDateRangeDto dto) {
+    public ResponseEntity<List<AvailablityDateRangeDto>> update(@PathVariable String dateRangeId,
+            @PathVariable String serviceId, @RequestBody AvailablityDateRangeDto dto) {
         AvailabilityDateRange date = availabilityDateRangeService.getById(Integer.parseInt(dateRangeId));
-        List<AvailablityDateRangeDto> dateRanges = availabilityDateRangeService.updateAvailabilityDate(date, dto.getStart(), dto.getEnd(), Integer.parseInt(serviceId));
+        List<AvailablityDateRangeDto> dateRanges = availabilityDateRangeService.updateAvailabilityDate(date,
+                dto.getStart(), dto.getEnd(), Integer.parseInt(serviceId));
         return new ResponseEntity<>(dateRanges, HttpStatus.OK);
     }
 
     @PostMapping(value = "/save/{id}")
     @PreAuthorize("hasAnyRole('ROLE_VACATION_HOME_OWNER','ROLE_BOAT_OWNER')")
     @Transactional
-    public ResponseEntity<AvailablityDateRangeDto> save(@PathVariable String id, @RequestBody AvailablityDateRangeDto dto) {
+    public ResponseEntity<AvailablityDateRangeDto> save(@PathVariable String id,
+            @RequestBody AvailablityDateRangeDto dto) {
         AvailabilityDateRange newDate = availabilityDateRangeService.saveNewAvailabilityDateRange(id, dto);
         dto.setId(newDate.getId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -60,8 +61,10 @@ public class AvailabilityDateRangeController {
     @DeleteMapping(value = "/{dateRangeId}/{serviceId}")
     @PreAuthorize("hasAnyRole('ROLE_VACATION_HOME_OWNER','ROLE_BOAT_OWNER')")
     @Transactional
-    public ResponseEntity<List<AvailablityDateRangeDto>> delete(@PathVariable String dateRangeId, @PathVariable String serviceId) {
-        List<AvailablityDateRangeDto> dateRanges = availabilityDateRangeService.delete(Integer.parseInt(dateRangeId), Integer.parseInt(serviceId));
+    public ResponseEntity<List<AvailablityDateRangeDto>> delete(@PathVariable String dateRangeId,
+            @PathVariable String serviceId) {
+        List<AvailablityDateRangeDto> dateRanges = availabilityDateRangeService.delete(Integer.parseInt(dateRangeId),
+                Integer.parseInt(serviceId));
         return new ResponseEntity<>(dateRanges, HttpStatus.OK);
     }
 }

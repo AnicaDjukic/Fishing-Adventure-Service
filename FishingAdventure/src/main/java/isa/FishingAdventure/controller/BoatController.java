@@ -3,11 +3,7 @@ package isa.FishingAdventure.controller;
 import isa.FishingAdventure.dto.BoatDto;
 import isa.FishingAdventure.dto.NewBoatDto;
 import isa.FishingAdventure.dto.ServiceNameDto;
-import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.Boat;
-import isa.FishingAdventure.model.BoatOwner;
-import isa.FishingAdventure.model.Image;
-import isa.FishingAdventure.security.util.TokenUtils;
 import isa.FishingAdventure.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -28,10 +23,8 @@ import java.util.List;
 @CrossOrigin
 public class BoatController {
 
-
     @Autowired
     private BoatService boatService;
-
 
     @GetMapping(value = "/all")
     public ResponseEntity<List<BoatDto>> getAllBoats() {
@@ -85,10 +78,10 @@ public class BoatController {
         return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 
-
     @PostMapping(value = "/newBoat")
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
-    public ResponseEntity<NewBoatDto> saveNewBoat(@RequestHeader("Authorization") String token, @RequestBody NewBoatDto dto) {
+    public ResponseEntity<NewBoatDto> saveNewBoat(@RequestHeader("Authorization") String token,
+            @RequestBody NewBoatDto dto) {
         boatService.saveNewBoat(new Boat(dto), token.split(" ")[1]);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -127,22 +120,25 @@ public class BoatController {
     }
 
     @GetMapping(value = "/search")
-    public ResponseEntity<List<BoatDto>> getSearchedVacationHomes(@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-                                                                  @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end, @RequestParam("persons") int persons) throws ParseException {
+    public ResponseEntity<List<BoatDto>> getSearchedVacationHomes(
+            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end,
+            @RequestParam("persons") int persons) throws ParseException {
         List<Boat> boats = boatService.findAllAvailableBoats(start, end, persons);
         return new ResponseEntity<>(createBoatDtos(boats), HttpStatus.OK);
     }
 
     @GetMapping(value = "/persons")
-    public ResponseEntity getBoatMaxPersons(@RequestParam("id") Integer id) {
+    public ResponseEntity<Integer> getBoatMaxPersons(@RequestParam("id") Integer id) {
         int maxPersons = boatService.getMaxPersons(id);
-        return new ResponseEntity(maxPersons, HttpStatus.OK);
+        return new ResponseEntity<>(maxPersons, HttpStatus.OK);
     }
 
     @GetMapping(value = "/available/dateRange")
-    public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer id, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-                                                @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
+    public ResponseEntity<Boolean> getIsCottageAvailable(@RequestParam("id") Integer id,
+            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
         boolean availability = boatService.isBoatAvailableForDateRange(id, start, end);
-        return new ResponseEntity(availability, HttpStatus.OK);
+        return new ResponseEntity<>(availability, HttpStatus.OK);
     }
 }

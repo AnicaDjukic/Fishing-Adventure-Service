@@ -18,16 +18,17 @@ import java.util.Date;
 @RestController
 @RequestMapping(value = "boatOwner")
 public class BoatOwnerController {
-	
+
 	@Autowired
 	private BoatOwnerService boatOwnerService;
 
 	@GetMapping(value = "/available/dateRange")
 	@Transactional
-	public ResponseEntity getIsCottageAvailable(@RequestParam("id") Integer boatId, @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-												@RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
+	public ResponseEntity<Boolean> getIsCottageAvailable(@RequestParam("id") Integer boatId,
+			@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+			@RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
 
 		boolean availability = boatOwnerService.isBoatOwnerAvailableForDateRange(boatId, start, end);
-		return new ResponseEntity(availability, HttpStatus.OK);
+		return new ResponseEntity<>(availability, HttpStatus.OK);
 	}
 }

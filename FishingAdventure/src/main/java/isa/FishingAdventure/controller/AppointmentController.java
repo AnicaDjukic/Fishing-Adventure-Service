@@ -1,11 +1,8 @@
 package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.AppointmentDto;
-import isa.FishingAdventure.model.AdditionalService;
 import isa.FishingAdventure.model.Appointment;
-import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.service.AppointmentService;
-import isa.FishingAdventure.service.ServiceProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -3,6 +3,7 @@ package isa.FishingAdventure.model;
 import javax.persistence.*;
 
 import isa.FishingAdventure.dto.AppointmentDto;
+import isa.FishingAdventure.dto.NewReservationDto;
 
 import java.time.Duration;
 import java.util.Date;
@@ -89,6 +90,27 @@ public class Appointment {
             this.chosenServices.add(as);
         }
 
+    }
+
+    public Appointment(NewReservationDto dto) {
+        this.place = "";
+        this.discount = 0.0;
+        this.isReserved = true;
+        this.isCancelled = false;
+        this.dateCreated = new Date();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+        long duration = (dto.getEndDate().getTime() - dto.getStartDate().getTime()) / (1000 * 60 * 60 * 24);
+        this.duration = Duration.ofDays(duration);
+        this.maxPersons = dto.getPersons();
+        if (this.chosenServices == null) {
+            this.chosenServices = new HashSet<AdditionalService>();
+        }
+        for (AdditionalService as : dto.getChosenServices()) {
+            this.chosenServices.add(as);
+        }
+        this.price = dto.getPrice();
+        this.ownerPresence = dto.isOwnersPresence();
     }
 
     public Appointment() {

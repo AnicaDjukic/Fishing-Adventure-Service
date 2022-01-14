@@ -6,6 +6,8 @@ import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.model.User;
 import isa.FishingAdventure.model.UserType;
 import isa.FishingAdventure.repository.ClientRepository;
+import isa.FishingAdventure.security.util.TokenUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private TokenUtils tokenUtils;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -36,8 +41,10 @@ public class ClientService {
         Client u = new Client();
         u.setEmail(userDto.getEmail());
 
-        // pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
-        // treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
+        // pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi
+        // nalazila hesirana lozinka
+        // treba voditi racuna da se koristi isi password encoder bean koji je
+        // postavljen u AUthenticationManager-u kako bi koristili isti algoritam
         u.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         u.setName(userDto.getName());
@@ -47,7 +54,8 @@ public class ClientService {
         u.setAddress(userDto.getAddress());
         u.setBiography(userDto.getBiography());
 
-        // u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
+        // u primeru se registruju samo obicni korisnici i u skladu sa tim im se i
+        // dodeljuje samo rola USER
         List<UserType> roles = userTypeService.findByName("ROLE_CLIENT");
         u.setUserType(roles.get(0));
         u.setPoints(0.0);
@@ -98,7 +106,6 @@ public class ClientService {
         return false;
     }
 
-
     public List<User> getClientSubscribedToServiceProfile(Integer serviceProfileId) {
         List<User> clients = new ArrayList<>();
         for (Integer clientId : clientRepository.findClientIdBySubscription(serviceProfileId)) {
@@ -109,5 +116,10 @@ public class ClientService {
 
     public List<ServiceProfile> getClientSubscriptions(Client client) {
         return new ArrayList<>(client.getSubscriptions());
+    }
+
+    public Client findByToken(String token) {
+        String email = tokenUtils.getEmailFromToken(token);
+        return findByEmail(email);
     }
 }
