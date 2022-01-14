@@ -4,7 +4,7 @@ import isa.FishingAdventure.model.AvailabilityDateRange;
 
 import java.util.Date;
 
-public class AvailableDateRangeDto {
+public class AvailablityDateRangeDto {
 
     private Integer id;
 
@@ -14,17 +14,17 @@ public class AvailableDateRangeDto {
 
     private Date end;
 
-    public AvailableDateRangeDto(Integer id, String title, Date start, Date end) {
+    public AvailablityDateRangeDto(Integer id, String title, Date start, Date end) {
         this.id = id;
         this.title = title;
         this.start = start;
         this.end = end;
     }
 
-    public AvailableDateRangeDto() {
+    public AvailablityDateRangeDto() {
     }
 
-    public AvailableDateRangeDto(AvailabilityDateRange dateRange) {
+    public AvailablityDateRangeDto(AvailabilityDateRange dateRange) {
         this.id = dateRange.getId();
         this.start = dateRange.getStartDate();
         this.end = dateRange.getEndDate();

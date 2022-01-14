@@ -1,5 +1,6 @@
 package isa.FishingAdventure.service;
 
+import isa.FishingAdventure.dto.AvailablityDateRangeDto;
 import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.AvailabilityDateRange;
 import isa.FishingAdventure.model.ServiceProfile;
@@ -7,6 +8,7 @@ import isa.FishingAdventure.repository.AvailabilityDateRangeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,13 +34,13 @@ public class AvailabilityDateRangeService {
         return repository.save(date);
     }
 
-    public List<AvailabilityDateRange> delete(Integer dateRangeId, Integer serviceId) {
+    public List<AvailablityDateRangeDto> delete(Integer dateRangeId, Integer serviceId) {
         ServiceProfile serviceProfile = serviceProfileService.getById(serviceId);
         AvailabilityDateRange oldDateRange = getById(dateRangeId);
 
         createDateRangeForExistingAppointments(serviceProfile, oldDateRange);
         repository.deleteById(oldDateRange.getId());
-        return getAllByServiceProfileId(serviceProfile.getId());
+        return createAvailabilityDateRangeDtos(getAllByServiceProfileId(serviceProfile.getId()), serviceProfile);
     }
 
     private void createDateRangeForExistingAppointments(ServiceProfile serviceProfile, AvailabilityDateRange oldDateRange) {
@@ -58,7 +60,7 @@ public class AvailabilityDateRangeService {
         return repository.findById(id);
     }
 
-    public List<AvailabilityDateRange> updateAvailabilityDate(AvailabilityDateRange oldDateRange, Date newStartDate, Date newEndDate, Integer serviceId) {
+    public List<AvailablityDateRangeDto> updateAvailabilityDate(AvailabilityDateRange oldDateRange, Date newStartDate, Date newEndDate, Integer serviceId) {
         ServiceProfile serviceProfile = serviceProfileService.getById(serviceId);
         List<AvailabilityDateRange> dateRanges = getAllByServiceProfileId(serviceProfile.getId());
         dateRanges = checkScheduledAppointments(dateRanges, serviceProfile, newStartDate, newEndDate);
@@ -67,7 +69,15 @@ public class AvailabilityDateRangeService {
             repository.deleteById(oldDateRange.getId());
         }
         save(newDateRange);
-        return getAllByServiceProfileId(serviceProfile.getId());
+        return createAvailabilityDateRangeDtos(getAllByServiceProfileId(serviceProfile.getId()), serviceProfile);
+    }
+
+    private List<AvailablityDateRangeDto> createAvailabilityDateRangeDtos(List<AvailabilityDateRange> dateRanges, ServiceProfile profile) {
+        List<AvailablityDateRangeDto> dateRangeDtos = new ArrayList<>();
+        for (AvailabilityDateRange dateRange : dateRanges) {
+            dateRangeDtos.add(new AvailablityDateRangeDto(dateRange.getId(), profile.getName(), dateRange.getStartDate(), dateRange.getEndDate()));
+        }
+        return dateRangeDtos;
     }
 
     private AvailabilityDateRange mergeOverlapingAvailabilityDates(List<AvailabilityDateRange> dateRanges, Date newStartDate, Date newEndDate, ServiceProfile serviceProfile) {
@@ -115,5 +125,13 @@ public class AvailabilityDateRangeService {
         }
 
         return dateRanges;
+    }
+
+    public AvailabilityDateRange saveNewAvailabilityDateRange(String id, AvailablityDateRangeDto dto) {
+        AvailabilityDateRange date = new AvailabilityDateRange();
+        date.setStartDate(dto.getStart());
+        date.setEndDate(dto.getEnd());
+        date.setServiceProfile(serviceProfileService.getById(Integer.parseInt(id)));
+        return save(date);
     }
 }
