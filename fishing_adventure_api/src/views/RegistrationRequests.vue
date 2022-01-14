@@ -149,6 +149,7 @@
             <registration-request
               :id="'registration-request' + user.id"
               :user="user"
+              @rejectRequest="rejectRequest"
             ></registration-request>
           </tr>
           <!-- <tr v-if="searchResults.length == 0">
@@ -157,64 +158,27 @@
         </tbody>
       </table>
     </div>
+    <ReasonForRejectionModal
+    id="ReasonForRejectionModal"
+    :email="email"
+  ></ReasonForRejectionModal>
   </div>
 </template>
 
 <script>
 import RequestForRegistration from "@/components/Admin/RequestForRegistration.vue";
+import ReasonForRejectionModal from "@/components/Admin/ReasonForRejectionModal.vue";
 import axios from "axios";
 
 export default {
-  components: { "registration-request": RequestForRegistration },
+  components: { "registration-request": RequestForRegistration, ReasonForRejectionModal },
   data: function () {
     return {
       searchText: "",
       searchResults: [],
       selectedUser: undefined,
-      users: [`
-        {
-          id: "1",
-          name: "Curtis",
-          surname: "Lee",
-          email: "curtis_lee@gmail.com",
-          userType: "BOAT_OWNER",
-          date: "03.12.2021.",
-          telephone: "0634375921",
-          country: "Serbia",
-          city: "City",
-          street: "Street 2",
-          reason_for_registration:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum ut lectus et efficitur. Quisque finibus facilisis rutrum. Mauris sed ipsum congue, euismod mauris ac, volutpat mi. Sed sollicitudin ullamcorper varius. Ut ullamcorper ac ex a suscipit.",
-        },
-        {
-          id: "2",
-          name: "Amy",
-          surname: "Larsson",
-          email: "simon_smith@gmail.com",
-          userType: "COTTAGE_OWNER",
-          date: "01.12.2021.",
-          telephone: "0632868924",
-          country: "Germany",
-          city: "City",
-          street: "Street 7",
-          reason_for_registration:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum ut lectus et efficitur.",
-        },
-        {
-          id: "3",
-          name: "Nick",
-          surname: "Ness",
-          email: "nick@gmail.com",
-          userType: "FISHING_INSTRUCTOR",
-          date: "29.11.2021.",
-          telephone: "0634825938",
-          country: "Norway",
-          city: "City",
-          street: "Street 8",
-          reason_for_registration:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum ut lectus et efficitur.",
-        },
-      `],
+      users: [],
+      email: "",
     };
   },
   mounted: function () {
@@ -234,6 +198,12 @@ export default {
     searchUsers: function () {},
     showRequest: function (user) {
       this.selectedUser = user;
+    },
+    rejectRequest(email) {
+      this.email = email;
+      var myModal = document.getElementById("ReasonForRejectionModal");
+      var modal = window.bootstrap.Modal.getOrCreateInstance(myModal);
+      modal.show();
     },
   },
 };

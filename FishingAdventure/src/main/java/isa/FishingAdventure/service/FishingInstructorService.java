@@ -39,7 +39,7 @@ public class FishingInstructorService{
 		u.setAddress(userDto.getAddress());
 		u.setBiography(userDto.getBiography());
 		u.setDeleted(false);
-
+		u.setActivated(false);
 
 
 		List<UserType> roles = userTypeService.findByName("ROLE_FISHING_INSTRUCTOR");

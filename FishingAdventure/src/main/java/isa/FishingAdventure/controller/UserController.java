@@ -100,4 +100,18 @@ public class UserController {
 		return new ResponseEntity<>(requests, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/rejectRegistrationRequest")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<String> rejectRegistrationRequest(@RequestParam("email") String email, @RequestParam("reason") String reason) {
+		userService.rejectRegistrationRequest(email, reason);
+		return new ResponseEntity<>("ok", HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/approveRegistrationRequest/{email}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<String> approveRegistrationRequest(@PathVariable String email) {
+		userService.approveRegistrationRequest(email);
+		return new ResponseEntity<>("ok", HttpStatus.OK);
+	}
+
 }

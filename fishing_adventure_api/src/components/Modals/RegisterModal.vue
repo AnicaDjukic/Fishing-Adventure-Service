@@ -414,7 +414,7 @@ export default {
             }
             else {
               document.getElementById("msg").innerHTML =
-              "Your registration has been sent to an admin and is awaiting approval.";
+              "Your registration request has been sent to an admin for approval.";
             }
             document.getElementById("create-btn").style.visibility = "collapse";
             document.getElementById("back-btn").style.visibility = "collapse";
