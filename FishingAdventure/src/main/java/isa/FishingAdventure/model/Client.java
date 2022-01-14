@@ -28,12 +28,9 @@ public class Client extends User {
     }
 
     public Client(UserDto userDto) {
-
         super(userDto.getEmail(), userDto.getName(), userDto.getSurname(), userDto.getPassword(), userDto.getPhoneNumber(), userDto.getUserType(), userDto.getAddress(), null);
-
         this.penalties = 0;
         this.subscriptions = new HashSet<>();
-
     }
 
     public Integer getPenalties() {

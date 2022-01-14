@@ -3,9 +3,7 @@ package isa.FishingAdventure.service;
 import isa.FishingAdventure.dto.UserDto;
 import isa.FishingAdventure.dto.UserTokenState;
 import isa.FishingAdventure.exception.ResourceConflictException;
-import isa.FishingAdventure.model.Client;
-import isa.FishingAdventure.model.ConfirmationToken;
-import isa.FishingAdventure.model.User;
+import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -96,6 +94,41 @@ public class AuthenticationService {
             clientService.saveNewClient(client);
             sendRegistrationEmail(client);
         }
+    }
+
+    public void signUpHomeOwner(VacationHomeOwner vacationHomeOwner) {
+        if (userService.isEmailRegistered(vacationHomeOwner.getEmail())) {
+            throw new ResourceConflictException("Email already exists");
+        } else {
+            homeOwnerService.saveNewHomeOwner(vacationHomeOwner);
+        }
+        //TODO: send registration to admin for approval
+    }
+
+    public void signUpBoatOwner(BoatOwner boatOwner) {
+        if (userService.isEmailRegistered(boatOwner.getEmail())) {
+            throw new ResourceConflictException("Email already exists");
+        } else {
+            boatOwnerService.saveNewBoatOwner(boatOwner);
+        }
+        //TODO: send registration to admin for approval
+    }
+
+    public void signUpFishingInstructor(FishingInstructor fishingInstructor) {
+        if (userService.isEmailRegistered(fishingInstructor.getEmail())) {
+            throw new ResourceConflictException("Email already exists");
+        } else {
+            instructorService.saveNewInstructor(fishingInstructor);
+        }
+        //TODO: send registration to admin for approval
+    }
+
+    public void confirmAccount(String token) {
+        ConfirmationToken confirmationToken = confirmationTokenService.findByConfirmationToken(token);
+        Client user = clientService.findByEmail(confirmationToken.getEmail());
+        user.setActivated(true);
+        clientService.save(user);
+        confirmationTokenService.delete(confirmationToken);
     }
 
     private void sendRegistrationEmail(Client client) throws Exception {
@@ -319,13 +352,5 @@ public class AuthenticationService {
                 " </body>\n" +
                 "</html>");
         return html.toString();
-    }
-
-    public void confirmAccount(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService.findByConfirmationToken(token);
-        Client user = clientService.findByEmail(confirmationToken.getEmail());
-        user.setActivated(true);
-        clientService.save(user);
-        confirmationTokenService.delete(confirmationToken);
     }
 }

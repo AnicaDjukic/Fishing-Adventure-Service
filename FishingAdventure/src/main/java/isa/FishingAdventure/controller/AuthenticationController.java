@@ -76,41 +76,21 @@ public class AuthenticationController {
 
 
     @PostMapping("/signup/homeOwner")
-    public ResponseEntity<VacationHomeOwner> addHomeOwner(@RequestBody UserDto userDto, UriComponentsBuilder ucBuilder) throws MailException, InterruptedException {
-        VacationHomeOwner vacationHomeOwner;
-        if (userService.isEmailRegistered(userDto.getEmail())) {
-            throw new ResourceConflictException("Email already exists");
-        } else {
-            vacationHomeOwner = this.homeOwnerService.save(userDto);
-        }
-
-        return new ResponseEntity<>(vacationHomeOwner, HttpStatus.CREATED);
+    public ResponseEntity<UserDto> addHomeOwner(@RequestBody UserDto userDto) throws MailException {
+        authenticationService.signUpHomeOwner(new VacationHomeOwner(userDto));
+        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/signup/boatOwner")
-    public ResponseEntity<BoatOwner> addBoatOwner(@RequestBody UserDto userDto, UriComponentsBuilder ucBuilder) throws MailException, InterruptedException {
-        BoatOwner boatOwner;
-        if (userService.isEmailRegistered(userDto.getEmail())) {
-            throw new ResourceConflictException("Email already exists");
-        } else {
-            boatOwner = this.boatOwnerService.save(userDto);
-        }
-
-        return new ResponseEntity<>(boatOwner, HttpStatus.CREATED);
+    public ResponseEntity<UserDto> addBoatOwner(@RequestBody UserDto userDto) throws MailException {
+        authenticationService.signUpBoatOwner(new BoatOwner(userDto));
+        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/signup/fishingInstructor")
-    public ResponseEntity<FishingInstructor> addFishingInstructor(@RequestBody UserDto userDto, UriComponentsBuilder ucBuilder) throws MailException, InterruptedException {
-        FishingInstructor fishingInstructor;
-        if (userService.isEmailRegistered(userDto.getEmail())) {
-            throw new ResourceConflictException("Email already exists");
-        } else {
-            fishingInstructor = this.instructorService.save(userDto);
-        }
-
-        //TODO: send registration to admin for approval
-
-        return new ResponseEntity<>(fishingInstructor, HttpStatus.CREATED);
+    public ResponseEntity<UserDto> addFishingInstructor(@RequestBody UserDto userDto) throws MailException {
+        authenticationService.signUpFishingInstructor(new FishingInstructor(userDto));
+        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/confirm-account")

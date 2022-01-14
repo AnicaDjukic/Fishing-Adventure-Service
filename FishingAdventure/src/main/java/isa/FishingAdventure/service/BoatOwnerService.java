@@ -35,26 +35,12 @@ public class BoatOwnerService {
 	public BoatOwner findByEmail(String email) {
 		return (BoatOwner)boatOwnerRepository.findByEmail(email);
 	}
-	
-	public BoatOwner save(UserDto userDto) {
-		BoatOwner u = new BoatOwner();
-		u.setEmail(userDto.getEmail());
 
-		u.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		u.setName(userDto.getName());
-		u.setSurname(userDto.getSurname());
-		u.setPhoneNumber(userDto.getPhoneNumber());
-		u.setEmail(userDto.getEmail());
-		u.setAddress(userDto.getAddress());
-		u.setBiography(userDto.getBiography());
-		u.setDeleted(false);
-		u.setActivated(false);
-
+	public void saveNewBoatOwner(BoatOwner boatOwner){
+		boatOwner.setPassword(passwordEncoder.encode(boatOwner.getPassword()));
 		List<UserType> roles = userTypeService.findByName("ROLE_BOAT_OWNER");
-		u.setUserType(roles.get(0));
-		u.setPoints(0.0);
-		
-		return this.boatOwnerRepository.save(u);
+		boatOwner.setUserType(roles.get(0));
+		boatOwnerRepository.save(boatOwner);
 	}
 
 	public boolean isBoatOwnerAvailableForDateRange(Integer boatId, Date start, Date end) {

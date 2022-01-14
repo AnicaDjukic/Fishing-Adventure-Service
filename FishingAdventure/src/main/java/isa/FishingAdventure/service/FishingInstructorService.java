@@ -27,26 +27,11 @@ public class FishingInstructorService{
 		return fishingInstructorRepository.findByEmail(email);
 	}
 
-	public FishingInstructor save(UserDto userDto) {
-		FishingInstructor u = new FishingInstructor();
-		u.setEmail(userDto.getEmail());
-
-		u.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		u.setName(userDto.getName());
-		u.setSurname(userDto.getSurname());
-		u.setPhoneNumber(userDto.getPhoneNumber());
-		u.setEmail(userDto.getEmail());
-		u.setAddress(userDto.getAddress());
-		u.setBiography(userDto.getBiography());
-		u.setDeleted(false);
-		u.setActivated(false);
-
-
+	public void saveNewInstructor(FishingInstructor fishingInstructor) {
+		fishingInstructor.setPassword(passwordEncoder.encode(fishingInstructor.getPassword()));
 		List<UserType> roles = userTypeService.findByName("ROLE_FISHING_INSTRUCTOR");
-		u.setUserType(roles.get(0));
-		u.setPoints(0.0);
-		
-		return this.fishingInstructorRepository.save(u);
+		fishingInstructor.setUserType(roles.get(0));
+		fishingInstructorRepository.save(fishingInstructor);
 	}
 
 	public List<isa.FishingAdventure.model.User> findAll() {

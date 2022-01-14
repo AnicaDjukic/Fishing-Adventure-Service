@@ -1,5 +1,7 @@
 package isa.FishingAdventure.model;
 
+import isa.FishingAdventure.dto.UserDto;
+
 import javax.persistence.Entity;
 
 import java.sql.Timestamp;
@@ -11,7 +13,12 @@ public class VacationHomeOwner extends User {
         super(email, name, surname, password, phoneNumber, userType, address, lastPasswordResetDate);
     }
 
-    public VacationHomeOwner() {
+    public VacationHomeOwner(UserDto userDto){
+        super(userDto.getEmail(), userDto.getName(), userDto.getSurname(), userDto.getPassword(), userDto.getPhoneNumber(), userDto.getUserType(), userDto.getAddress(), null);
     }
 
+
+
+    public VacationHomeOwner() {
+    }
 }
