@@ -24,7 +24,7 @@ public class BoatOwnerController {
 
 	@GetMapping(value = "/available/dateRange")
 	@Transactional
-	public ResponseEntity<Boolean> getIsCottageAvailable(@RequestParam("id") Integer boatId,
+	public ResponseEntity<Boolean> getIsBoatOwnerAvailable(@RequestParam("id") Integer boatId,
 			@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
 			@RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
 

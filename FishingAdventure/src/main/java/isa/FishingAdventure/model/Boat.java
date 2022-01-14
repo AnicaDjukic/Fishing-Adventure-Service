@@ -1,6 +1,5 @@
 package isa.FishingAdventure.model;
 
-import isa.FishingAdventure.dto.BoatDto;
 import isa.FishingAdventure.dto.NewBoatDto;
 
 import javax.persistence.*;
@@ -34,7 +33,10 @@ public class Boat extends ServiceProfile {
     @ManyToMany(targetEntity = FishingEquipment.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     public Set<FishingEquipment> fishingEquipment;
 
-    public Boat(String name, String description, double cancellationRule, double rating, Location location, Set<Rule> rules, Set<AdditionalService> additionalServices, int persons, String type, int length, int motorNumber, double motorPower, double maxSpeed, BoatOwner boatOwner, Set<NavigationEquipment> navigationEquipment, Set<FishingEquipment> fishingEquipment) {
+    public Boat(String name, String description, double cancellationRule, double rating, Location location,
+            Set<Rule> rules, Set<AdditionalService> additionalServices, int persons, String type, int length,
+            int motorNumber, double motorPower, double maxSpeed, BoatOwner boatOwner,
+            Set<NavigationEquipment> navigationEquipment, Set<FishingEquipment> fishingEquipment) {
         super(name, description, cancellationRule, rating, location, rules, additionalServices, persons);
         this.type = type;
         this.length = length;
@@ -50,7 +52,8 @@ public class Boat extends ServiceProfile {
     }
 
     public Boat(NewBoatDto dto) {
-        super(dto.getName(), dto.getDescription(), dto.getCancellationRule(), 0.0, dto.getLocation(), dto.getRules(), dto.getAdditionalServices(), dto.getPersons());
+        super(dto.getName(), dto.getDescription(), dto.getCancellationRule(), 0.0, dto.getLocation(), dto.getRules(),
+                dto.getAdditionalServices(), dto.getPersons());
         this.type = dto.getType();
         this.length = dto.getLength();
         this.motorNumber = dto.getMotorNumber();
@@ -105,26 +108,21 @@ public class Boat extends ServiceProfile {
         return boatOwner;
     }
 
-
     public void setBoatOwner(BoatOwner boatOwner) {
         this.boatOwner = boatOwner;
     }
-
 
     public Set<NavigationEquipment> getNavigationEquipment() {
         return navigationEquipment;
     }
 
-
     public void setNavigationEquipment(Set<NavigationEquipment> navigationEquipment) {
         this.navigationEquipment = navigationEquipment;
     }
 
-
     public Set<FishingEquipment> getFishingEquipment() {
         return fishingEquipment;
     }
-
 
     public void setFishingEquipment(Set<FishingEquipment> fishingEquipment) {
         this.fishingEquipment = fishingEquipment;

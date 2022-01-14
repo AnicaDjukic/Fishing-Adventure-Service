@@ -1,6 +1,5 @@
 package isa.FishingAdventure.service;
 
-import isa.FishingAdventure.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -18,12 +17,6 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
-
-    @Autowired
-    private ConfirmationTokenService confirmationTokenService;
-
-    @Autowired
-    private TokenUtils tokenUtils;
 
     @Autowired
     private Environment env;

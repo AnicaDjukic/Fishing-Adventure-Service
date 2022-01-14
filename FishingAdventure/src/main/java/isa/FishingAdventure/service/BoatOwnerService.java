@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import isa.FishingAdventure.dto.UserDto;
 import isa.FishingAdventure.model.BoatOwner;
 import isa.FishingAdventure.model.UserType;
 import isa.FishingAdventure.repository.BoatOwnerRepository;
@@ -22,21 +21,19 @@ public class BoatOwnerService {
 	private BoatOwnerRepository boatOwnerRepository;
 
 	@Autowired
-	private  BoatService boatService;
+	private BoatService boatService;
 
 	@Autowired
-	private AppointmentService appointmentService;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder;
+
 	@Autowired
 	private UserTypeService userTypeService;
 
 	public BoatOwner findByEmail(String email) {
-		return (BoatOwner)boatOwnerRepository.findByEmail(email);
+		return (BoatOwner) boatOwnerRepository.findByEmail(email);
 	}
 
-	public void saveNewBoatOwner(BoatOwner boatOwner){
+	public void saveNewBoatOwner(BoatOwner boatOwner) {
 		boatOwner.setPassword(passwordEncoder.encode(boatOwner.getPassword()));
 		List<UserType> roles = userTypeService.findByName("ROLE_BOAT_OWNER");
 		boatOwner.setUserType(roles.get(0));
@@ -47,19 +44,21 @@ public class BoatOwnerService {
 		Boat boat = boatService.getById(boatId);
 		BoatOwner boatOwner = boat.getBoatOwner();
 		List<Boat> ownerBoats = new ArrayList<Boat>();
-		for(Boat b : boatService.findAllNonDeleted()){
-			if(b.getId().equals(boatId))
+		for (Boat b : boatService.findAllNonDeleted()) {
+			if (b.getId().equals(boatId))
 				continue;
 
-			if(b.getBoatOwner().getUserId().equals(boatOwner.getUserId())){
+			if (b.getBoatOwner().getUserId().equals(boatOwner.getUserId())) {
 				ownerBoats.add(b);
 			}
 
 		}
 		boolean available = true;
-		for(Boat b : ownerBoats){
-			for(Appointment ap : b.getAppointments()){
-				if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate())) || (end.after(ap.getStartDate()) && end.before(ap.getEndDate())) || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
+		for (Boat b : ownerBoats) {
+			for (Appointment ap : b.getAppointments()) {
+				if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
+						|| (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
+						|| (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
 					if (ap.getOwnerPresence().equals(true)) {
 						available = false;
 						break;
