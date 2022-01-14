@@ -60,24 +60,19 @@ public abstract class User implements UserDetails {
 	public User() {
 	}
 
-	public User(Integer userId, String email, String password, String name, String surname, String phoneNumber,
-			UserType userType, double points, UserCategory category, boolean activated, Address address,
-			Timestamp lastPasswordResetDate) {
-		super();
-		this.userId = userId;
-		this.isDeleted = false;
+	public User(String email, String name, String surname, String password, String phoneNumber, UserType userType, Address address, Timestamp lastPasswordResetDate) {
 		this.email = email;
-		this.password = password;
+		this.isDeleted = false;
 		this.name = name;
 		this.surname = surname;
+		this.password = password;
 		this.phoneNumber = phoneNumber;
+		this.biography = "";
 		this.userType = userType;
-		this.points = points;
-		this.category = category;
-		this.activated = activated;
+		this.points = 0.0;
+		this.activated = false;
 		this.address = address;
 		this.lastPasswordResetDate = lastPasswordResetDate;
-		this.biography = "";
 	}
 
 	public String getBiography() {

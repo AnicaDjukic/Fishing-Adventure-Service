@@ -243,14 +243,17 @@ export default {
       this.loggedInRole = undefined;
     } else {
       axios
-        .get("http://localhost:8080/users/getRole", {
+        .get("http://localhost:8080/users/getRoleIfActivated", {
           headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
         .then((res) => {
-          this.loggedInRole = res.data;
+          if(res.data != '')
+            this.loggedInRole = res.data;
+          else
+            window.location.href = "/";
         });
     }
   },

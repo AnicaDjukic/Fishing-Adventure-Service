@@ -1,5 +1,6 @@
 package isa.FishingAdventure.service;
 
+import isa.FishingAdventure.dto.AppointmentDto;
 import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.model.User;
@@ -76,7 +77,7 @@ public class AppointmentService {
         return savedAppointment.getAppointmentId();
     }
 
-    public List<Appointment> getOffersByAdvertiser(String token) {
+    public List<AppointmentDto> getOffersByAdvertiser(String token) {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         User advertiser = userService.findByEmail(email);
 
@@ -93,7 +94,7 @@ public class AppointmentService {
                 break;
         }
 
-        return appointments;
+        return createAppointmentDtos(appointments);
     }
 
     public List<Appointment> getValidAppointements(List<Appointment> appointments) {
@@ -108,9 +109,20 @@ public class AppointmentService {
         return validAppointments;
     }
 
-    public List<Appointment> getOffersByServiceId(Integer id) {
+    public List<AppointmentDto> getOffersByServiceId(Integer id) {
         ServiceProfile serviceProfile = serviceProfileService.getById(id);
-        return new ArrayList<>(getValidAppointements(new ArrayList<>(serviceProfile.getAppointments())));
+        return new ArrayList<>(createAppointmentDtos(getValidAppointements(new ArrayList<>(serviceProfile.getAppointments()))));
+    }
+
+    private List<AppointmentDto> createAppointmentDtos(List<Appointment> appointments) {
+        List<AppointmentDto> appointmentDtos = new ArrayList<>();
+        if (appointments != null) {
+            for (Appointment appointment : appointments) {
+                ServiceProfile profile = serviceProfileService.getByAppointmentsIsContaining(appointment);
+                appointmentDtos.add(new AppointmentDto(appointment, profile));
+            }
+        }
+        return appointmentDtos;
     }
 
     public Appointment findById(Integer id) {

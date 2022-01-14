@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import isa.FishingAdventure.repository.UserRepository;
+import isa.FishingAdventure.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,15 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private EmailService emailService;
+
+
+	public String getRoleIfActivated(String email) {
+		User user = findByEmail(email);
+		String retVal = "";
+		if(user.isActivated())
+			retVal = user.getUserType().getName();
+		return retVal;
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -105,8 +115,7 @@ public class UserService implements UserDetailsService {
 			title = "Registration request rejected";
 			body = "Unfortunately your registration was not approved due to the following reason: \n"
 					+ reason;
-		}
-		else {
+		} else {
 			title = "WELCOME!";
 			body = "We're excited to start working with you! Your account has been activated, press the button below so you&nbsp;can start setting up your profile.";
 		}

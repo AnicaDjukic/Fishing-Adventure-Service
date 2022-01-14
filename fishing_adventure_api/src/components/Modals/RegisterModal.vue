@@ -361,8 +361,10 @@ export default {
         })
         .then((res) => {
           window.location.reload();
-          localStorage.setItem("jwt", res.data.accessToken);
-          localStorage.setItem("refreshToken", res.data.refreshToken);
+          if(res.data != "") {
+            localStorage.setItem("jwt", res.data.accessToken);
+            localStorage.setItem("refreshToken", res.data.refreshToken);
+          }
         });
     },
     registerUser: function () {

@@ -58,7 +58,14 @@ public class ClientService {
     }
 
     public Client save(Client client) {
-        return this.clientRepository.save(client);
+        return clientRepository.save(client);
+    }
+
+    public void saveNewClient(Client client) {
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
+        List<UserType> roles = userTypeService.findByName("ROLE_CLIENT");
+        client.setUserType(roles.get(0));
+        clientRepository.save(client);
     }
 
     public boolean subscribe(Client client, Integer id) {

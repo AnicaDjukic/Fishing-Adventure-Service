@@ -24,33 +24,18 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    @Autowired
-    private ServiceProfileService serviceProfileService;
-
     @GetMapping(value = "/getOffersByAdvertiser")
     @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
     @Transactional
     public ResponseEntity<List<AppointmentDto>> getOffersByAdvertiser(@RequestHeader("Authorization") String token) {
-        return new ResponseEntity<>(createAppointmentDtos(appointmentService.getOffersByAdvertiser(token)),
+        return new ResponseEntity<>(appointmentService.getOffersByAdvertiser(token),
                 HttpStatus.OK);
     }
 
     @GetMapping(value = "/getOffersByServiceId/{id}")
     @Transactional
     public ResponseEntity<List<AppointmentDto>> getOffersByServiceId(@PathVariable String id) {
-        return new ResponseEntity<>(
-                createAppointmentDtos(appointmentService.getOffersByServiceId(Integer.parseInt(id))), HttpStatus.OK);
-    }
-
-    private List<AppointmentDto> createAppointmentDtos(List<Appointment> appointments) {
-        List<AppointmentDto> appointmentDtos = new ArrayList<>();
-        if (appointments != null) {
-            for (Appointment appointment : appointments) {
-                ServiceProfile profile = serviceProfileService.getByAppointmentsIsContaining(appointment);
-                appointmentDtos.add(new AppointmentDto(appointment, profile));
-            }
-        }
-        return appointmentDtos;
+        return new ResponseEntity<>(appointmentService.getOffersByServiceId(Integer.parseInt(id)), HttpStatus.OK);
     }
 
     @PostMapping(value = "/create")

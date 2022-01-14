@@ -23,11 +23,23 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   name: "ConfirmToken",
+  mounted() {
+    axios
+      .get("http://localhost:8080/auth/confirm-account?token=" + this.$route.query.token, {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8080",
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then();
+  },
   methods: {
     btnClick: function () {
       window.location.href = "/";
+      
     },
   },
 };

@@ -29,13 +29,13 @@ public class UserController {
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private EmailService emailService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private TokenUtils tokenUtils;
@@ -51,6 +51,12 @@ public class UserController {
 	@RequestMapping(value = "getRole", method = RequestMethod.GET)
 	public @ResponseBody String getRole(@RequestHeader("Authorization") String token) {
 		return tokenUtils.getRoleFromToken(token.split(" ")[1]);
+	}
+
+	@RequestMapping(value = "getRoleIfActivated", method = RequestMethod.GET)
+	public @ResponseBody String getRoleIfActivated(@RequestHeader("Authorization") String token) {
+		String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
+		return userService.getRoleIfActivated(email);
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.PUT)
