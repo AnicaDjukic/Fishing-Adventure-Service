@@ -189,6 +189,7 @@
                   >
                 </li>
                 <li><a class="dropdown-item" href="/users">All Users</a></li>
+                 <li><a class="dropdown-item" href="/deleteRequests">Deletion requests</a></li>
               </ul>
             </li>
           </ul>

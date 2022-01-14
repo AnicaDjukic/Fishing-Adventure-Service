@@ -165,10 +165,10 @@ const routes = [{
         checkAuthentification()
     }
 }, {
-    path: '/admin/profile',
-    name: 'AdminProfile',
+    path: '/deleteRequests',
+    name: 'DeleteRequests',
     component: () =>
-        import ('../views/AdminProfile.vue')
+        import ('../views/DeleteRequests.vue')
 }, {
     path: '/users',
     name: 'AllUsers',

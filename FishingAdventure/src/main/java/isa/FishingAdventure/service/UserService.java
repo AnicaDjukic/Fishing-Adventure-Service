@@ -1,10 +1,12 @@
 package isa.FishingAdventure.service;
 
+import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.model.User;
 
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import isa.FishingAdventure.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,13 @@ public class UserService implements UserDetailsService {
 
 	public void save(User user) {
 		repository.save(user);
+	}
+
+	public void delete(String email) {
+		User user = findByEmail(email);
+		user.setActivated(false);
+		user.setDeleted(true);
+		save(user);
 	}
 
 	public Boolean isEmailRegistered(String email) {
@@ -246,7 +255,7 @@ public class UserService implements UserDetailsService {
 				"                       <!--<![endif]--></td> \n" +
 				"                     </tr> \n" +
 				"                     <tr style=\"border-collapse:collapse\"> \n" +
-				"                      <td align=\"left\" style=\"padding:0;Margin:0;padding-bottom:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:30px;color:#262626;font-size:20px\">If you have any questions, just reply to this email—we're always happy to help out.</p></td> \n" +
+				"                      <td align=\"left\" style=\"padding:0;Margin:0;padding-bottom:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:30px;color:#262626;font-size:20px\">If you have any questions, just reply to this email - we're always happy to help out.</p></td> \n" +
 				"                     </tr> \n" +
 				"                     <tr style=\"border-collapse:collapse\"> \n" +
 				"                      <td align=\"left\" style=\"padding:0;Margin:0;padding-bottom:20px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:30px;color:#262626;font-size:20px\"><strong>Cheers, The Developer Team</strong></p></td> \n" +

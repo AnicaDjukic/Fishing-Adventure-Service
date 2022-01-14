@@ -138,13 +138,13 @@ VALUES (5, 'ROLE_BOAT_OWNER');
 
 INSERT INTO admin
 VALUES (113, true, '', 'admin1@gmail.com', false, NULL, 'Natalie',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Jones', 101, NULL, 4);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Jones', 101, NULL, 4, true);
 INSERT INTO admin
 VALUES (114, true, '', 'admin2@gmail.com', false, NULL, 'Billy',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Morales', 102, NULL, 4);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Morales', 102, NULL, 4, false);
 INSERT INTO admin
 VALUES (115, true, '', 'admin3@gmail.com', false, NULL, 'Toby',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Dale', 108, NULL, 4);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Dale', 108, NULL, 4, false);
 
 
 --

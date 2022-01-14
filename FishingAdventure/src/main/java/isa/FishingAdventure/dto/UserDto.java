@@ -23,6 +23,8 @@ public class UserDto {
 
 	private String biography;
 
+	private String role;
+
 	public UserDto() {}
 
 	public UserDto(Integer id, String email, String password, String name, String surname, String phoneNumber,
@@ -36,6 +38,7 @@ public class UserDto {
 		this.phoneNumber = phoneNumber;
 		this.userType = userType;
 		this.biography = biography;
+		this.role = userType.getName();
 	}
 
 	public UserDto(String email, String password, String name) {
@@ -43,6 +46,14 @@ public class UserDto {
 		this.email = email;
 		this.password = password;
 		this.name = name;
+	}
+
+	public UserDto(String email, String name, String surname, UserType userType) {
+		this.email = email;
+		this.name = name;
+		this.surname = surname;
+		this.userType = userType;
+		this.role = userType.getName();
 	}
 
 	public String getBiography() {
@@ -115,5 +126,13 @@ public class UserDto {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 }

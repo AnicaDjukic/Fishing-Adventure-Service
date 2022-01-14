@@ -78,3 +78,23 @@
     transition: 0.5s;
     color: white;
 }
+
+.green-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #188D56;
+    font-weight: bold;
+    border: 1px solid #188D56;
+    padding: 10px 30px;
+    font-size: 15px;
+    margin: 4px;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+}
+
+.green-btn:hover {
+    background: #0c442a;
+    transition: 0.5s;
+    color: white;
+}

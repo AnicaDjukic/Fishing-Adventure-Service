@@ -24,7 +24,7 @@ public class AdminService{
 	private UserTypeService userTypeService;
 
 	public Admin findByEmail(String email) {
-		return (Admin) adminRepository.findByEmail(email);
+		return adminRepository.findByEmail(email);
 	}
 
 	public Admin save(UserDto userDto) {

@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="title">
-      <h1>All users</h1>
+      <h1>Deletion requests</h1>
       <i
-        class="far fa-users fa-3x"
+        class="far fa-user-times fa-3x"
         style="font-family: 'Font Awesome 5 Pro'"
       ></i>
     </div>
@@ -18,15 +18,6 @@
         class="container w-100 row row-cols-1 row-cols-sm-1 row-cols-md-4"
         style="justify-content: space-evenly; align-items: center"
       >
-        <div class="col-md-2">
-          <button
-            type="button"
-            class="btn btn-outline-primary text-nowrap me-2"
-            data-bs-toggle="modal"
-          >
-            Add new admin
-          </button>
-        </div>
         <div class="col-md-3">
           <input
             class="form-control me-2"
@@ -34,8 +25,8 @@
             placeholder="Search"
             aria-label="Search"
             v-model="searchText"
-            v-on:keyup="searchUsers"
-            v-on:click="searchUsers"
+            v-on:keyup="searchRequests"
+            v-on:click="searchRequests"
           />
         </div>
         <div class="col-md-4">
@@ -43,7 +34,7 @@
             <div
               class="rating-div form-control"
               style="min-width: 115px;"
-              v-on:click="searchUsers"
+              v-on:click="searchRequests"
               
             >
                <div class="nav-item dropdown">
@@ -95,28 +86,37 @@
             <thead>
                 <tr>
                     <th>Role</th>
-                    <th v-on:click="sortByName" id="name-th">Name <i class="fa fa-sort"></i></th>
-                    <th v-on:click="sortBySurname" id="surname-th">Surname <i class="fa fa-sort"></i></th>
-                    <th v-on:click="sortByEmail" id="email-th">Email <i class="fa fa-sort"></i></th>
+                    <th v-on:click="sortByDate" id="name-th">
+                        Date of request
+                    </th>
+                    <th v-on:click="sortByName" id="name-th">Email </th>
+                    <th v-on:click="sortBySurname" id="surname-th">Reason </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in users" :key="user.id" v-bind:user="user">
+                <tr v-for="request in requests" :key="request.id" v-bind:request="request">
                     <td>
-                        <i v-if="user.role == 'ROLE_CLIENT'" class="fas fa-user fa-lg" style="color:#003148" aria-hidden="true"></i>
-                        <i v-else-if="user.role == 'ROLE_ADMIN'" class="fas fa-cog fa-lg" style="color:#003148" aria-hidden="true"></i>
-                        <i v-else-if="user.role == 'ROLE_FISHING_INSTRUCTOR'" class="fas fa-fish fa-lg" style="color:#003148" aria-hidden="true"></i>
-                        <i v-else-if="user.role == 'ROLE_VACATION_HOME_OWNER'" class="fas fa-home fa-lg" style="color:#003148" aria-hidden="true"></i>
-                        <i v-else-if="user.role == 'ROLE_BOAT_OWNER'" class="fas fa-anchor fa-lg" style="color:#003148" aria-hidden="true"></i>
+                        <i v-if="request.role == 'ROLE_CLIENT'" class="fas fa-user fa-lg" style="color:#003148" aria-hidden="true"></i>
+                        <i v-else-if="request.role == 'ROLE_ADMIN'" class="fas fa-cog fa-lg" style="color:#003148" aria-hidden="true"></i>
+                        <i v-else-if="request.role == 'ROLE_FISHING_INSTRUCTOR'" class="fas fa-fish fa-lg" style="color:#003148" aria-hidden="true"></i>
+                        <i v-else-if="request.role == 'ROLE_VACATION_HOME_OWNER'" class="fas fa-home fa-lg" style="color:#003148" aria-hidden="true"></i>
+                        <i v-else-if="request.role == 'ROLE_BOAT_OWNER'" class="fas fa-anchor fa-lg" style="color:#003148" aria-hidden="true"></i>
                         </td>
-                    <td>{{user.name}}</td>
-                    <td>{{user.surname}}</td>
-                    <td>{{user.email}}</td>
+                    <td>{{request.dateCreated}}</td>
+                    <td>{{request.email}}</td>
+                    <td>{{request.requestContent}} </td>
                     <td>
-                         <button class="black-btn" v-if="user.role =='ROLE_ADMIN'"  disabled ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                        <button class="black-btn" v-else ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                        <button class="green-btn"
+                        data-bs-toggle="modal"
+                        :data-bs-target="'#deletion-request' + request.id"
+                        > Respond</button>
                     </td>
+
+                    <deletion-request
+                    :id="'deletion-request' + request.id"
+                    :request="request"
+                    ></deletion-request>
                 </tr>
                 <!-- <tr v-if="searchResults.length == 0">
                     <td colspan="6"><h3  style="text-align:center" >No users found</h3></td>
@@ -130,29 +130,31 @@
 </template>
 
 <script>
+import ReasonForDeletionModal from "@/components/Admin/ReasonForDeletionModal.vue";
 import axios from "axios";
 export default {
+  components: { "deletion-request": ReasonForDeletionModal },
   data: function () {
     return {
       searchText: "",
       searchResults: [],
-      users: []
+      requests: []
     };
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/users/getAllUsers", {
+      .get("http://localhost:8080/deleteRequest/getDeleteRequests", {
         headers: {
           "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
       .then((res) => {
-        this.users = res.data;
+        this.requests = res.data;
       });
   },
   methods: {
-    searchUsers: function () {
+    searchRequests: function () {
 
     },
   },

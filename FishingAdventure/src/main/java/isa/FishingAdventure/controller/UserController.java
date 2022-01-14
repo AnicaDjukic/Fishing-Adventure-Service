@@ -1,6 +1,7 @@
 package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.RegistrationRequestDto;
+import isa.FishingAdventure.dto.UserDto;
 import isa.FishingAdventure.security.util.TokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,19 @@ public class UserController {
 
 		userService.save(user);
 		return dto;
+	}
+
+	@GetMapping(value="getAllUsers")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<List<UserDto>> getAllUsers() {
+		List<User> users = userService.findAllNotDeleted();
+		List<UserDto> userDtos = new ArrayList<>();
+		for (User user : users) {
+			UserDto userDto = new UserDto(user.getEmail(), user.getName(), user.getSurname(), user.getUserType());
+			userDtos.add(userDto);
+		}
+
+		return new ResponseEntity<>(userDtos, HttpStatus.OK);
 	}
 
 	@GetMapping(value="getAllRegistrationRequests")
