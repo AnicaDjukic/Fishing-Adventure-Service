@@ -2,6 +2,8 @@ package isa.FishingAdventure.service;
 
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.VacationHomeRepository;
+import isa.FishingAdventure.security.util.TokenUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,18 @@ public class VacationHomeService {
 
     @Autowired
     private VacationHomeRepository homeRepository;
+
+    @Autowired
+    private TokenUtils tokenUtils;
+
     @Autowired
     private AvailabilityDateRangeService dateRangeService;
 
     @Autowired
     private VacationHomeOwnerService ownerService;
+
+    @Autowired
+    private ServiceProfileService profileService;
 
     public List<VacationHome> findAllNonDeleted() {
         List<VacationHome> homes = new ArrayList<VacationHome>();
@@ -150,5 +159,22 @@ public class VacationHomeService {
     public int getMaxPersons(Integer id) {
         VacationHome vacationHome = homeRepository.findById(id).orElse(new VacationHome());
         return vacationHome.getPersons();
+    }
+
+    public List<VacationHome> findByVacationHomeOwnerToken(String token) {
+        String email = tokenUtils.getEmailFromToken(token);
+        VacationHomeOwner owner = ownerService.findByEmail(email);
+        return findByVacationHomeOwner(owner);
+    }
+
+    public void deleteById(int id) {
+        profileService.delete(id);
+    }
+
+    public void saveNewHome(VacationHome vacationHome, String token) {
+        String email = tokenUtils.getEmailFromToken(token);
+        VacationHomeOwner owner = ownerService.findByEmail(email);
+        vacationHome.setVacationHomeOwner(owner);
+        save(vacationHome);
     }
 }

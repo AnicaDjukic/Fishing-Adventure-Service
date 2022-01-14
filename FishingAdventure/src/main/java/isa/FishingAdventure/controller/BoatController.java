@@ -90,8 +90,28 @@ public class BoatController {
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
     @Transactional
     public ResponseEntity<NewBoatDto> updateBoat(@PathVariable String id, @RequestBody NewBoatDto dto) {
-        boatService.update(Integer.parseInt(id), dto);
+        Boat oldBoat = boatService.getById(Integer.parseInt(id));
+        boatService.save(updateBoat(oldBoat, dto));
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    private Boat updateBoat(Boat boat, NewBoatDto dto) {
+        boat.setType(dto.getType());
+        boat.setMaxSpeed(dto.getMaxSpeed());
+        boat.setLength(dto.getLength());
+        boat.setMotorNumber(dto.getMotorNumber());
+        boat.setMotorPower(dto.getMotorPower());
+        boat.setName(dto.getName());
+        boat.setDescription(dto.getDescription());
+        boat.setCancellationRule(dto.getCancellationRule());
+        boat.setAdditionalServices(dto.getAdditionalServices());
+        boat.setFishingEquipment(dto.getFishingEquipments());
+        boat.setNavigationEquipment(dto.getNavigationEquipments());
+        boat.setRules(dto.getRules());
+        boat.setPersons(dto.getPersons());
+        boat.setLocation(dto.getLocation());
+
+        return boat;
     }
 
     @Transactional

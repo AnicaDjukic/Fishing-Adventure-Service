@@ -1,6 +1,5 @@
 package isa.FishingAdventure.service;
 
-import isa.FishingAdventure.dto.NewBoatDto;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.BoatRepository;
 import isa.FishingAdventure.security.util.TokenUtils;
@@ -49,7 +48,6 @@ public class BoatService {
         }
         return boats;
     }
-
 
     public List<Boat> findByBoatOwnerToken(String token) {
         String email = tokenUtils.getEmailFromToken(token);
@@ -181,37 +179,13 @@ public class BoatService {
     public void saveNewBoat(Boat boat, String token) {
         String email = tokenUtils.getEmailFromToken(token);
         BoatOwner owner = ownerService.findByEmail(email);
-        for(FishingEquipment fe: boat.getFishingEquipment()) {
+        for (FishingEquipment fe : boat.getFishingEquipment()) {
             fishingEquipmentService.save(fe);
         }
-        for(NavigationEquipment ne: boat.getNavigationEquipment()) {
+        for (NavigationEquipment ne : boat.getNavigationEquipment()) {
             navigationEquipmentService.save(ne);
         }
         boat.setBoatOwner(owner);
         save(boat);
-    }
-
-    public void update(Integer id, NewBoatDto dto) {
-        Boat oldBoat = getById(id);
-        save(updateBoat(oldBoat, dto));
-    }
-
-    private Boat updateBoat(Boat boat, NewBoatDto dto) {
-        boat.setType(dto.getType());
-        boat.setMaxSpeed(dto.getMaxSpeed());
-        boat.setLength(dto.getLength());
-        boat.setMotorNumber(dto.getMotorNumber());
-        boat.setMotorPower(dto.getMotorPower());
-        boat.setName(dto.getName());
-        boat.setDescription(dto.getDescription());
-        boat.setCancellationRule(dto.getCancellationRule());
-        boat.setAdditionalServices(dto.getAdditionalServices());
-        boat.setFishingEquipment(dto.getFishingEquipments());
-        boat.setNavigationEquipment(dto.getNavigationEquipments());
-        boat.setRules(dto.getRules());
-        boat.setPersons(dto.getPersons());
-        boat.setLocation(dto.getLocation());
-
-        return boat;
     }
 }
