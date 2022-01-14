@@ -225,7 +225,6 @@ public class ReservationService {
                 }
             }
         }
-
         return reservationDtos;
     }
 
@@ -632,7 +631,6 @@ public class ReservationService {
                 }
             }
         }
-
         return reservations;
     }
 
@@ -646,7 +644,6 @@ public class ReservationService {
                     || (start.before(r.getAppointment().getStartDate()) && end.after(r.getAppointment().getEndDate())))
                 return true;
         }
-
         return false;
     }
 }

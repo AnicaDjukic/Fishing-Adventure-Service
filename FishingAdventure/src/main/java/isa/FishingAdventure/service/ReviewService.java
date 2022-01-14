@@ -27,7 +27,6 @@ public class ReviewService {
             if (review.getReservation().getReservationId().equals(reservationId))
                 return true;
         }
-
         return false;
     }
 }

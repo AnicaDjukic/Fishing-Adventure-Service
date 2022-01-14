@@ -89,7 +89,6 @@ public class Appointment {
         for (AdditionalService as : dto.getChosenServices()) {
             this.chosenServices.add(as);
         }
-
     }
 
     public Appointment(NewReservationDto dto) {

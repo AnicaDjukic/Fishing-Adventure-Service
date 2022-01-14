@@ -12,14 +12,15 @@ public class ConfirmationToken {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "confirmation_token", length = 1024)
 	private String token;
-	
-	public ConfirmationToken() {}
+
+	public ConfirmationToken() {
+	}
 
 	public ConfirmationToken(Integer id, String email, String confirmationToken) {
 		super();
@@ -27,8 +28,6 @@ public class ConfirmationToken {
 		this.email = email;
 		this.token = confirmationToken;
 	}
-
-
 
 	public Integer getId() {
 		return id;
