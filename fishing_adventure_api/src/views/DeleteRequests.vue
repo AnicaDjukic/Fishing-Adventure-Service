@@ -86,11 +86,11 @@
             <thead>
                 <tr>
                     <th>Role</th>
-                    <th v-on:click="sortByDate" id="name-th">
+                    <th>
                         Date of request
                     </th>
-                    <th v-on:click="sortByName" id="name-th">Email </th>
-                    <th v-on:click="sortBySurname" id="surname-th">Reason </th>
+                    <th>Email </th>
+                    <th>Reason </th>
                     <th></th>
                 </tr>
             </thead>

@@ -123,7 +123,11 @@
                 </tr> -->
             </tbody>
         </table>
-      
+        <div class="loyalty-button">
+          <button type="button" class="btn btn-secondary" style="background-color: #DAA520; color: black; font-size: 105%">
+           <i class="fas fa-crown"></i> Loyalty program
+          </button>
+        </div>
     </div>
   </div>
  

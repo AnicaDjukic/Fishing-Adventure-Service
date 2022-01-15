@@ -71,7 +71,7 @@ public class AppointmentService {
         List<User> clients = clientService.getClientSubscribedToServiceProfile(serviceProfileId);
 
         for (User client : clients) {
-            String emailText = createEmail(client, newAppointment, serviceProfile);
+            String emailText = createEmail(newAppointment, serviceProfile);
             emailService.sendEmail(client.getEmail(), "New offer for " + serviceProfile.getName(), emailText);
         }
         return savedAppointment.getAppointmentId();
@@ -134,7 +134,7 @@ public class AppointmentService {
         return new ArrayList<>(new ArrayList<>(serviceProfile.getAppointments()));
     }
 
-    private String createEmail(User client, Appointment newAppointment, ServiceProfile serviceProfile) {
+    private String createEmail(Appointment newAppointment, ServiceProfile serviceProfile) {
         StringBuilder content = new StringBuilder();
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         ;

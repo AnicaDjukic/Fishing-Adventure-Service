@@ -55,6 +55,11 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
+	public String getFullNameByEmail(String email) {
+		User user = findByEmail(email);
+		return user.getName() + " " + user.getSurname();
+	}
+
 	public User findByEmail(String email) throws UsernameNotFoundException {
 		return repository.findByEmail(email);
 	}

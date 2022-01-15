@@ -1,6 +1,7 @@
 package isa.FishingAdventure.service;
 
 import isa.FishingAdventure.dto.AdvertiserReservationDto;
+import isa.FishingAdventure.dto.ReservationInfoDto;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.ReservationRepository;
 import isa.FishingAdventure.security.util.TokenUtils;
@@ -87,6 +88,24 @@ public class ReservationService {
 
     public Reservation getById(Integer id) {
         return repository.getById(id);
+    }
+
+    public ReservationInfoDto getReservationInfo(Reservation reservation) {
+        ServiceProfile profile = serviceProfileService.getByAppointmentsIsContaining(reservation.getAppointment());
+        User advertiser = getAdvertiserByServiceId(profile.getId());
+        return new ReservationInfoDto(reservation.getReservationId(), profile.getId(),
+                advertiser.getEmail(), reservation.getClient().getEmail());
+    }
+
+    private User getAdvertiserByServiceId(int id) {
+        User advertiser;
+        if (adventureService.findByIdIfExists(id).isPresent())
+            advertiser = adventureService.findById(id).getFishingInstructor();
+        else if (vacationHomeService.findByIdIfExists(id).isPresent())
+            advertiser = vacationHomeService.findById(id).getVacationHomeOwner();
+        else
+            advertiser = boatService.findById(id).getBoatOwner();
+        return advertiser;
     }
 
     public List<Reservation> getClientCurrentReservations(String token) {

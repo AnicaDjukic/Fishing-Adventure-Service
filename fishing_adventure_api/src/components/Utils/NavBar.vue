@@ -69,7 +69,7 @@
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                v-if="loggedInRole == 'ROLE_CLIENT'"
+                v-if="loggedInRole == 'ROLE_CLIENT' || loggedInRole == 'ROLE_ADMIN'"
               >
                 Reservations
               </a>
@@ -78,13 +78,28 @@
                 aria-labelledby="navbarScrollingDropdown"
               >
                 <li>
-                  <a class="dropdown-item" href="/client/pastReservations"
+                  <a class="dropdown-item" href="/client/pastReservations" v-if="loggedInRole == 'ROLE_CLIENT'"
                     >Past reservations</a
                   >
                 </li>
                 <li>
-                  <a class="dropdown-item" href="/client/currentReservations"
+                  <a class="dropdown-item" href="/client/currentReservations" v-if="loggedInRole == 'ROLE_CLIENT'"
                     >Current reservations</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/clientReviews" v-if="loggedInRole == 'ROLE_ADMIN'"
+                    >Reviews</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/clientComplaints" v-if="loggedInRole == 'ROLE_ADMIN'"
+                    >Complaints</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/advertiserComplaints" v-if="loggedInRole == 'ROLE_ADMIN'"
+                    >Reports</a
                   >
                 </li>
               </ul>
@@ -183,12 +198,8 @@
                 class="dropdown-menu text-center dropdown-menu-dark"
                 aria-labelledby="navbarScrollingDropdown"
               >
-                <li>
-                  <a class="dropdown-item" href="/registrationRequests"
-                    >Registration Requests</a
-                  >
-                </li>
-                <li><a class="dropdown-item" href="/users">All Users</a></li>
+                  <li><a class="dropdown-item" href="/users">All users</a></li>
+                  <li><a class="dropdown-item" href="/registrationRequests">Registration Requests</a></li>
                  <li><a class="dropdown-item" href="/deleteRequests">Deletion requests</a></li>
               </ul>
             </li>

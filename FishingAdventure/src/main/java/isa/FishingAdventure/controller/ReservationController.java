@@ -90,7 +90,7 @@ public class ReservationController {
 
     @GetMapping(value = "/allByAdvertiser")
     @PreAuthorize("hasAnyRole('ROLE_FISHING_INSTRUCTOR', 'ROLE_VACATION_HOME_OWNER', 'ROLE_BOAT_OWNER')")
-    public ResponseEntity<List<AdvertiserReservationDto>> findAllReservationsForInstructor(
+    public ResponseEntity<List<AdvertiserReservationDto>> findAllReservationsByAdvertiser(
             @RequestHeader("Authorization") String token) {
         List<AdvertiserReservationDto> reservationDtos = reservationService.findAllReservationsByAdvertiser(
                 token.split(" ")[1]);

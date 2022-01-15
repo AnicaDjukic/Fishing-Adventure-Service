@@ -76,6 +76,11 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    public void addPenaltyToClient(Client client) {
+        client.setPenalties(client.getPenalties() + 1);
+        save(client);
+    }
+
     public boolean subscribe(Client client, Integer id) {
         ServiceProfile serviceProfile = serviceProfileService.getById(id);
         if (isSubscribed(client, id))

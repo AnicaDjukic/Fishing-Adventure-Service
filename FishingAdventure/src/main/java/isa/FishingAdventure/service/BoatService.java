@@ -120,7 +120,7 @@ public class BoatService {
         return boat.getPersons() >= persons;
     }
 
-    private Boat findById(Integer id) {
+    public Boat findById(Integer id) {
         return boatRepository.findById(id).orElse(new Boat());
     }
 
