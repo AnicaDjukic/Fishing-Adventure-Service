@@ -13,11 +13,6 @@ public class UserTypeService {
 	@Autowired
 	private UserTypeRepository userTypeRepository;
 
-	public UserType findById(Integer id) {
-		UserType auth = userTypeRepository.getById(id);
-		return auth;
-	}
-
 	public List<UserType> findByName(String name) {
 		List<UserType> roles = userTypeRepository.findByName(name);
 		return roles;

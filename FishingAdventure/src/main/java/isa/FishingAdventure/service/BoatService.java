@@ -102,7 +102,9 @@ public class BoatService {
         for (Appointment ap : boat.getAppointments()) {
             if (ap.getCancelled().equals(true))
                 continue;
-            if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
+            if (start.equals(ap.getStartDate()) || end.equals(ap.getEndDate()) ||
+                    end.equals(ap.getStartDate()) || start.equals(ap.getEndDate())
+                    || (start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
                     || (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
                     || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
                 available = false;

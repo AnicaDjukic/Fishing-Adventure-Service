@@ -109,21 +109,19 @@ public class UserService implements UserDetailsService {
 		User user = findByEmail(email);
 		user.setDeleted(true);
 		save(user);
-		String emailText = createRegistrationResponseEmail(reason);
-		try {
-			emailService.sendEmail(email, "Reservation approved", emailText);
-		} catch (Exception e) {
-			System.out.println("Email could not be sent.");
-		}
+		sendRegistrationRequestEmail(email, "Reservation approved", reason);
 	}
 
 	public void approveRegistrationRequest(String email) {
 		User user = findByEmail(email);
 		user.setActivated(true);
 		save(user);
-		String emailText = createRegistrationResponseEmail("");
+		sendRegistrationRequestEmail(email, "Reservation rejected", "");
+	}
+
+	private void sendRegistrationRequestEmail(String email, String subject, String reason) {
 		try {
-			emailService.sendEmail(email, "Reservation rejected", emailText);
+			emailService.sendEmail(email, subject,  createRegistrationResponseEmail(reason));
 		} catch (Exception e) {
 			System.out.println("Email could not be sent.");
 		}

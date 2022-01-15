@@ -101,12 +101,11 @@ public class ServiceProfileService {
         return profileRepository.findAll();
     }
 
-    public Boolean isServiceAvailableForDateRange(Integer id, Date start, Date end) {
+    public boolean isServiceAvailableForDateRange(Integer id, Date start, Date end) {
         Optional<VacationHome> home = homeService.findByIdIfExists(id);
         Optional<Boat> boat = boatService.findByIdIfExists(id);
         Optional<FishingAdventure> adventure = adventureService.findByIdIfExists(id);
-
-        Boolean isAvailable = true;
+        boolean isAvailable;
         if (home.isPresent()) {
             isAvailable = homeService.isCottageAvailableForDateRange(id, start, end);
         } else if (boat.isPresent()) {
@@ -119,7 +118,6 @@ public class ServiceProfileService {
 
     public void deleteOffer(Integer offerId, Integer serviceProfileId) {
         ServiceProfile profile = profileRepository.getById(serviceProfileId);
-
         for (Appointment appointment : profile.getAppointments()) {
             if (appointment.getAppointmentId().equals(offerId)) {
                 Set<Appointment> appointments = profile.getAppointments();

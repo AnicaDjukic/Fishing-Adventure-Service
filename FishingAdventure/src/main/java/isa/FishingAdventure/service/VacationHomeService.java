@@ -31,7 +31,7 @@ public class VacationHomeService {
     private ServiceProfileService profileService;
 
     public List<VacationHome> findAllNonDeleted() {
-        List<VacationHome> homes = new ArrayList<VacationHome>();
+        List<VacationHome> homes = new ArrayList<>();
         for (VacationHome home : homeRepository.findAll()) {
             if (!home.getDeleted()) {
                 homes.add(home);
@@ -41,7 +41,7 @@ public class VacationHomeService {
     }
 
     public List<VacationHome> findByVacationHomeOwner(VacationHomeOwner owner) {
-        List<VacationHome> homes = new ArrayList<VacationHome>();
+        List<VacationHome> homes = new ArrayList<>();
         for (VacationHome home : homeRepository.findByVacationHomeOwner(owner)) {
             if (!home.getDeleted()) {
                 homes.add(home);
@@ -58,43 +58,6 @@ public class VacationHomeService {
         return homeRepository.getById(id);
     }
 
-    public List<VacationHome> findAllAvailableVacationHomes(Date start, Date end, int persons) {
-        boolean available = true;
-        ArrayList<VacationHome> availableVacationHomes = new ArrayList<VacationHome>();
-        for (VacationHome vh : findAllNonDeleted()) {
-
-            if (vh.getPersons() < persons)
-                continue;
-
-            available = false;
-            for (AvailabilityDateRange dateRange : dateRangeService.findByServiceProfile(vh)) {
-                if (start.after(dateRange.getStartDate()) && end.before(dateRange.getEndDate())) {
-                    available = true;
-                    break;
-                }
-            }
-
-            if (!available)
-                continue;
-
-            for (Appointment ap : vh.getAppointments()) {
-                if (ap.getCancelled().equals(true))
-                    continue;
-                if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
-                        || (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
-                        || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
-                    available = false;
-                    break;
-                }
-            }
-
-            if (available)
-                availableVacationHomes.add(vh);
-        }
-
-        return availableVacationHomes;
-    }
-
     public VacationHome findById(Integer id) {
         return homeRepository.findById(id).orElse(new VacationHome());
     }
@@ -108,29 +71,29 @@ public class VacationHomeService {
         return new ArrayList<>(vacationHome.getAdditionalServices());
     }
 
-    public boolean isCottageAvailableForPersons(Integer id, int persons) {
-        VacationHome vacationHome = findById(id);
-        return vacationHome.getPersons() >= persons;
+    public List<VacationHome> findAllAvailableVacationHomes(Date start, Date end, int persons) {
+        ArrayList<VacationHome> availableVacationHomes = new ArrayList<>();
+        for (VacationHome vh : findAllNonDeleted()) {
+            if (vh.getPersons() < persons) continue;
+            boolean available = isCottageAvailableForDateRange(vh.getId(), start, end);
+            if (available) availableVacationHomes.add(vh);
+        }
+        return availableVacationHomes;
     }
 
     public boolean isCottageAvailableForDateRange(Integer id, Date start, Date end) {
         VacationHome vacationHome = findById(id);
+        boolean available = checkAvailabilityDateRanges(start, end, vacationHome);
+        if (!available) return false;
+        return checkAppointments(start, end, vacationHome);
+    }
 
-        boolean available = false;
-        for (AvailabilityDateRange dateRange : dateRangeService.findByServiceProfile(vacationHome)) {
-            if (start.after(dateRange.getStartDate()) && end.before(dateRange.getEndDate())) {
-                available = true;
-                break;
-            }
-        }
-
-        if (!available)
-            return false;
-
+    private boolean checkAppointments(Date start, Date end, VacationHome vacationHome) {
+        boolean available = true;
         for (Appointment ap : vacationHome.getAppointments()) {
-            if (ap.getCancelled().equals(true))
-                continue;
-            if (start.equals(ap.getStartDate()) || end.equals(ap.getEndDate())
+            if (ap.getCancelled()) continue;
+            if (start.equals(ap.getStartDate()) || end.equals(ap.getEndDate()) ||
+                    end.equals(ap.getStartDate()) || start.equals(ap.getEndDate())
                     || (start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
                     || (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
                     || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
@@ -138,7 +101,17 @@ public class VacationHomeService {
                 break;
             }
         }
+        return available;
+    }
 
+    private boolean checkAvailabilityDateRanges(Date start, Date end, VacationHome vacationHome) {
+        boolean available = false;
+        for (AvailabilityDateRange dateRange : dateRangeService.findByServiceProfile(vacationHome)) {
+            if (start.after(dateRange.getStartDate()) && end.before(dateRange.getEndDate())) {
+                available = true;
+                break;
+            }
+        }
         return available;
     }
 
@@ -148,7 +121,6 @@ public class VacationHomeService {
 
     public List<Appointment> getOffersByAdvertiser(String email) {
         VacationHomeOwner owner = ownerService.findByEmail(email);
-
         List<Appointment> appointments = new ArrayList<>();
         for (VacationHome home : findByVacationHomeOwner(owner)) {
             appointments.addAll(home.getAppointments());
