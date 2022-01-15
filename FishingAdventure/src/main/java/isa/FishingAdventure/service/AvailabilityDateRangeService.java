@@ -37,7 +37,6 @@ public class AvailabilityDateRangeService {
     public List<AvailablityDateRangeDto> delete(Integer dateRangeId, Integer serviceId) {
         ServiceProfile serviceProfile = serviceProfileService.getById(serviceId);
         AvailabilityDateRange oldDateRange = getById(dateRangeId);
-
         createDateRangeForExistingAppointments(serviceProfile, oldDateRange);
         repository.deleteById(oldDateRange.getId());
         return createAvailabilityDateRangeDtos(getAllByServiceProfileId(serviceProfile.getId()), serviceProfile);
@@ -63,8 +62,8 @@ public class AvailabilityDateRangeService {
     public List<AvailablityDateRangeDto> updateAvailabilityDate(AvailabilityDateRange oldDateRange, Date newStartDate, Date newEndDate, Integer serviceId) {
         ServiceProfile serviceProfile = serviceProfileService.getById(serviceId);
         List<AvailabilityDateRange> dateRanges = getAllByServiceProfileId(serviceProfile.getId());
-        dateRanges = checkScheduledAppointments(dateRanges, serviceProfile, newStartDate, newEndDate);
-        AvailabilityDateRange newDateRange = mergeOverlapingAvailabilityDates(dateRanges, newStartDate, newEndDate, serviceProfile);
+        List<AvailabilityDateRange> updatedDateRanges = checkScheduledAppointments(dateRanges, serviceProfile, newStartDate, newEndDate);
+        AvailabilityDateRange newDateRange = mergeOverlapingAvailabilityDates(updatedDateRanges, newStartDate, newEndDate, serviceProfile);
         if (findById(oldDateRange.getId()).isPresent()) {
             repository.deleteById(oldDateRange.getId());
         }

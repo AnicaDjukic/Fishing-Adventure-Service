@@ -61,20 +61,19 @@ public class AppointmentService {
         serviceProfileService.save(profile);
     }
 
-    public Integer createAppointment(Appointment newAppointment, Duration duration, Integer serviceProfileId)
-            throws MessagingException {
+    public Integer createAppointment(Appointment newAppointment, Duration duration, Integer serviceProfileId) throws MessagingException {
         newAppointment.setDateCreated(new Date());
         newAppointment.setDuration(duration);
         Appointment savedAppointment = save(newAppointment);
         addAppointmentToServiceProfile(serviceProfileId, newAppointment);
         ServiceProfile serviceProfile = serviceProfileService.getById(serviceProfileId);
-        List<User> clients = clientService.getClientSubscribedToServiceProfile(serviceProfileId);
-
-        for (User client : clients) {
-            String emailText = createEmail(newAppointment, serviceProfile);
-            emailService.sendEmail(client.getEmail(), "New offer for " + serviceProfile.getName(), emailText);
-        }
+        sendEmailsToClients(newAppointment, serviceProfile, clientService.getClientSubscribedToServiceProfile(serviceProfileId));
         return savedAppointment.getAppointmentId();
+    }
+
+    private void sendEmailsToClients(Appointment newAppointment, ServiceProfile serviceProfile, List<User> clients) throws MessagingException {
+        for (User client : clients)
+            emailService.sendEmail(client.getEmail(), "New offer for " + serviceProfile.getName(), createEmail(newAppointment, serviceProfile));
     }
 
     public List<AppointmentDto> getOffersByAdvertiser(String token) {

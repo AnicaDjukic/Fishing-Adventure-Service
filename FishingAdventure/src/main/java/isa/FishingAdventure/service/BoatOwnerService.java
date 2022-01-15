@@ -1,6 +1,5 @@
 package isa.FishingAdventure.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class BoatOwnerService {
 	private UserTypeService userTypeService;
 
 	public BoatOwner findByEmail(String email) {
-		return (BoatOwner) boatOwnerRepository.findByEmail(email);
+		return boatOwnerRepository.findByEmail(email);
 	}
 
 	public void saveNewBoatOwner(BoatOwner boatOwner) {
@@ -41,32 +40,34 @@ public class BoatOwnerService {
 	}
 
 	public boolean isBoatOwnerAvailableForDateRange(Integer boatId, Date start, Date end) {
-		Boat boat = boatService.getById(boatId);
-		BoatOwner boatOwner = boat.getBoatOwner();
-		List<Boat> ownerBoats = new ArrayList<Boat>();
+		return checkAppointmentsForOwnerBoats(boatId, start, end, boatService.getById(boatId).getBoatOwner());
+	}
+
+	private boolean checkAppointmentsForOwnerBoats(Integer boatId, Date start, Date end, BoatOwner boatOwner) {
+		boolean available = true;
 		for (Boat b : boatService.findAllNonDeleted()) {
 			if (b.getId().equals(boatId))
 				continue;
-
 			if (b.getBoatOwner().getUserId().equals(boatOwner.getUserId())) {
-				ownerBoats.add(b);
+				available = checkAppointmentsByBoat(start, end, b);
+				if(!available) break;
 			}
-
 		}
+		return available;
+	}
+
+	private boolean checkAppointmentsByBoat(Date start, Date end, Boat boat) {
 		boolean available = true;
-		for (Boat b : ownerBoats) {
-			for (Appointment ap : b.getAppointments()) {
-				if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
-						|| (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
-						|| (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
-					if (ap.getOwnerPresence().equals(true)) {
-						available = false;
-						break;
-					}
+		for (Appointment ap : boat.getAppointments()) {
+			if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
+					|| (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
+					|| (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
+				if (ap.getOwnerPresence().equals(true)) {
+					available = false;
+					break;
 				}
 			}
 		}
-
 		return available;
 	}
 }

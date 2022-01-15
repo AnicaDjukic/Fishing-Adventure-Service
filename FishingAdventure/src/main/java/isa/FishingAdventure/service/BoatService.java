@@ -69,7 +69,10 @@ public class BoatService {
 
     public List<Appointment> getOffersByAdvertiser(String email) {
         BoatOwner owner = ownerService.findByEmail(email);
+        return getOwnerAppointments(owner);
+    }
 
+    private List<Appointment> getOwnerAppointments(BoatOwner owner) {
         List<Appointment> appointments = new ArrayList<>();
         for (Boat boat : findByBoatOwner(owner)) {
             appointments.addAll(boat.getAppointments());
@@ -78,46 +81,46 @@ public class BoatService {
     }
 
     public List<Boat> findAllAvailableBoats(Date start, Date end, int persons) {
-
-        boolean available = true;
-        ArrayList<Boat> availableBoats = new ArrayList<Boat>();
+        ArrayList<Boat> availableBoats = new ArrayList<>();
         for (Boat boat : findAll()) {
-
-            if (boat.getPersons() < persons)
-                continue;
-
-            available = false;
-            for (AvailabilityDateRange dateRange : dateRangeService.findByServiceProfile(boat)) {
-                if (start.after(dateRange.getStartDate()) && end.before(dateRange.getEndDate())) {
-                    available = true;
-                    break;
-                }
-            }
-
-            if (!available)
-                continue;
-
-            for (Appointment ap : boat.getAppointments()) {
-                if (ap.getCancelled().equals(true))
-                    continue;
-                if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
-                        || (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
-                        || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
-                    available = false;
-                    break;
-                }
-            }
-
-            if (available)
-                availableBoats.add(boat);
+            if (boat.getPersons() < persons) continue;
+            boolean available = isBoatAvailableForDateRange(boat.getId(), start, end);
+            if (available) availableBoats.add(boat);
         }
-
         return availableBoats;
     }
 
-    public boolean isBoatAvailableForPersons(Integer id, int persons) {
+    public boolean isBoatAvailableForDateRange(Integer id, Date start, Date end) {
         Boat boat = findById(id);
-        return boat.getPersons() >= persons;
+        boolean available = checkAvailabilityDateRanges(start, end, boat);
+        if (!available) return false;
+        return checkAppointmentsByBoat(start, end, boat);
+    }
+
+    private boolean checkAppointmentsByBoat(Date start, Date end, Boat boat) {
+        boolean available = true;
+        for (Appointment ap : boat.getAppointments()) {
+            if (ap.getCancelled().equals(true))
+                continue;
+            if ((start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
+                    || (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
+                    || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
+                available = false;
+                break;
+            }
+        }
+        return available;
+    }
+
+    private boolean checkAvailabilityDateRanges(Date start, Date end, Boat boat) {
+        boolean available = false;
+        for (AvailabilityDateRange dateRange : dateRangeService.findByServiceProfile(boat)) {
+            if (start.after(dateRange.getStartDate()) && end.before(dateRange.getEndDate())) {
+                available = true;
+                break;
+            }
+        }
+        return available;
     }
 
     public Boat findById(Integer id) {
@@ -128,34 +131,7 @@ public class BoatService {
         return boatRepository.findById(id);
     }
 
-    public boolean isBoatAvailableForDateRange(Integer id, Date start, Date end) {
-        Boat boat = findById(id);
 
-        boolean available = false;
-        for (AvailabilityDateRange dateRange : dateRangeService.findByServiceProfile(boat)) {
-            if (start.after(dateRange.getStartDate()) && end.before(dateRange.getEndDate())) {
-                available = true;
-                break;
-            }
-        }
-
-        if (!available)
-            return false;
-
-        for (Appointment ap : boat.getAppointments()) {
-            if (ap.getCancelled().equals(true))
-                continue;
-            if (start.equals(ap.getStartDate()) || end.equals(ap.getEndDate())
-                    || (start.after(ap.getStartDate()) && start.before(ap.getEndDate()))
-                    || (end.after(ap.getStartDate()) && end.before(ap.getEndDate()))
-                    || (start.before(ap.getStartDate()) && end.after(ap.getEndDate()))) {
-                available = false;
-                break;
-            }
-        }
-
-        return available;
-    }
 
     public List<Boat> findAllNonDeleted() {
         List<Boat> boats = new ArrayList<Boat>();
