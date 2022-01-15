@@ -1,6 +1,6 @@
 package isa.FishingAdventure.service;
 
-import isa.FishingAdventure.dto.AdvertiserReportDto;
+import isa.FishingAdventure.dto.ReservationIssueDto;
 import isa.FishingAdventure.dto.ReservationInfoDto;
 import isa.FishingAdventure.model.*;
 import isa.FishingAdventure.repository.ReservationReportRepository;
@@ -66,10 +66,10 @@ public class ReservationReportService {
             sendEmailAboutReport(report.getReservation().getClient().getEmail(), report, true);
     }
 
-    public List<AdvertiserReportDto> getAdvertiserReportsForAdmin() {
-        List<AdvertiserReportDto> reportDtos = new ArrayList<>();
+    public List<ReservationIssueDto> getAdvertiserReportsForAdmin() {
+        List<ReservationIssueDto> reportDtos = new ArrayList<>();
         for (ReservationReport report : getAllReportsAwaitingReview()) {
-            reportDtos.add(createAdvertiserReportDto(report));
+            reportDtos.add(createReservationIssueDto(report));
         }
 
         return reportDtos;
@@ -85,11 +85,11 @@ public class ReservationReportService {
         return reports;
     }
 
-    private AdvertiserReportDto createAdvertiserReportDto(ReservationReport report) {
+    private ReservationIssueDto createReservationIssueDto(ReservationReport report) {
         ReservationInfoDto reservationInfoDto = reservationService.getReservationInfo(report.getReservation());
-        AdvertiserReportDto reportDto = new AdvertiserReportDto();
+        ReservationIssueDto reportDto = new ReservationIssueDto();
         reportDto.setId(report.getId());
-        reportDto.setReport(report.getReport());
+        reportDto.setContent(report.getReport());
         reportDto.setClientEmail(reservationInfoDto.getClientEmail());
         reportDto.setAdvertiserEmail(reservationInfoDto.getAdvertiserEmail());
         reportDto.setServiceName(serviceProfileService.getById(reservationInfoDto.getServiceId()).getName());

@@ -1,8 +1,7 @@
 package isa.FishingAdventure.controller;
 
-import isa.FishingAdventure.dto.AdvertiserReportDto;
+import isa.FishingAdventure.dto.ReservationIssueDto;
 import isa.FishingAdventure.dto.ReportDto;
-import isa.FishingAdventure.dto.ReservationInfoDto;
 import isa.FishingAdventure.model.ReservationReport;
 import isa.FishingAdventure.service.ReservationReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +33,14 @@ public class ReservationReportController {
     @GetMapping(value="getReportsAwaitingReview")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<List<AdvertiserReportDto>> getReportsAwaitingReview(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<ReservationIssueDto>> getReportsAwaitingReview() {
         return new ResponseEntity<>(reportService.getAdvertiserReportsForAdmin(), HttpStatus.OK);
     }
 
     @PutMapping(value = "/sanctionClient/")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<String> approveClientPenalty(@RequestBody AdvertiserReportDto dto) {
+    public ResponseEntity<String> approveClientPenalty(@RequestBody ReservationIssueDto dto) {
         ReservationReport report = reportService.findById(dto.getId());
         reportService.reviewReport(report, dto.getAdvertiserEmail(), true);
         return new ResponseEntity<>("ok", HttpStatus.OK);
@@ -50,7 +49,7 @@ public class ReservationReportController {
     @PutMapping(value = "/rejectPenalty/")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<String> rejectClientPenalty(@RequestBody AdvertiserReportDto dto) {
+    public ResponseEntity<String> rejectClientPenalty(@RequestBody ReservationIssueDto dto) {
         ReservationReport report = reportService.findById(dto.getId());
         reportService.reviewReport(report, dto.getAdvertiserEmail(), false);
         return new ResponseEntity<>("ok", HttpStatus.OK);

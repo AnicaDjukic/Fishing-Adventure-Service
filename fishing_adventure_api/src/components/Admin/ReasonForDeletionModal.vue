@@ -6,7 +6,6 @@
     aria-labelledby="OfferModalLabel"
     data-bs-backdrop="static"
     aria-hidden="true"
-    v-on:show="closeModal"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="height: 20.5rem">
@@ -18,6 +17,7 @@
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
+            v-on:click="closeModal"
           >
             <i class="fas fa-times fa-lg"></i>
           </button>

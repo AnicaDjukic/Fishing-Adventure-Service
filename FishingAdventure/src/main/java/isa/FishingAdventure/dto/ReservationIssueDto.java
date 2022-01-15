@@ -1,9 +1,9 @@
 package isa.FishingAdventure.dto;
 
-public class AdvertiserReportDto {
+public class ReservationIssueDto {
     private Integer id;
 
-    private String report;
+    private String content;
 
     private String clientFullName;
 
@@ -15,12 +15,12 @@ public class AdvertiserReportDto {
 
     private String advertiserEmail;
 
-    public AdvertiserReportDto() {
+    public ReservationIssueDto() {
     }
 
-    public AdvertiserReportDto(Integer id, String report, String clientFullName, String advertiserFullName, String serviceName, String clientEmail, String advertiserEmail) {
+    public ReservationIssueDto(Integer id, String content, String clientFullName, String advertiserFullName, String serviceName, String clientEmail, String advertiserEmail) {
         this.id = id;
-        this.report = report;
+        this.content = content;
         this.clientFullName = clientFullName;
         this.advertiserFullName = advertiserFullName;
         this.serviceName = serviceName;
@@ -36,12 +36,12 @@ public class AdvertiserReportDto {
         this.id = id;
     }
 
-    public String getReport() {
-        return report;
+    public String getContent() {
+        return content;
     }
 
-    public void setReport(String report) {
-        this.report = report;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getClientFullName() {

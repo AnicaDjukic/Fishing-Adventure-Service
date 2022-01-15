@@ -165,6 +165,20 @@ const routes = [{
         checkAuthentification()
     }
 }, {
+    path: '/clientComplaints',
+    name: 'ClientComplaints',
+    component: () =>
+        import ('../views/ClientComplaints.vue'),
+    beforeEnter: (to, from, next) => {
+        checkAuthentification().then(response => {
+            if (response != "ROLE_ADMIN") {
+                next("/")
+            } else {
+                next();
+            }
+        })
+    }
+},{
     path: '/advertiserComplaints',
     name: 'ReportsForAdmin',
     component: () =>

@@ -159,7 +159,7 @@ export default {
       });
 
     axios
-      .get("http://localhost:8080/compliant/exists/" + this.reservation.id, {
+      .get("http://localhost:8080/complaint/exists/" + this.reservation.id, {
         headers: {
           "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,

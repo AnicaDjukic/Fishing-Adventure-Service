@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="title">
-      <h1>Advertiser complaints</h1>
+      <h1>Client complaints</h1>
       <i
-        class="fas fa-exclamation-circle fa-4x"
+        class="far fa-thumbs-down fa-4x"
         style="font-family: 'Font Awesome 5 Pro'"
       ></i>
     </div>
@@ -18,37 +18,38 @@
         class="container w-100 row row-cols-1 row-cols-sm-1 row-cols-md-4"
         style="justify-content: space-evenly; align-items: center; height: 38px; color: #dddddd; font-size: 20px"
       >
-        Sanctioning a client will add a penalty to their account.
+        
+        
       </div>
     </div>
     <div>
         <table class="table-users">
             <thead>
                 <tr>
-                    <th>Service</th>
-                    <th >
-                        Advertiser
-                    </th>
                     <th>Client </th>
-                    <th>Report </th>
-                    <th colspan="2">Sanction?</th>
+                    <th>Service</th>
+                    <th>Advertiser</th>
+                    <th>Complaint </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="report in reports" :key="report.id" v-bind:report="report">
-                    <td>{{report.serviceName}}</td>
-                    <td>{{report.advertiserFullName}}</td>
-                    <td>{{report.clientFullName}}</td>
-                    <td>{{report.content}} </td>
+                <tr v-for="complaint in complaints" :key="complaint.id" v-bind:complaint="complaint">
+                    <td>{{complaint.clientFullName}}</td>
+                    <td>{{complaint.serviceName}}</td>
+                    <td>{{complaint.advertiserFullName}}</td>
+                    <td>{{complaint.content}} </td>
                     <td>
-                        <button class="green-btn" v-on:click="sanctionClient(report)"
-                        > Yes</button>
-                    </td>
-                                        <td>
-                        <button class="black-btn" v-on:click="dontSanctionClient(report)"
-                        > No</button>
+                        <button class="green-btn"
+                        data-bs-toggle="modal"
+                        :data-bs-target="'#complaint-response' + complaint.id"
+                        > Respond</button>
                     </td>
 
+                    <complaint-response
+                    :id="'complaint-response' + complaint.id"
+                    :complaint="complaint"
+                    ></complaint-response>
                 </tr>
             </tbody>
         </table>
@@ -59,25 +60,27 @@
 </template>
 
 <script>
+import ComplaintResponseModal from "@/components/Admin/ComplaintResponseModal.vue";
 import axios from "axios";
 export default {
-  data: function () {
+  components: { "complaint-response": ComplaintResponseModal },
+  data: function () {   
     return {
       searchText: "",
       searchResults: [],
-      reports: []
+      complaints: []
     };
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/reservationReport/getReportsAwaitingReview", {
+      .get("http://localhost:8080/complaint/getClientComplaints", {
         headers: {
           "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
       .then((res) => {
-        this.reports = res.data;
+        this.complaints = res.data;
       });
   },
   methods: {
