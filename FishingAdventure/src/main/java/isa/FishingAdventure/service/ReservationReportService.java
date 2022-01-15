@@ -64,7 +64,6 @@ public class ReservationReportService {
         sendEmailAboutReport(advertiserEmail, report, isSanctioned);
         if (isSanctioned)
             sendEmailAboutReport(report.getReservation().getClient().getEmail(), report, true);
-        // TODO: send email twice?
     }
 
     public List<ReservationIssueDto> getAdvertiserReportsForAdmin() {
@@ -87,7 +86,8 @@ public class ReservationReportService {
 
     private ReservationIssueDto createReservationIssueDto(ReservationReport report) {
         ReservationInfoDto reservationInfoDto = reservationService.getReservationInfo(report.getReservation());
-        ReservationIssueDto reportDto = new ReservationIssueDto(report.getId(), report.getReport(), reservationInfoDto.getClientEmail(), reservationInfoDto.getAdvertiserEmail());
+        ReservationIssueDto reportDto = new ReservationIssueDto(report.getId(), report.getReport(),
+                reservationInfoDto.getClientEmail(), reservationInfoDto.getAdvertiserEmail());
         reportDto.setServiceName(serviceProfileService.getById(reservationInfoDto.getServiceId()).getName());
         reportDto.setAdvertiserFullName(userService.getFullNameByEmail(reservationInfoDto.getAdvertiserEmail()));
         reportDto.setClientFullName(userService.getFullNameByEmail(reservationInfoDto.getClientEmail()));
@@ -95,25 +95,24 @@ public class ReservationReportService {
     }
 
     private void sendEmailAboutReport(String email, ReservationReport report, boolean isSanctioned) {
-        StringBuilder html = new StringBuilder();
+        String emailText;
         if (report.getReservation().getClient().getEmail().equals(email)) {
-            html.append("You have received one penalty because of a complained filed against you. If you receive 3" +
-                    "penalties you will not be able to make any new reservation until the end of the month.");
-        }
-        else {
+            emailText = emailService.createGenericEmail("Reservation report",
+                    "You have received one penalty because of a complained filed against you. If you receive 3" +
+                            "penalties you will not be able to make any new reservation until the end of the month.");
+        } else {
             User user = report.getReservation().getClient();
             if (isSanctioned) {
-                html.append("Your complaint against " + user.getName() + " " + user.getSurname() + " has been " +
+                emailText = emailService.createGenericEmail("Reservation report",
+                        "Your complaint against " + user.getName() + " " + user.getSurname() + " has been " +
                                 "approved. They have been sanctioned and will be receiving a penalty.");
-            }
-            else {
-                html.append("Your complaint against " + user.getName() + " " + user.getSurname() + " has not been " +
-                        "approved. They will not be sanctioned at this time.");
+            } else {
+                emailText = emailService.createGenericEmail("Reservation report",
+                        "Your complaint against " + user.getName() + " " + user.getSurname() + " has not been " +
+                                "approved. They will not be sanctioned at this time.");
 
             }
         }
-        html.append("\"<br><br> Kindest regards, Angler");
-        String emailText = html.toString();
         try {
             emailService.sendEmail(email, "Reservation report", emailText);
         } catch (Exception e) {

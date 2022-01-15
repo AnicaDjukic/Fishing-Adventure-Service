@@ -1,8 +1,6 @@
 package isa.FishingAdventure.dto;
 
-import isa.FishingAdventure.model.Address;
 import isa.FishingAdventure.model.User;
-import isa.FishingAdventure.model.UserType;
 
 public class RegistrationRequestDto {
     private Integer id;
@@ -27,11 +25,12 @@ public class RegistrationRequestDto {
 
     private String description;
 
-    public RegistrationRequestDto() {}
+    public RegistrationRequestDto() {
+    }
 
     public RegistrationRequestDto(Integer id, String email, String password, String name, String surname,
-                                  String phoneNumber, String userType, String country, String city, String street,
-                                  String description) {
+            String phoneNumber, String userType, String country, String city, String street,
+            String description) {
         this.id = id;
         this.email = email;
         this.password = password;
