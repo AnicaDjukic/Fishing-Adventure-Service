@@ -1,7 +1,9 @@
 package isa.FishingAdventure.dto;
 
 import isa.FishingAdventure.model.AdditionalService;
+import isa.FishingAdventure.model.Image;
 import isa.FishingAdventure.model.Reservation;
+import isa.FishingAdventure.model.ServiceProfile;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,7 +61,7 @@ public class AdvertiserReservationDto {
         this.isReportFilled = isReportFilled;
     }
 
-    public AdvertiserReservationDto(Reservation reservation) {
+    public AdvertiserReservationDto(Reservation reservation, ServiceProfile serviceProfile) {
         this.reservationId = reservation.getReservationId();
         this.appointmentId = reservation.getAppointment().getAppointmentId();
         this.clientName = reservation.getClient().getName();
@@ -74,6 +76,13 @@ public class AdvertiserReservationDto {
         this.status = "";
         this.place = reservation.getAppointment().getPlace();
         this.isReportFilled = reservation.getReportFilled();
+        this.name = serviceProfile.getName();
+        for (Image img : serviceProfile.getImages()) {
+            if (img.isCoverImage()) {
+                this.imagePath = img.getPath();
+                break;
+            }
+        }
     }
 
     public Integer getReservationId() {

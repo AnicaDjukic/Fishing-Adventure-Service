@@ -34,6 +34,10 @@ public class FishingAdventureService {
         return adventureRepository.findByFishingInstructor(instructor);
     }
 
+    public List<ServiceProfile> findFishingAdventuresByFishingInstructor(FishingInstructor instructor) {
+        return adventureRepository.findFishingAdventuresByFishingInstructor(instructor);
+    }
+
     public FishingAdventure findById(int id) {
         return adventureRepository.findById(id);
     }
@@ -44,7 +48,10 @@ public class FishingAdventureService {
 
     public List<Appointment> getOffersByAdvertiser(String email) {
         FishingInstructor instructor = instructorService.findByEmail(email);
+        return getInstructorAppointments(instructor);
+    }
 
+    private List<Appointment> getInstructorAppointments(FishingInstructor instructor) {
         List<Appointment> appointments = new ArrayList<>();
         for (FishingAdventure adventure : findByFishingInstructor(instructor)) {
             appointments.addAll(adventure.getAppointments());
@@ -54,41 +61,42 @@ public class FishingAdventureService {
 
     public boolean isInstructorAvailable(FishingInstructor instructor, Date start, Date end) {
         List<FishingAdventure> adventures = findByFishingInstructor(instructor);
-
         boolean available = false;
         List<AvailabilityDateRange> availabilityPeriods = dateRangeService.findByServiceProfile(adventures.get(0));
         for (AvailabilityDateRange period : availabilityPeriods) {
             if (start.after(period.getStartDate()) && end.before(period.getEndDate())) {
                 available = true;
                 for (FishingAdventure adventure : adventures) {
-                    if (areAdventuresOverlaping(start, end, new ArrayList<>(adventure.getAppointments()))) {
+                    if (areAdventuresOverlapping(start, end, new ArrayList<>(adventure.getAppointments()))) {
                         available = false;
                         break;
                     }
                 }
-                if (available)
-                    break;
+                if (available) break;
             }
         }
         return available;
     }
 
-    private boolean areAdventuresOverlaping(Date start, Date end, List<Appointment> appointments) {
-        boolean isOverlaping = false;
+    private boolean areAdventuresOverlapping(Date start, Date end, List<Appointment> appointments) {
+        boolean isOverlapping = false;
         for (Appointment appointment : appointments) {
-            if(appointment.getCancelled().equals(true))
-                continue;
+            if(appointment.getCancelled().equals(true)) continue;
             if (!reservationService.isReservationCanceled(appointment.getAppointmentId())) {
-                if ((start.after(appointment.getStartDate()) && start.before(appointment.getEndDate())) ||
-                        (end.after(appointment.getStartDate()) && end.before(appointment.getEndDate())) ||
-                        start.equals(appointment.getStartDate()) || start.equals(appointment.getEndDate()) ||
-                        end.equals(appointment.getStartDate()) || end.equals(appointment.getEndDate())) {
-                    isOverlaping = true;
+                if (checkIfOverlaps(start, end, appointment)) {
+                    isOverlapping = true;
                     break;
                 }
             }
         }
-        return isOverlaping;
+        return isOverlapping;
+    }
+
+    private boolean checkIfOverlaps(Date start, Date end, Appointment appointment) {
+        return (start.after(appointment.getStartDate()) && start.before(appointment.getEndDate())) ||
+                (end.after(appointment.getStartDate()) && end.before(appointment.getEndDate())) ||
+                start.equals(appointment.getStartDate()) || start.equals(appointment.getEndDate()) ||
+                end.equals(appointment.getStartDate()) || end.equals(appointment.getEndDate());
     }
 
     public FishingAdventure getById(int id) {
@@ -100,16 +108,7 @@ public class FishingAdventureService {
         for (Appointment appointment : adventure.getAppointments()) {
             if (!appointment.isReserved()
                     && Date.from(appointment.getDateCreated().toInstant().plusMillis(appointment.getDuration().toMillis() / 1000)).after(new Date())) {
-                AppointmentDto dto = new AppointmentDto(appointment);
-                dto.setServiceProfileName(adventure.getName());
-                dto.setServiceProfileId(adventure.getId());
-                for (Image img : adventure.getImages()) {
-                    if (img.isCoverImage()) {
-                        dto.setCoverImage(img.getPath());
-                        break;
-                    }
-                }
-                appointmentDtos.add(dto);
+                appointmentDtos.add(new AppointmentDto(appointment, adventure));
             }
         }
         return appointmentDtos;

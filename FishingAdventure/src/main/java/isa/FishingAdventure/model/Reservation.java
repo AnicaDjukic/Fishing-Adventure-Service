@@ -31,6 +31,13 @@ public class Reservation {
     public Reservation() {
     }
 
+    public Reservation(boolean isReportFilled, Appointment appointment, Client client, boolean isCanceled) {
+        this.isReportFilled = isReportFilled;
+        this.appointment = appointment;
+        this.client = client;
+        this.isCanceled = isCanceled;
+    }
+
     public Integer getReservationId() {
         return this.reservationId;
     }

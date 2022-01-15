@@ -64,6 +64,7 @@ public class ReservationReportService {
         sendEmailAboutReport(advertiserEmail, report, isSanctioned);
         if (isSanctioned)
             sendEmailAboutReport(report.getReservation().getClient().getEmail(), report, true);
+        // TODO: send email twice?
     }
 
     public List<ReservationIssueDto> getAdvertiserReportsForAdmin() {
@@ -71,7 +72,6 @@ public class ReservationReportService {
         for (ReservationReport report : getAllReportsAwaitingReview()) {
             reportDtos.add(createReservationIssueDto(report));
         }
-
         return reportDtos;
     }
 
@@ -87,15 +87,10 @@ public class ReservationReportService {
 
     private ReservationIssueDto createReservationIssueDto(ReservationReport report) {
         ReservationInfoDto reservationInfoDto = reservationService.getReservationInfo(report.getReservation());
-        ReservationIssueDto reportDto = new ReservationIssueDto();
-        reportDto.setId(report.getId());
-        reportDto.setContent(report.getReport());
-        reportDto.setClientEmail(reservationInfoDto.getClientEmail());
-        reportDto.setAdvertiserEmail(reservationInfoDto.getAdvertiserEmail());
+        ReservationIssueDto reportDto = new ReservationIssueDto(report.getId(), report.getReport(), reservationInfoDto.getClientEmail(), reservationInfoDto.getAdvertiserEmail());
         reportDto.setServiceName(serviceProfileService.getById(reservationInfoDto.getServiceId()).getName());
         reportDto.setAdvertiserFullName(userService.getFullNameByEmail(reservationInfoDto.getAdvertiserEmail()));
         reportDto.setClientFullName(userService.getFullNameByEmail(reservationInfoDto.getClientEmail()));
-
         return reportDto;
     }
 

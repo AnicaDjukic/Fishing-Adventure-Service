@@ -164,4 +164,8 @@ public class BoatService {
         boat.setBoatOwner(owner);
         save(boat);
     }
+
+    public List<ServiceProfile> findBoatsByBoatOwner(BoatOwner boatOwner) {
+        return boatRepository.findBoatsByBoatOwner(boatOwner);
+    }
 }

@@ -28,6 +28,13 @@ public class ReservationIssueDto {
         this.advertiserEmail = advertiserEmail;
     }
 
+    public ReservationIssueDto(Integer id, String content, String clientEmail, String advertiserEmail) {
+        this.id = id;
+        this.content = content;
+        this.clientEmail = clientEmail;
+        this.advertiserEmail = advertiserEmail;
+    }
+
     public Integer getId() {
         return id;
     }

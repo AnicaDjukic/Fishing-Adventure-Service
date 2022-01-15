@@ -66,24 +66,20 @@ public class ReservationService {
         try {
             String clientEmail = tokenUtils.getEmailFromToken(token);
             Client client = clientService.findByEmail(clientEmail);
-            appointmentService.save(newAppointment);
             ServiceProfile serviceProfile = serviceProfileService.getById(serviceProfileId);
-            serviceProfile.getAppointments().add(newAppointment);
-            serviceProfileService.save(serviceProfile);
-            Reservation newReservation = new Reservation();
-            newReservation.setReportFilled(false);
-            newReservation.setAppointment(newAppointment);
-            newReservation.setClient(client);
-            newReservation.setCanceled(false);
-            save(newReservation);
-            String emailText = createEmail(client, newAppointment, serviceProfile);
-            emailService.sendEmail(clientEmail, "Reservation confirmation", emailText);
-
+            saveNewAppointment(newAppointment, serviceProfile);
+            save(new Reservation(false, newAppointment, client, false));
+            emailService.sendEmail(clientEmail, "Reservation confirmation", createEmail(client, newAppointment, serviceProfile));
         } catch (Exception e) {
             return true;
         }
-
         return true;
+    }
+
+    private void saveNewAppointment(Appointment newAppointment, ServiceProfile serviceProfile) {
+        appointmentService.save(newAppointment);
+        serviceProfile.getAppointments().add(newAppointment);
+        serviceProfileService.save(serviceProfile);
     }
 
     public Reservation getById(Integer id) {
@@ -112,7 +108,7 @@ public class ReservationService {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         Client client = clientService.findByEmail(email);
         List<Reservation> reservations = repository.findByClient(client);
-        List<Reservation> currentReservations = new ArrayList<Reservation>();
+        List<Reservation> currentReservations = new ArrayList<>();
         for (Reservation r : reservations) {
             if (r.getCanceled().equals(true))
                 continue;
@@ -124,7 +120,7 @@ public class ReservationService {
     }
 
     public List<ServiceProfile> getServiceProfiles(List<Reservation> reservations) {
-        List<ServiceProfile> serviceProfiles = new ArrayList<ServiceProfile>();
+        List<ServiceProfile> serviceProfiles = new ArrayList<>();
         for (Reservation r : reservations) {
             if (r.getCanceled().equals(true))
                 continue;
@@ -142,7 +138,7 @@ public class ReservationService {
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         Client client = clientService.findByEmail(email);
         List<Reservation> reservations = repository.findByClient(client);
-        List<Reservation> currentReservations = new ArrayList<Reservation>();
+        List<Reservation> currentReservations = new ArrayList<>();
         for (Reservation r : reservations) {
             if (r.getCanceled().equals(true))
                 continue;
@@ -156,90 +152,41 @@ public class ReservationService {
     public List<AdvertiserReservationDto> findAllReservationsByAdvertiser(String token) {
         String email = tokenUtils.getEmailFromToken(token);
         String role = tokenUtils.getRoleFromToken(token);
-
-        List<AdvertiserReservationDto> reservationDtos = new ArrayList<>();
-        if (role.equals("ROLE_FISHING_INSTRUCTOR"))
-            reservationDtos = findAllReservationsForInstructor(email);
-        else if (role.equals("ROLE_VACATION_HOME_OWNER"))
-            reservationDtos = findAllReservationsForHomeOwner(email);
-        else
-            reservationDtos = findAllReservationsForBoatOwner(email);
-
-        return reservationDtos;
+        return findAllReservationsForAdvertiser(email, role);
     }
 
-    private List<AdvertiserReservationDto> findAllReservationsForInstructor(String email) {
-        FishingInstructor instructor = instructorService.findByEmail(email);
+    private List<AdvertiserReservationDto> findAllReservationsForAdvertiser(String email, String role) {
         List<AdvertiserReservationDto> reservationDtos = new ArrayList<>();
-        for (FishingAdventure adventure : adventureService.findByFishingInstructor(instructor)) {
-            List<AdvertiserReservationDto> resDtos = getReservationsFromAppointments(adventure.getAppointments());
-            for (AdvertiserReservationDto reservationDto : resDtos) {
-                reservationDto.setName(adventure.getName());
-                for (Image img : adventure.getImages()) {
-                    if (img.isCoverImage()) {
-                        reservationDto.setImagePath(img.getPath());
-                        break;
-                    }
-                }
-                reservationDto
-                        .setStatus(checkReservationStatus(reservationDto.getIsReportFilled(),
-                                reservationDto.getStartDate(), reservationDto.getEndDate()));
-            }
-            reservationDtos.addAll(resDtos);
+        for (ServiceProfile serviceProfile : findServiceProfilesByAdvertiser(email, role)) {
+            reservationDtos.addAll(getReservationsFromAppointments(serviceProfile));
         }
         return reservationDtos;
     }
 
-    private List<AdvertiserReservationDto> findAllReservationsForHomeOwner(String email) {
-        VacationHomeOwner homeOwner = homeOwnerService.findByEmail(email);
-        List<AdvertiserReservationDto> reservationDtos = new ArrayList<>();
-        for (VacationHome home : vacationHomeService.findByVacationHomeOwner(homeOwner)) {
-            List<AdvertiserReservationDto> resDtos = getReservationsFromAppointments(home.getAppointments());
-            for (AdvertiserReservationDto reservationDto : resDtos) {
-                reservationDto.setName(home.getName());
-                for (Image img : home.getImages()) {
-                    if (img.isCoverImage()) {
-                        reservationDto.setImagePath(img.getPath());
-                        break;
-                    }
-                }
-                reservationDto
-                        .setStatus(checkReservationStatus(reservationDto.getIsReportFilled(),
-                                reservationDto.getStartDate(), reservationDto.getEndDate()));
-            }
-            reservationDtos.addAll(resDtos);
+    private List<ServiceProfile> findServiceProfilesByAdvertiser(String email, String role) {
+        List<ServiceProfile> serviceProfiles;
+        if (role.equals("ROLE_FISHING_INSTRUCTOR")) {
+            FishingInstructor instructor = instructorService.findByEmail(email);
+            serviceProfiles = adventureService.findFishingAdventuresByFishingInstructor(instructor);
+        } else if (role.equals("ROLE_VACATION_HOME_OWNER")) {
+            VacationHomeOwner homeOwner = homeOwnerService.findByEmail(email);
+            serviceProfiles = vacationHomeService.findVacationHomesByVacationHomeOwner(homeOwner);
         }
-        return reservationDtos;
+        else {
+            BoatOwner boatOwner = boatOwnerService.findByEmail(email);
+            serviceProfiles = boatService.findBoatsByBoatOwner(boatOwner);
+        }
+        return serviceProfiles;
     }
 
-    private List<AdvertiserReservationDto> findAllReservationsForBoatOwner(String email) {
-        BoatOwner boatOwner = boatOwnerService.findByEmail(email);
+    private List<AdvertiserReservationDto> getReservationsFromAppointments(ServiceProfile serviceProfile) {
         List<AdvertiserReservationDto> reservationDtos = new ArrayList<>();
-        for (Boat boat : boatService.findByBoatOwner(boatOwner)) {
-            List<AdvertiserReservationDto> resDtos = getReservationsFromAppointments(boat.getAppointments());
-            for (AdvertiserReservationDto reservationDto : resDtos) {
-                reservationDto.setName(boat.getName());
-                for (Image img : boat.getImages()) {
-                    if (img.isCoverImage()) {
-                        reservationDto.setImagePath(img.getPath());
-                        break;
-                    }
-                }
-                reservationDto
-                        .setStatus(checkReservationStatus(reservationDto.getIsReportFilled(),
-                                reservationDto.getStartDate(), reservationDto.getEndDate()));
-            }
-            reservationDtos.addAll(resDtos);
-        }
-        return reservationDtos;
-    }
-
-    private List<AdvertiserReservationDto> getReservationsFromAppointments(Set<Appointment> appointments) {
-        List<AdvertiserReservationDto> reservationDtos = new ArrayList<>();
-        for (Appointment appointment : appointments) {
+        for (Appointment appointment : serviceProfile.getAppointments()) {
             for (Reservation reservation : findAll()) {
                 if (appointment.getAppointmentId().equals(reservation.getAppointment().getAppointmentId())) {
-                    AdvertiserReservationDto reservationDto = new AdvertiserReservationDto(reservation);
+                    AdvertiserReservationDto reservationDto = new AdvertiserReservationDto(reservation, serviceProfile);
+                    reservationDto.setStatus(checkReservationStatus(reservationDto.getIsReportFilled(),
+                            reservationDto.getStartDate(), reservationDto.getEndDate()));
                     reservationDtos.add(reservationDto);
                 }
             }
@@ -281,16 +228,53 @@ public class ReservationService {
         Appointment appointment = appointmentService.findById(offerId);
         appointment.setReserved(true);
         appointmentService.save(appointment);
-        Reservation newReservation = new Reservation();
-        newReservation.setReportFilled(false);
-        newReservation.setClient(client);
-        newReservation.setAppointment(appointment);
-        newReservation.setCanceled(false);
-        save(newReservation);
+        save(new Reservation(false, appointment, client, false));
     }
 
     public Reservation findById(Integer id) {
         return repository.findById(id).orElse(new Reservation());
+    }
+
+    public boolean cancelReservation(Integer id) {
+        for (Reservation r : findAll()) {
+            if (r.getReservationId().equals(id)) {
+                r.setCanceled(true);
+                r.getAppointment().setCancelled(true);
+                appointmentService.save(r.getAppointment());
+                save(r);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Reservation> getClientReservationsForServiceProfile(String token, Integer serviceId) {
+        String email = tokenUtils.getEmailFromToken(token);
+        List<Reservation> reservations = new ArrayList<>();
+        for (Appointment ap : appointmentService.getAppointmentsByServiceId(serviceId)) {
+            for (Reservation r : findAll()) {
+                if (r.getAppointment().getAppointmentId().equals(ap.getAppointmentId())
+                        && r.getClient().getEmail().equals(email)) {
+                    reservations.add(r);
+                    break;
+                }
+            }
+        }
+        return reservations;
+    }
+
+    public boolean overlapsWithDateRange(List<Reservation> reservations, Date start, Date end) {
+        for (Reservation r : reservations) {
+            if (!r.getCanceled())
+                continue;
+            if (start.equals(r.getAppointment().getStartDate()) || end.equals(r.getAppointment().getEndDate()) ||
+                    end.equals(r.getAppointment().getStartDate()) || start.equals(r.getAppointment().getEndDate())
+                    || (start.after(r.getAppointment().getStartDate()) && start.before(r.getAppointment().getEndDate()))
+                    || (end.after(r.getAppointment().getStartDate()) && end.before(r.getAppointment().getEndDate()))
+                    || (start.before(r.getAppointment().getStartDate()) && end.after(r.getAppointment().getEndDate())))
+                return true;
+        }
+        return false;
     }
 
     private String createEmail(Client client, Appointment newAppointment, ServiceProfile serviceProfile) {
@@ -614,55 +598,5 @@ public class ReservationService {
                 " </body>\n" +
                 "</html>");
         return content.toString();
-    }
-
-    public boolean cancelReservation(Integer id) {
-        for (Reservation r : findAll()) {
-            if (r.getReservationId().equals(id)) {
-                r.setCanceled(true);
-                r.getAppointment().setCancelled(true);
-                appointmentService.save(r.getAppointment());
-                save(r);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public List<Reservation> getClientCancelledReservations(String email) {
-        List<Reservation> clientReservations = new ArrayList<Reservation>();
-        for (Reservation reservation : findAll()) {
-            if (reservation.getClient().getEmail().equals(email) && reservation.getCanceled().equals(true))
-                clientReservations.add(reservation);
-        }
-        return clientReservations;
-    }
-
-    public List<Reservation> getClientReservationsForServiceProfile(String token, Integer serviceId) {
-        String email = tokenUtils.getEmailFromToken(token);
-        List<Reservation> reservations = new ArrayList<Reservation>();
-        for (Appointment ap : appointmentService.getAppointmentsByServiceId(serviceId)) {
-            for (Reservation r : findAll()) {
-                if (r.getAppointment().getAppointmentId().equals(ap.getAppointmentId())
-                        && r.getClient().getEmail().equals(email)) {
-                    reservations.add(r);
-                    break;
-                }
-            }
-        }
-        return reservations;
-    }
-
-    public boolean overlapsWithDateRange(List<Reservation> reservations, Date start, Date end) {
-        for (Reservation r : reservations) {
-            if (r.getCanceled().equals(false))
-                continue;
-            if (start.equals(r.getAppointment().getStartDate()) || end.equals(r.getAppointment().getEndDate())
-                    || (start.after(r.getAppointment().getStartDate()) && start.before(r.getAppointment().getEndDate()))
-                    || (end.after(r.getAppointment().getStartDate()) && end.before(r.getAppointment().getEndDate()))
-                    || (start.before(r.getAppointment().getStartDate()) && end.after(r.getAppointment().getEndDate())))
-                return true;
-        }
-        return false;
     }
 }

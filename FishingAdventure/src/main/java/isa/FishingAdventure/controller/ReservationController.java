@@ -108,7 +108,7 @@ public class ReservationController {
     public ResponseEntity<Boolean> hadCancelledReservation(@RequestHeader("Authorization") String token,
             @RequestParam("serviceId") Integer serviceId,
             @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
+            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) {
 
         List<Reservation> serviceProfileReservations = reservationService.getClientReservationsForServiceProfile(token
                 .split(" ")[1], serviceId);

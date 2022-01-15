@@ -177,4 +177,8 @@ public class VacationHomeService {
         vacationHome.setVacationHomeOwner(owner);
         save(vacationHome);
     }
+
+    public List<ServiceProfile> findVacationHomesByVacationHomeOwner(VacationHomeOwner homeOwner) {
+       return  homeRepository.findVacationHomesByVacationHomeOwner(homeOwner);
+    }
 }

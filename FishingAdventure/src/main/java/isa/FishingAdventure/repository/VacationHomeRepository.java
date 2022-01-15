@@ -1,5 +1,6 @@
 package isa.FishingAdventure.repository;
 
+import isa.FishingAdventure.model.ServiceProfile;
 import isa.FishingAdventure.model.VacationHome;
 import isa.FishingAdventure.model.VacationHomeOwner;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import java.util.List;
 public interface VacationHomeRepository extends JpaRepository<VacationHome, Integer> {
 
     List<VacationHome> findByVacationHomeOwner(VacationHomeOwner owner);
+
+    List<ServiceProfile> findVacationHomesByVacationHomeOwner(VacationHomeOwner homeOwner);
 }

@@ -55,15 +55,11 @@ public class DeleteRequestService {
     }
 
     public List<DeleteRequest> getDeleteRequests(String token) {
-        List<DeleteRequest> deleteRequests = new ArrayList<>();
+        List<DeleteRequest> deleteRequests;
         String email = tokenUtils.getEmailFromToken(token.split(" ")[1]);
         Admin admin = adminService.findByEmail(email);
-        if (admin.getHeadAdmin()) {
-            deleteRequests = findAllUnreviewed();
-        }
-        else {
-            deleteRequests = findAllExceptAdmin();
-        }
+        if (admin.getHeadAdmin()) deleteRequests = findAllUnreviewed();
+        else deleteRequests = findAllExceptAdmin();
         return deleteRequests;
     }
 
@@ -82,7 +78,11 @@ public class DeleteRequestService {
         request.setReviewed(true);
         userService.delete(request.getEmail());
         deleteRequestRepository.save(request);
-        String emailText = createDeletionResponseEmail(response, true);
+        sendDeletionResponseEmail(response, request, true);
+    }
+
+    private void sendDeletionResponseEmail(String response, DeleteRequest request, boolean requestApproved) {
+        String emailText = createDeletionResponseEmail(response, requestApproved);
         try {
             emailService.sendEmail(request.getEmail(), "Request for account deletion", emailText);
         } catch (Exception e) {
@@ -94,12 +94,7 @@ public class DeleteRequestService {
         DeleteRequest request = findById(id);
         request.setReviewed(true);
         deleteRequestRepository.save(request);
-        String emailText = createDeletionResponseEmail(response, false);
-        try {
-            emailService.sendEmail(request.getEmail(), "Request for account deletion", emailText);
-        } catch (Exception e) {
-            System.out.println("Email could not be sent.");
-        }
+        sendDeletionResponseEmail(response, request, false);
     }
 
     private String createDeletionResponseEmail(String response, boolean requestApproved) {
