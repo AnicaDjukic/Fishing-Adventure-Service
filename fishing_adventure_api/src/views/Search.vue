@@ -262,7 +262,7 @@ export default {
     } else if (window.location.href.includes("/search/adventures")) {
       this.searching = "adventures";
       axios
-        .get("http://localhost:8080/fishingAdventure/all", {
+        .get("https://fishing-adventure-website-back.herokuapp.com/fishingAdventure/all", {
           headers: {
             "Access-Control-Allow-Origin": "http://localhost:8080",
           },
