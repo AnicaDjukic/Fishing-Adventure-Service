@@ -233,9 +233,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/users/getRole", {
+      .get("https://fishing-adventure-website-back.herokuapp.com/users/getRole", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -248,9 +248,9 @@ export default {
     if (window.location.href.includes("/search/cottages")) {
       this.searching = "cottages";
       axios
-        .get("http://localhost:8080/vacationHome/all", {
+        .get("https://fishing-adventure-website-back.herokuapp.com/vacationHome/all", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
           },
         })
         .then((res) => {
@@ -264,7 +264,7 @@ export default {
       axios
         .get("https://fishing-adventure-website-back.herokuapp.com/fishingAdventure/all", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
           },
         })
         .then((res) => {
@@ -276,9 +276,9 @@ export default {
     } else if (window.location.href.includes("/search/boats")) {
       this.searching = "boats";
       axios
-        .get("http://localhost:8080/boat/all", {
+        .get("https://fishing-adventure-website-back.herokuapp.com/boat/all", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
           },
         })
         .then((res) => {
@@ -366,7 +366,7 @@ export default {
     searchCottagesByDateAndPersons: function () {
       axios
         .get(
-          "http://localhost:8080/vacationHome/search?start=" +
+          "https://fishing-adventure-website-back.herokuapp.com/vacationHome/search?start=" +
             moment(this.date[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
             "&end=" +
             moment(this.date[1]).format("yyyy-MM-DD HH:mm:ss.SSS") +
@@ -374,7 +374,7 @@ export default {
             this.numberOfPersons,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
             },
           }
         )
@@ -388,7 +388,7 @@ export default {
     searchBoatsByDateAndPersons: function () {
       axios
         .get(
-          "http://localhost:8080/boat/search?start=" +
+          "https://fishing-adventure-website-back.herokuapp.com/boat/search?start=" +
             moment(this.date[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
             "&end=" +
             moment(this.date[1]).format("yyyy-MM-DD HH:mm:ss.SSS") +
@@ -396,7 +396,7 @@ export default {
             this.numberOfPersons,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
             },
           }
         )
