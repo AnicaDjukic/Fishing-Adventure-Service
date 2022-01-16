@@ -28,9 +28,9 @@ export default {
   name: "ConfirmToken",
   mounted() {
     axios
-      .get("/auth/confirm-account?token=" + this.$route.query.token, {
+      .get("http://localhost:8080/auth/confirm-account?token=" + this.$route.query.token, {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL ,
+          "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

@@ -171,9 +171,9 @@ export default {
         return;
       }
       axios
-        .get("/boat/deleteBoat/" + this.boatEntity.id, {
+        .get("http://localhost:8080/boat/deleteBoat/" + this.boatEntity.id, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL ,
+            "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })

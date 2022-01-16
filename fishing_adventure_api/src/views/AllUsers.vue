@@ -145,9 +145,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("/users/getAllUsers", {
+      .get("http://localhost:8080/users/getAllUsers", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL ,
+          "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

@@ -73,11 +73,11 @@ export default {
         else {
              axios
                 .get(
-                "/users/rejectRegistrationRequest?email=" +
+                "http://localhost:8080/users/rejectRegistrationRequest?email=" +
                     this.email + "&reason=" + this.reason,
                 {
                     headers: {
-                    "Access-Control-Allow-Origin": process.env.BASE_URL ,
+                    "Access-Control-Allow-Origin": "http://localhost:8080",
                     Authorization: "Bearer " + localStorage.refreshToken,
                     },
                 }

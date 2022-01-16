@@ -80,9 +80,9 @@ export default {
   },
   mounted() {
      axios
-        .get("/users/getRole", {
+        .get("http://localhost:8080/users/getRole", {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL ,
+            "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -99,9 +99,9 @@ export default {
 
 
           axios
-            .get("/appointment/getOffersByAdvertiser", {
+            .get("http://localhost:8080/appointment/getOffersByAdvertiser", {
               headers: {
-                "Access-Control-Allow-Origin": process.env.BASE_URL ,
+                "Access-Control-Allow-Origin": "http://localhost:8080",
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             })

@@ -89,9 +89,9 @@ export default {
       event.preventDefault();
       event.stopPropagation();
       axios
-        .get("/client/unsubscribe/" + this.subscription.id, {
+        .get("http://localhost:8080/client/unsubscribe/" + this.subscription.id, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL ,
+            "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -103,9 +103,9 @@ export default {
     },
     open: function () {
       axios
-      .get("/vacationHome/exists/" + this.subscription.id, {
+      .get("http://localhost:8080/vacationHome/exists/" + this.subscription.id, {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL ,
+          "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -120,10 +120,10 @@ export default {
     },
     findBoat: function() {
       axios
-      .get("/boat/exists/" + this.subscription.id,
+      .get("http://localhost:8080/boat/exists/" + this.subscription.id,
       {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL ,
+          "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

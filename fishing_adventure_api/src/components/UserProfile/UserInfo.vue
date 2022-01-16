@@ -272,9 +272,9 @@ export default {
   components: { DeleteAccountModal },
   mounted: function () {
     axios
-      .get("/deleteRequest/isRequested", {
+      .get("http://localhost:8080/deleteRequest/isRequested", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL ,
+          "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -283,9 +283,9 @@ export default {
       });
     if (localStorage.jwt) {
       axios
-        .get("/users/getRole", {
+        .get("http://localhost:8080/users/getRole", {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL ,
+            "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -295,9 +295,9 @@ export default {
     }
 
     axios
-      .get("/users/get", {
+      .get("http://localhost:8080/users/get", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL ,
+          "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -359,9 +359,9 @@ export default {
       };
 
       if (this.password1 === this.password2) {
-        axios.put("/users/changePassword", dto, {
+        axios.put("http://localhost:8080/users/changePassword", dto, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL ,
+            "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         });
@@ -408,9 +408,9 @@ export default {
       };
       if (this.role != undefined) {
         axios
-          .put("/users/update", user, {
+          .put("http://localhost:8080/users/update", user, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL ,
+              "Access-Control-Allow-Origin": "http://localhost:8080",
             },
           })
           .then((res) => {

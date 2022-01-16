@@ -86,11 +86,11 @@ export default {
           else {
               axios
                   .get(
-                  "/deleteRequest/approveDeletion?id=" +
+                  "http://localhost:8080/deleteRequest/approveDeletion?id=" +
                       this.request.id + "&response=" + this.response,
                   {
                       headers: {
-                      "Access-Control-Allow-Origin": process.env.BASE_URL ,
+                      "Access-Control-Allow-Origin": "http://localhost:8080",
                       Authorization: "Bearer " + localStorage.refreshToken,
                       },
                   }
@@ -106,11 +106,11 @@ export default {
           else {
               axios
                   .get(
-                  "/deleteRequest/rejectDeletion?id=" +
+                  "http://localhost:8080/deleteRequest/rejectDeletion?id=" +
                       this.request.id + "&response=" + this.response,
                   {
                       headers: {
-                      "Access-Control-Allow-Origin": process.env.BASE_URL ,
+                      "Access-Control-Allow-Origin": "http://localhost:8080",
                       Authorization: "Bearer " + localStorage.refreshToken,
                       },
                   }

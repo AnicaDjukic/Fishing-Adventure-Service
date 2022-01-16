@@ -455,11 +455,11 @@ export default {
 
         axios
           .put(
-            "/vacationHome/update/" + this.cottageId,
+            "http://localhost:8080/vacationHome/update/" + this.cottageId,
             home,
             {
               headers: {
-                "Access-Control-Allow-Origin": process.env.BASE_URL ,
+                "Access-Control-Allow-Origin": "http://localhost:8080",
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -476,11 +476,11 @@ export default {
 
       axios
         .put(
-          "/vacationHome/smallUpdate/" + this.cottageId,
+          "http://localhost:8080/vacationHome/smallUpdate/" + this.cottageId,
           dto,
           {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL ,
+              "Access-Control-Allow-Origin": "http://localhost:8080",
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -530,9 +530,9 @@ export default {
         };
 
         axios
-          .post("/vacationHome/newHome", home, {
+          .post("http://localhost:8080/vacationHome/newHome", home, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL ,
+              "Access-Control-Allow-Origin": "http://localhost:8080",
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })

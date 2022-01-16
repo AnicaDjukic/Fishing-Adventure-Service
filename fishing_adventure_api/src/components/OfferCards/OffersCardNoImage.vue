@@ -116,11 +116,11 @@ export default {
   methods: {
     createReservation: function() {
       axios
-        .post("/reservation/new/specialOffer/" , 
+        .post("http://localhost:8080/reservation/new/specialOffer/" , 
         this.offer,
         {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL ,
+            "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })

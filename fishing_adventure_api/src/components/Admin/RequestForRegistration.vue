@@ -93,11 +93,11 @@ export default {
       approveRequest: function () {
         axios
           .get(
-            "/users/approveRegistrationRequest/" +
+            "http://localhost:8080/users/approveRegistrationRequest/" +
               this.user.email,
             {
               headers: {
-                "Access-Control-Allow-Origin": process.env.BASE_URL ,
+                "Access-Control-Allow-Origin": "http://localhost:8080",
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }

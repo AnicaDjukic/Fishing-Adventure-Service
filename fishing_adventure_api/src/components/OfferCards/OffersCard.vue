@@ -177,13 +177,13 @@ export default {
     closeOffer: function () {
       axios
         .delete(
-          "/appointment/" +
+          "http://localhost:8080/appointment/" +
             this.offer.offerId +
             "/" +
             this.offer.serviceProfileId,
           {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL ,
+              "Access-Control-Allow-Origin": "http://localhost:8080",
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }

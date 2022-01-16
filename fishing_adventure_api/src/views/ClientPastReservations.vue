@@ -87,9 +87,9 @@ export default {
   },
   mounted() {
     axios
-      .get("/reservation/client/past", {
+      .get("http://localhost:8080/reservation/client/past", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL ,
+          "Access-Control-Allow-Origin": "http://localhost:8080",
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

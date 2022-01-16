@@ -546,9 +546,9 @@ export default {
         };
 
         axios
-          .put("/boat/update/" + this.boatId, boat, {
+          .put("http://localhost:8080/boat/update/" + this.boatId, boat, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL ,
+              "Access-Control-Allow-Origin": "http://localhost:8080",
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
@@ -563,9 +563,9 @@ export default {
       };
 
       axios
-        .put("/boat/smallUpdate/" + this.boatId, dto, {
+        .put("http://localhost:8080/boat/smallUpdate/" + this.boatId, dto, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL ,
+            "Access-Control-Allow-Origin": "http://localhost:8080",
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -629,9 +629,9 @@ export default {
         console.log(boat);
 
         axios
-          .post("/boat/newBoat", boat, {
+          .post("http://localhost:8080/boat/newBoat", boat, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL ,
+              "Access-Control-Allow-Origin": "http://localhost:8080",
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
