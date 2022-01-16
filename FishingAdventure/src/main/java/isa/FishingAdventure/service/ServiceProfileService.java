@@ -33,6 +33,9 @@ public class ServiceProfileService {
     @Autowired
     private BoatService boatService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     public void delete(int id) {
         Optional<ServiceProfile> profile = profileRepository.findById(id);
         profile.get().setDeleted(true);
@@ -127,4 +130,27 @@ public class ServiceProfileService {
             }
         }
     }
+
+    public void recalculateServiceRating(int id) {
+        ServiceProfile serviceProfile = getById(id);
+        serviceProfile.setRating(calculateAverageRatingForService(id));
+        save(serviceProfile);
+    }
+
+    public double calculateAverageRatingForService(int id) {
+        double sum = 0;
+        int num = 0;
+        double rating = 0;
+        for (Review review : reviewService.getAllApprovedReviewsForService(id)) {
+            if (review.getServiceId().equals(id)) {
+                num += 1;
+                sum += review.getRating();
+            }
+        }
+        if (num > 0)
+            rating = sum / num;
+
+        return rating;
+    }
 }
+

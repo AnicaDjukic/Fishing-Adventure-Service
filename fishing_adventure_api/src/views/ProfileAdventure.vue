@@ -268,7 +268,7 @@
 
         <div class="review-fa continer">
           <div class="review-tp">
-            <img class="user-rev-img" src="@/assets/fa7.jpg" alt="" />
+            <img class="user-rev-img" src="@/assets/user-comment.png" alt="" />
             <div class="rev-info">
               <h5>John Smith</h5>
               <h6>01.12.2021.</h6>

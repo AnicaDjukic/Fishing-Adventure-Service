@@ -1,6 +1,7 @@
 package isa.FishingAdventure.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Review {
@@ -26,6 +27,9 @@ public class Review {
     @Column(name = "serviceId", nullable = false)
     private Integer serviceId;
 
+    @Column(name = "datePosted", nullable = false)
+    private Date datePosted;
+
     public Review(Integer id, String content, int rating, boolean isApproved, boolean isRejected, Reservation reservation, Integer serviceId) {
         this.id = id;
         this.content = content;
@@ -34,6 +38,7 @@ public class Review {
         this.isRejected = isRejected;
         this.reservation = reservation;
         this.serviceId = serviceId;
+        this.datePosted = new Date();
     }
 
     public Review(String content, int rating, Integer serviceId, boolean isApproved, boolean isRejected) {
@@ -42,9 +47,11 @@ public class Review {
         this.isApproved = isApproved;
         this.isRejected = isRejected;
         this.serviceId = serviceId;
+        this.datePosted = new Date();
     }
 
     public Review() {
+        this.datePosted = new Date();
     }
 
     public Integer getId() {
@@ -101,5 +108,13 @@ public class Review {
 
     public void setServiceId(Integer serviceId) {
         this.serviceId = serviceId;
+    }
+
+    public Date getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(Date datePosted) {
+        this.datePosted = datePosted;
     }
 }
