@@ -70,9 +70,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/reservationReport/getReportsAwaitingReview", {
+      .get("/reservationReport/getReportsAwaitingReview", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -83,9 +83,9 @@ export default {
   methods: {
     sanctionClient: function (report) {
         axios
-          .put("http://localhost:8080/reservationReport/sanctionClient/", report, {
+          .put("/reservationReport/sanctionClient/", report, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
@@ -101,9 +101,9 @@ export default {
     },
     dontSanctionClient: function (report) {
         axios
-          .put("http://localhost:8080/reservationReport/rejectPenalty/", report, {
+          .put("/reservationReport/rejectPenalty/", report, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })

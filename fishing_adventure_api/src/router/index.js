@@ -293,6 +293,7 @@ const routes = [{
 }]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
+    base: process.env.BASE_URL,
     routes
 })
 async function checkAuthentification() {
@@ -323,9 +324,9 @@ async function checkAuthentification() {
 export default router
 async function checkRole() {
     try {
-        return await axios.get("https://fishing-adventure-website-back.herokuapp.com/users/getRole", {
+        return await axios.get("/users/getRole", {
             headers: {
-                "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
+                "Access-Control-Allow-Origin": process.env.BASE_URL,
                 Authorization: "Bearer " + localStorage.jwt,
             },
         })
@@ -335,9 +336,9 @@ async function checkRole() {
 }
 async function refreshToken() {
     try {
-        return await axios.get("https://fishing-adventure-website-back.herokuapp.com/auth/refreshToken", {
+        return await axios.get("/auth/refreshToken", {
             headers: {
-                "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
+                "Access-Control-Allow-Origin": process.env.BASE_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
             },
         }).then((res) => {

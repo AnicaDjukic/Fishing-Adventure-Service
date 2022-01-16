@@ -275,7 +275,7 @@ export default {
       if (this.selectedDateRange == null) return;
       axios
         .get(
-          "http://localhost:8080/vacationHome/available/dateRange?id=" +
+          "/vacationHome/available/dateRange?id=" +
             this.serviceId +
             "&start=" +
             moment(this.selectedDateRange[0]).format(
@@ -285,7 +285,7 @@ export default {
             moment(this.selectedDateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -310,10 +310,10 @@ export default {
     checkPersonsForCottage: function () {
       axios
         .get(
-          "http://localhost:8080/vacationHome/persons?id=" + this.serviceId,
+          "/vacationHome/persons?id=" + this.serviceId,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -324,9 +324,9 @@ export default {
     },
     checkPersonsForBoat: function () {
       axios
-        .get("http://localhost:8080/boat/persons?id=" + this.serviceId, {
+        .get("/boat/persons?id=" + this.serviceId, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -337,10 +337,10 @@ export default {
     checkPersonsForAdventure: function () {
       axios
         .get(
-          "http://localhost:8080/fishingAdventure/persons?id=" + this.serviceId,
+          "/fishingAdventure/persons?id=" + this.serviceId,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -374,7 +374,7 @@ export default {
     checkCottageAvailability: function () {
       axios
         .get(
-          "http://localhost:8080/vacationHome/available/dateRange?id=" +
+          "/vacationHome/available/dateRange?id=" +
             this.serviceId +
             "&start=" +
             moment(this.selectedDateRange[0]).format(
@@ -384,7 +384,7 @@ export default {
             moment(this.selectedDateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -399,7 +399,7 @@ export default {
     checkBoatAvailability: function () {
       axios
         .get(
-          "http://localhost:8080/boat/available/dateRange?id=" +
+          "/boat/available/dateRange?id=" +
             this.serviceId +
             "&start=" +
             moment(this.selectedDateRange[0]).format(
@@ -409,7 +409,7 @@ export default {
             moment(this.selectedDateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -419,7 +419,7 @@ export default {
           if (this.boatOwner == true) {
             axios
               .get(
-                "http://localhost:8080/boatOwner/available/dateRange?id=" +
+                "/boatOwner/available/dateRange?id=" +
                   this.serviceId +
                   "&start=" +
                   moment(this.selectedDateRange[0]).format(
@@ -431,7 +431,7 @@ export default {
                   ),
                 {
                   headers: {
-                    "Access-Control-Allow-Origin": "http://localhost:8080",
+                    "Access-Control-Allow-Origin": process.env.BASE_URL ,
                     Authorization: "Bearer " + localStorage.refreshToken,
                   },
                 }
@@ -448,7 +448,7 @@ export default {
       let endDate = new Date(startDate.getTime() + this.duration * 60000);
       axios
         .get(
-          "http://localhost:8080/fishingAdventure/isAdventureInstructorAvailable?id=" +
+          "/fishingAdventure/isAdventureInstructorAvailable?id=" +
             this.serviceId +
             "&start=" +
             moment(startDate).format("yyyy-MM-DD HH:mm:ss.SSS") +
@@ -456,7 +456,7 @@ export default {
             moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"),
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -480,7 +480,7 @@ export default {
 
       axios
         .get(
-          "http://localhost:8080/reservation/cancelled?serviceId=" +
+          "/reservation/cancelled?serviceId=" +
             this.serviceId +
             "&start=" +
             moment(startDate).format("yyyy-MM-DD HH:mm:ss.SSS") +
@@ -488,7 +488,7 @@ export default {
             moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"),
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -530,9 +530,9 @@ export default {
         };
 
         axios
-          .post("http://localhost:8080/reservation/new", reservation, {
+          .post("/reservation/new", reservation, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })

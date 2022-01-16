@@ -354,9 +354,9 @@ export default {
       };
 
       axios
-        .post("http://localhost:8080/auth/login", user, {
+        .post("/auth/login", user, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
           },
         })
         .then((res) => {
@@ -389,23 +389,23 @@ export default {
       let path;
       switch (this.chosenRole) {
         case "ROLE_CLIENT":
-          path = "http://localhost:8080/auth/signup";
+          path = "/auth/signup";
           break;
         case "ROLE_BOAT_OWNER":
-          path = "http://localhost:8080/auth/signup/boatOwner";
+          path = "/auth/signup/boatOwner";
           break;
         case "ROLE_VACATION_HOME_OWNER":
-          path = "http://localhost:8080/auth/signup/homeOwner";
+          path = "/auth/signup/homeOwner";
           break;
         case "ROLE_FISHING_INSTRUCTOR":
-          path = "http://localhost:8080/auth/signup/fishingInstructor";
+          path = "/auth/signup/fishingInstructor";
           break;
       }
 
       axios
         .post(path, user, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
           },
         })
         .then((res) => {

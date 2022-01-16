@@ -175,10 +175,10 @@ export default {
 
       axios
         .get(
-          "http://localhost:8080/vacationHome/deleteHome/" + this.entity.id,
+          "/vacationHome/deleteHome/" + this.entity.id,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }

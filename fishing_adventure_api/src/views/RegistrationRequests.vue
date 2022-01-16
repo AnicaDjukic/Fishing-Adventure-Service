@@ -183,9 +183,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/users/getAllRegistrationRequests", {
+      .get("/users/getAllRegistrationRequests", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

@@ -74,9 +74,9 @@ export default {
         serviceId: this.reservation.serviceId,
       };
       axios
-        .post("http://localhost:8080/complaint/new", complaint, {
+        .post("/complaint/new", complaint, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })

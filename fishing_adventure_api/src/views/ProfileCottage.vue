@@ -309,9 +309,9 @@ export default {
     window.scrollTo(0, 0);
 
     axios
-      .get("http://localhost:8080/vacationHome/" + this.$route.query.id, {
+      .get("/vacationHome/" + this.$route.query.id, {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -334,11 +334,11 @@ export default {
     }
     axios
       .get(
-        "http://localhost:8080/appointment/getOffersByServiceId/" +
+        "/appointment/getOffersByServiceId/" +
           this.$route.query.id,
         {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         }
@@ -349,11 +349,11 @@ export default {
 
     axios
       .get(
-        "http://localhost:8080/review/getReviewsForService/" +
+        "/review/getReviewsForService/" +
           this.$route.query.id,
         {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         }
@@ -371,9 +371,9 @@ export default {
     },
     isSubscribed: function () {
       axios
-        .get("http://localhost:8080/users/getRole", {
+        .get("/users/getRole", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -384,10 +384,10 @@ export default {
           if (this.loggedInRole == "ROLE_CLIENT") {
             axios
               .get(
-                "http://localhost:8080/client/isSubscribed/" + this.entity.id,
+                "/client/isSubscribed/" + this.entity.id,
                 {
                   headers: {
-                    "Access-Control-Allow-Origin": "http://localhost:8080",
+                    "Access-Control-Allow-Origin": process.env.BASE_URL ,
                     Authorization: "Bearer " + localStorage.refreshToken,
                   },
                 }
@@ -436,9 +436,9 @@ export default {
     },
     subscribe: function () {
       axios
-        .get("http://localhost:8080/client/subscribe/" + this.entity.id, {
+        .get("/client/subscribe/" + this.entity.id, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -448,9 +448,9 @@ export default {
     },
     unsubscribe: function () {
       axios
-        .get("http://localhost:8080/client/unsubscribe/" + this.entity.id, {
+        .get("/client/unsubscribe/" + this.entity.id, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })

@@ -148,9 +148,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/users/get", {
+      .get("/users/get", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -159,9 +159,9 @@ export default {
       });
 
     axios
-      .get("http://localhost:8080/complaint/exists/" + this.reservation.id, {
+      .get("/complaint/exists/" + this.reservation.id, {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -170,9 +170,9 @@ export default {
       });
 
     axios
-      .get("http://localhost:8080/review/exists/" + this.reservation.id, {
+      .get("/review/exists/" + this.reservation.id, {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -196,10 +196,10 @@ export default {
     cancelReservation: function () {
       axios
         .put(
-          "http://localhost:8080/reservation/cancel", this.reservation.id,
+          "/reservation/cancel", this.reservation.id,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }

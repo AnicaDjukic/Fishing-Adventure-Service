@@ -146,9 +146,9 @@ export default {
   },
   mounted() {
     axios
-      .get("http://localhost:8080/users/getRole", {
+      .get("/users/getRole", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -158,9 +158,9 @@ export default {
         if (loggedInRole == "ROLE_VACATION_HOME_OWNER") {
           this.entityType = "cottage";
           axios
-            .get("http://localhost:8080/vacationHome/getNamesByUser", {
+            .get("/vacationHome/getNamesByUser", {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL ,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             })
@@ -169,11 +169,11 @@ export default {
               for (let data of this.selectData) {
                 axios
                   .get(
-                    "http://localhost:8080/availabilityDate/getByServiceProfile/" +
+                    "/availabilityDate/getByServiceProfile/" +
                       data.code,
                     {
                       headers: {
-                        "Access-Control-Allow-Origin": "http://localhost:8080",
+                        "Access-Control-Allow-Origin": process.env.BASE_URL ,
                         Authorization: "Bearer " + localStorage.refreshToken,
                       },
                     }
@@ -194,9 +194,9 @@ export default {
         } else if (loggedInRole == "ROLE_BOAT_OWNER") {
           this.entityType = "boat";
           axios
-            .get("http://localhost:8080/boat/getNamesByUser", {
+            .get("/boat/getNamesByUser", {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL ,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             })
@@ -205,11 +205,11 @@ export default {
               for (let data of this.selectData) {
                 axios
                   .get(
-                    "http://localhost:8080/availabilityDate/getByServiceProfile/" +
+                    "/availabilityDate/getByServiceProfile/" +
                       data.code,
                     {
                       headers: {
-                        "Access-Control-Allow-Origin": "http://localhost:8080",
+                        "Access-Control-Allow-Origin": process.env.BASE_URL ,
                         Authorization: "Bearer " + localStorage.refreshToken,
                       },
                     }
@@ -305,14 +305,14 @@ export default {
         }
         axios
           .put(
-            "http://localhost:8080/availabilityDate/update/" +
+            "/availabilityDate/update/" +
               this.currentEvent.id +
               "/" +
               profileId,
             newAvailabilityDate,
             {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL ,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -337,11 +337,11 @@ export default {
         }
         axios
           .post(
-            "http://localhost:8080/availabilityDate/save/" + profileId,
+            "/availabilityDate/save/" + profileId,
             newAvailabilityDate,
             {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL ,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -362,13 +362,13 @@ export default {
       }
       axios
         .delete(
-          "http://localhost:8080/availabilityDate/" +
+          "/availabilityDate/" +
             this.currentEvent.extendedProps.defId +
             "/" +
             profileId,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }

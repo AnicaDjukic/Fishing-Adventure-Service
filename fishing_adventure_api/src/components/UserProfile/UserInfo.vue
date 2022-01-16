@@ -272,9 +272,9 @@ export default {
   components: { DeleteAccountModal },
   mounted: function () {
     axios
-      .get("http://localhost:8080/deleteRequest/isRequested", {
+      .get("/deleteRequest/isRequested", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -283,9 +283,9 @@ export default {
       });
     if (localStorage.jwt) {
       axios
-        .get("http://localhost:8080/users/getRole", {
+        .get("/users/getRole", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -295,9 +295,9 @@ export default {
     }
 
     axios
-      .get("http://localhost:8080/users/get", {
+      .get("/users/get", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL ,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -359,9 +359,9 @@ export default {
       };
 
       if (this.password1 === this.password2) {
-        axios.put("http://localhost:8080/users/changePassword", dto, {
+        axios.put("/users/changePassword", dto, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL ,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         });
@@ -408,9 +408,9 @@ export default {
       };
       if (this.role != undefined) {
         axios
-          .put("http://localhost:8080/users/update", user, {
+          .put("/users/update", user, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL ,
             },
           })
           .then((res) => {
