@@ -254,37 +254,12 @@
         <div class="so-title-fa">
           <h2>Past experiences</h2>
         </div>
+        <Review
+         v-for="review of reviews"
+         :key="review.id"
+         :review="review"
+        ></Review>
 
-        <div class="review-fa continer">
-          <div class="review-tp">
-            <img class="user-rev-img" src="@/assets/c16.jpg" alt="" />
-            <div class="rev-info">
-              <h5>John Smith</h5>
-              <h6>01.12.2021.</h6>
-            </div>
-            <div
-              style="
-                margin-left: auto;
-                display: inline-flex;
-                justify-content: flex-end;
-                align-content: center;
-              "
-            >
-              <i class="fas fa-star bi bi-star-fill rev-star"></i>
-              <i class="fas fa-star bi bi-star-fill rev-star"></i>
-              <i class="fas fa-star bi bi-star-fill rev-star"></i>
-              <i class="fas fa-star bi bi-star-fill rev-star"></i>
-            </div>
-          </div>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur.
-          </p>
-        </div>
       </div>
     </div>
   </div>
@@ -303,12 +278,14 @@
 import axios from "axios";
 import ReservationModal from "@/components/Modals/ReservationModal.vue";
 import OffersCardNoImage from "@/components/OfferCards/OffersCardNoImage.vue";
+import Review from "@/components/Utils/Review.vue";
 export default {
-  components: { ReservationModal, OffersCardNoImage },
+  components: { ReservationModal, OffersCardNoImage, Review },
   data: function () {
     return {
       offers: "",
       entityType: "home",
+      reviews: "",
       subscribed: false,
       loggedInRole: "",
       date: [],
@@ -368,6 +345,21 @@ export default {
       )
       .then((response) => {
         this.offers = response.data;
+      });
+
+    axios
+      .get(
+        "http://localhost:8080/review/getReviewsForService/" +
+          this.$route.query.id,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        }
+      )
+      .then((response) => {
+        this.reviews = response.data;
       });
   },
   methods: {

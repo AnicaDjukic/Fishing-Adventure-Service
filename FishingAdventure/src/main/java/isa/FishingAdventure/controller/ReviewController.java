@@ -36,6 +36,12 @@ public class ReviewController {
 		return new ResponseEntity<>(reviewService.exists(reservationId), HttpStatus.OK);
 	}
 
+	@GetMapping(value="getReviewsForService/{serviceId}")
+	@Transactional
+	public ResponseEntity<List<ReviewDto>> getReviewsForService(@PathVariable Integer serviceId) {
+		return new ResponseEntity<>(reviewService.getAllReviewsForServicePage(serviceId), HttpStatus.OK);
+	}
+
 	@GetMapping(value="getReviewsForAdmin")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Transactional

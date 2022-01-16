@@ -54,6 +54,14 @@ public class ReviewService {
         return reviews;
     }
 
+    public List<ReviewDto> getAllReviewsForServicePage(int id) {
+        List<ReviewDto> reviewDtos = new ArrayList<>();
+        for (Review review : getAllApprovedReviewsForService(id)) {
+            reviewDtos.add(createReviewDto(review));
+        }
+        return reviewDtos;
+    }
+
     public List<ReviewDto> getReviewsForAdmin() {
         List<ReviewDto> reviewDtos = new ArrayList<>();
         for (Review review : getAllUnreviewedReviews()) {
