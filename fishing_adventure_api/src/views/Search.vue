@@ -268,6 +268,7 @@ export default {
           },
         })
         .then((res) => {
+          console.log(res.data)
           this.adventureEntities = res.data;
           for (let adventure of this.adventureEntities) {
             adventure.rating = Number(adventure.rating).toFixed(2);
