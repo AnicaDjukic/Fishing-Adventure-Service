@@ -33,7 +33,16 @@ jobs:
           name: Test
           command: mvn test 
           
+orbs:
+  heroku: circleci/heroku@1.2.6
 workflows:
-  test:
+  heroku_deploy:
     jobs:
       - build-and-test
+      - heroku/deploy-via-git:
+          environment:
+            API_KEY: d09d9739-bf64-46a0-aa1c-d1b0c95ac5ab
+          app-name: fishing-adventure-front
+          api-key: $API_KEY
+          requires:
+            - build-and-test
