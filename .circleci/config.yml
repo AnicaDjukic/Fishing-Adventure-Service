@@ -37,6 +37,7 @@ orbs:
   heroku: circleci/heroku@1.2.6
 workflows:
   heroku_deploy:
+    working_directory: ~/FishingAdventureService
     jobs:
       - build-and-test
       - heroku/deploy-via-git:
