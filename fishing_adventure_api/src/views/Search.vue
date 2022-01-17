@@ -183,7 +183,6 @@ import BoatCard from "@/components/EntityCards/BoatCard.vue";
 import AdventureCard from "@/components/EntityCards/AdventureCard.vue";
 import axios from "axios";
 axios.defaults.baseURL = process.env.VUE_APP_URL;
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = process.env.VUE_APP_URL;
 import moment from "moment";
 export default {
   components: { Datepicker, CottageCard, BoatCard, AdventureCard },
@@ -238,6 +237,7 @@ export default {
     axios
       .get("/users/getRole", {
         headers: {
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -252,6 +252,7 @@ export default {
       axios
         .get("/vacationHome/all", {
           headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           },
         })
         .then((res) => {
@@ -265,6 +266,7 @@ export default {
       axios
         .get("/fishingAdventure/all", {
           headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           },
         })
         .then((res) => {
@@ -279,6 +281,7 @@ export default {
       axios
         .get("/boat/all", {
           headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           },
         })
         .then((res) => {

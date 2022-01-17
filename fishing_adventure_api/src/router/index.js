@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import axios from 'axios'
 
 axios.defaults.baseURL = process.env.VUE_APP_URL;
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = process.env.VUE_APP_URL;
 const routes = [{
     path: '/',
     name: 'Home',
@@ -328,6 +327,7 @@ async function checkRole() {
     try {
         return await axios.get("/users/getRole", {
             headers: {
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                 Authorization: "Bearer " + localStorage.jwt,
             },
         })
@@ -339,6 +339,7 @@ async function refreshToken() {
     try {
         return await axios.get("/auth/refreshToken", {
             headers: {
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
             },
         }).then((res) => {
