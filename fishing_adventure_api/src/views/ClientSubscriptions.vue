@@ -49,6 +49,7 @@
 <script>
 import SubscriptionCard from "@/components/EntityCards/SubscriptionCard.vue";
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 import moment from "moment";
 export default {
   components: { SubscriptionCard },
@@ -60,9 +61,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/client/subscriptions", {
+      .get("/client/subscriptions", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -89,7 +90,7 @@ export default {
     searchByDateAndPersons: function () {
       axios
         .get(
-          "http://localhost:8080/vacationHome/search?start=" +
+          "/vacationHome/search?start=" +
             moment(this.date[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
             "&end=" +
             moment(this.date[1]).format("yyyy-MM-DD HH:mm:ss.SSS") +
@@ -97,7 +98,7 @@ export default {
             this.numberOfPersons,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
             },
           }
         )

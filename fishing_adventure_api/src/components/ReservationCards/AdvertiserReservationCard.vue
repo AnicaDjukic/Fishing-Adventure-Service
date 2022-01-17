@@ -148,6 +148,7 @@
 <script>
 import moment from "moment";
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
   props: ["entity"],
   emits: ["createReservation", "createReport"],
@@ -167,9 +168,9 @@ export default {
     this.endDate = moment(this.endDate).format("MM/DD/yyyy HH:mm");
 
     axios
-      .get("http://localhost:8080/users/getRole", {
+      .get("/users/getRole", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

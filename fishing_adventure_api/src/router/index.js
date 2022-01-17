@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import axios from 'axios'
+
+axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = process.env.BASE_URL;
 const routes = [{
     path: '/',
     name: 'Home',
@@ -323,9 +326,8 @@ async function checkAuthentification() {
 export default router
 async function checkRole() {
     try {
-        return await axios.get("https://fishing-adventure-website-back.herokuapp.com/users/getRole", {
+        return await axios.get("/users/getRole", {
             headers: {
-                "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
                 Authorization: "Bearer " + localStorage.jwt,
             },
         })
@@ -335,9 +337,8 @@ async function checkRole() {
 }
 async function refreshToken() {
     try {
-        return await axios.get("https://fishing-adventure-website-back.herokuapp.com/auth/refreshToken", {
+        return await axios.get("/auth/refreshToken", {
             headers: {
-                "Access-Control-Allow-Origin": "https://fishing-adventure-website-back.herokuapp.com",
                 Authorization: "Bearer " + localStorage.refreshToken,
             },
         }).then((res) => {

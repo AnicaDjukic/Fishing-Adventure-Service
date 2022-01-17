@@ -233,6 +233,7 @@
 
 <script>
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 import BoatModalImages from "./CottageModalImages.vue";
 import BoatModalMap from "./CottageModalMap.vue";
 import BoatModalRules from "./CottageModalRules.vue";
@@ -546,9 +547,9 @@ export default {
         };
 
         axios
-          .put("http://localhost:8080/boat/update/" + this.boatId, boat, {
+          .put("/boat/update/" + this.boatId, boat, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
@@ -563,9 +564,9 @@ export default {
       };
 
       axios
-        .put("http://localhost:8080/boat/smallUpdate/" + this.boatId, dto, {
+        .put("/boat/smallUpdate/" + this.boatId, dto, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -629,9 +630,9 @@ export default {
         console.log(boat);
 
         axios
-          .post("http://localhost:8080/boat/newBoat", boat, {
+          .post("/boat/newBoat", boat, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })

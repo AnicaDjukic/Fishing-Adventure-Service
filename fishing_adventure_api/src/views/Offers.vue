@@ -68,6 +68,7 @@
 import OffersCard from "@/components/OfferCards/OffersCard.vue";
 import OfferModal from "@/components/Modals/OfferModal.vue";
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
   components: { OffersCard, OfferModal },
   data: function () {
@@ -80,9 +81,9 @@ export default {
   },
   mounted() {
      axios
-        .get("http://localhost:8080/users/getRole", {
+        .get("/users/getRole", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -99,9 +100,9 @@ export default {
 
 
           axios
-            .get("http://localhost:8080/appointment/getOffersByAdvertiser", {
+            .get("/appointment/getOffersByAdvertiser", {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             })

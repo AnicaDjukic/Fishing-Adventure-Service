@@ -169,6 +169,7 @@
 import RequestForRegistration from "@/components/Admin/RequestForRegistration.vue";
 import ReasonForRejectionModal from "@/components/Admin/ReasonForRejectionModal.vue";
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 
 export default {
   components: { "registration-request": RequestForRegistration, ReasonForRejectionModal },
@@ -183,9 +184,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/users/getAllRegistrationRequests", {
+      .get("/users/getAllRegistrationRequests", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

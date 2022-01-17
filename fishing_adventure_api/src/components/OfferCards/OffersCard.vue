@@ -139,6 +139,7 @@
 <script>
 import moment from "moment";
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 import YesNoModal from "@/components/Modals/YesNoModal.vue";
 export default {
   props: ["offer", "entityType"],
@@ -177,13 +178,13 @@ export default {
     closeOffer: function () {
       axios
         .delete(
-          "http://localhost:8080/appointment/" +
+          "/appointment/" +
             this.offer.offerId +
             "/" +
             this.offer.serviceProfileId,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }

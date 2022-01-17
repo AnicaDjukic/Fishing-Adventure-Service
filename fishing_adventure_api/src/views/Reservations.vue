@@ -77,6 +77,7 @@ import AdvertiserReservationModal from "@/components/Modals/AdvertiserReservatio
 import AdvertiserReportModal from "@/components/Modals/AdvertiserReportModal.vue";
 
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
   components: {
     AdvertiserReservationCard,
@@ -102,9 +103,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/reservation/allByAdvertiser", {
+      .get("/reservation/allByAdvertiser", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

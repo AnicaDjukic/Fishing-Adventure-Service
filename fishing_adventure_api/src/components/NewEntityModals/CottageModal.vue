@@ -219,6 +219,7 @@
 
 <script>
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 import CottageModalImages from "./CottageModalImages.vue";
 import CottageModalMap from "./CottageModalMap.vue";
 import CottageModalRooms from "./CottageModalRooms.vue";
@@ -455,11 +456,11 @@ export default {
 
         axios
           .put(
-            "http://localhost:8080/vacationHome/update/" + this.cottageId,
+            "/vacationHome/update/" + this.cottageId,
             home,
             {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -476,11 +477,11 @@ export default {
 
       axios
         .put(
-          "http://localhost:8080/vacationHome/smallUpdate/" + this.cottageId,
+          "/vacationHome/smallUpdate/" + this.cottageId,
           dto,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -530,9 +531,9 @@ export default {
         };
 
         axios
-          .post("http://localhost:8080/vacationHome/newHome", home, {
+          .post("/vacationHome/newHome", home, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })

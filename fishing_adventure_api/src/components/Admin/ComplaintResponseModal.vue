@@ -63,6 +63,7 @@
 
 <script>
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
     name: "ComplaintResponseModal",
     props: ['id', 'complaint'],
@@ -96,10 +97,10 @@ export default {
 
             axios
                 .put(
-                "http://localhost:8080/complaint/respondToComplaint/", responseDto,
+                "/complaint/respondToComplaint/", responseDto,
                 {
                     headers: {
-                    "Access-Control-Allow-Origin": "http://localhost:8080",
+                    "Access-Control-Allow-Origin": process.env.BASE_URL,
                      Authorization: "Bearer " + localStorage.refreshToken,
                     },
                 }

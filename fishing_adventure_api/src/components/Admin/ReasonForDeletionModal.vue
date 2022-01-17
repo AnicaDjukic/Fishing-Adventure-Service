@@ -63,6 +63,7 @@
 
 <script>
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
     name: "RequestForDeletion",
     props: ['id', 'request'],
@@ -86,11 +87,11 @@ export default {
           else {
               axios
                   .get(
-                  "http://localhost:8080/deleteRequest/approveDeletion?id=" +
+                  "/deleteRequest/approveDeletion?id=" +
                       this.request.id + "&response=" + this.response,
                   {
                       headers: {
-                      "Access-Control-Allow-Origin": "http://localhost:8080",
+                      "Access-Control-Allow-Origin": process.env.BASE_URL,
                       Authorization: "Bearer " + localStorage.refreshToken,
                       },
                   }
@@ -106,11 +107,11 @@ export default {
           else {
               axios
                   .get(
-                  "http://localhost:8080/deleteRequest/rejectDeletion?id=" +
+                  "/deleteRequest/rejectDeletion?id=" +
                       this.request.id + "&response=" + this.response,
                   {
                       headers: {
-                      "Access-Control-Allow-Origin": "http://localhost:8080",
+                      "Access-Control-Allow-Origin": process.env.BASE_URL,
                       Authorization: "Bearer " + localStorage.refreshToken,
                       },
                   }

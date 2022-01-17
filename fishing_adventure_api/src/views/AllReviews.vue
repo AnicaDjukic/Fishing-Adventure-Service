@@ -121,6 +121,7 @@
 
 <script>
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
   data: function () {
     return {
@@ -131,9 +132,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/review/getReviewsForAdmin", {
+      .get("/review/getReviewsForAdmin", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -144,9 +145,9 @@ export default {
   methods: {
     approveReview: function (review) {
         axios
-          .put("http://localhost:8080/review/approveReview/", review, {
+          .put("/review/approveReview/", review, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
@@ -162,9 +163,9 @@ export default {
     },
     rejectReview: function (review) {
         axios
-          .put("http://localhost:8080/review/rejectReview/", review, {
+          .put("/review/rejectReview/", review, {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })

@@ -187,6 +187,7 @@
 
 <script>
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 import moment from "moment";
 export default {
   components: {},
@@ -216,9 +217,9 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8080/users/getRole", {
+      .get("/users/getRole", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -240,11 +241,11 @@ export default {
     getAdditionalServicesByName: function (selectedEntity) {
       axios
         .get(
-          "http://localhost:8080/serviceProfile/getAdditionalServicesByName/" +
+          "/serviceProfile/getAdditionalServicesByName/" +
             selectedEntity,
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -264,11 +265,11 @@ export default {
         this.getAdditionalServicesByName(selectedEntity);
         axios
           .get(
-            "http://localhost:8080/serviceProfile/getServiceInfoForOfferByName/" +
+            "/serviceProfile/getServiceInfoForOfferByName/" +
               selectedEntity,
             {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -286,11 +287,11 @@ export default {
             if (this.entityType == "adventure") {
               axios
                 .get(
-                  "http://localhost:8080/fishingAdventure/getDurationById/" +
+                  "/fishingAdventure/getDurationById/" +
                     this.serviceProfileId,
                   {
                     headers: {
-                      "Access-Control-Allow-Origin": "http://localhost:8080",
+                      "Access-Control-Allow-Origin": process.env.BASE_URL,
                       Authorization: "Bearer " + localStorage.refreshToken,
                     },
                   }
@@ -335,7 +336,7 @@ export default {
         if (this.entityType == "cottage") {
           axios
             .get(
-              "http://localhost:8080/vacationHome/available/dateRange?id=" +
+              "/vacationHome/available/dateRange?id=" +
                 this.serviceProfileId +
                 "&start=" +
                 moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
@@ -343,7 +344,7 @@ export default {
                 moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
               {
                 headers: {
-                  "Access-Control-Allow-Origin": "http://localhost:8080",
+                  "Access-Control-Allow-Origin": process.env.BASE_URL,
                   Authorization: "Bearer " + localStorage.refreshToken,
                 },
               }
@@ -360,7 +361,7 @@ export default {
         } else {
           axios
             .get(
-              "http://localhost:8080/boat/available/dateRange?id=" +
+              "/boat/available/dateRange?id=" +
                 this.serviceProfileId +
                 "&start=" +
                 moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
@@ -368,7 +369,7 @@ export default {
                 moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
               {
                 headers: {
-                  "Access-Control-Allow-Origin": "http://localhost:8080",
+                  "Access-Control-Allow-Origin": process.env.BASE_URL,
                   Authorization: "Bearer " + localStorage.refreshToken,
                 },
               }
@@ -394,13 +395,13 @@ export default {
         );
         axios
           .get(
-            "http://localhost:8080/fishingAdventure/isInstructorAvailable?start=" +
+            "/fishingAdventure/isInstructorAvailable?start=" +
               moment(startDate).format("yyyy-MM-DD HH:mm:ss.SSS") +
               "&end=" +
               moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"),
             {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -490,11 +491,11 @@ export default {
 
         axios
           .post(
-            "http://localhost:8080/reservation/newByAdvertiser",
+            "/reservation/newByAdvertiser",
             reservation,
             {
               headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Origin": process.env.BASE_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -521,9 +522,9 @@ export default {
     },
     getServiceProfileByHomeOwner: function () {
       axios
-        .get("http://localhost:8080/vacationHome/getNamesByUser", {
+        .get("/vacationHome/getNamesByUser", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -533,9 +534,9 @@ export default {
     },
     getServiceProfileByBoatOwner: function () {
       axios
-        .get("http://localhost:8080/boat/getNamesByUser", {
+        .get("/boat/getNamesByUser", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -546,9 +547,9 @@ export default {
     },
     getServiceProfileByFishingInstructor: function () {
       axios
-        .get("http://localhost:8080/fishingAdventure/getNamesByUser", {
+        .get("/fishingAdventure/getNamesByUser", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -559,7 +560,7 @@ export default {
     checkBoatOwnerAvailability: function () {
       axios
         .get(
-          "http://localhost:8080/boatOwner/available/dateRange?id=" +
+          "/boatOwner/available/dateRange?id=" +
             this.serviceProfileId +
             "&start=" +
             moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
@@ -567,7 +568,7 @@ export default {
             moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
           {
             headers: {
-              "Access-Control-Allow-Origin": "http://localhost:8080",
+              "Access-Control-Allow-Origin": process.env.BASE_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }

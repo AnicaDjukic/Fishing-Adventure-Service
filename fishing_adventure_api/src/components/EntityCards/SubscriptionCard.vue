@@ -74,6 +74,7 @@
 
 <script>
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
   props: ["subscription"],
   data: function () {
@@ -89,9 +90,9 @@ export default {
       event.preventDefault();
       event.stopPropagation();
       axios
-        .get("http://localhost:8080/client/unsubscribe/" + this.subscription.id, {
+        .get("/client/unsubscribe/" + this.subscription.id, {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Origin": process.env.BASE_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -103,9 +104,9 @@ export default {
     },
     open: function () {
       axios
-      .get("http://localhost:8080/vacationHome/exists/" + this.subscription.id, {
+      .get("/vacationHome/exists/" + this.subscription.id, {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -120,10 +121,10 @@ export default {
     },
     findBoat: function() {
       axios
-      .get("http://localhost:8080/boat/exists/" + this.subscription.id,
+      .get("/boat/exists/" + this.subscription.id,
       {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

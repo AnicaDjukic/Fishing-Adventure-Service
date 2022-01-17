@@ -8,6 +8,7 @@
 <script>
 import VCalendar from "@/components/Utils/Calendar.vue";
 import axios from "axios";
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
   components: { VCalendar },
   data: function () {
@@ -17,9 +18,9 @@ export default {
   },
   mounted() {
     axios
-      .get("http://localhost:8080/users/getRole", {
+      .get("/users/getRole", {
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080",
+          "Access-Control-Allow-Origin": process.env.BASE_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
