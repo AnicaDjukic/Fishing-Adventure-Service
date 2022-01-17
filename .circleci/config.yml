@@ -32,13 +32,3 @@ jobs:
       - run:
           name: Test
           command: mvn test
-
-orbs:
-  heroku: circleci/heroku@1.2.6
-workflows:
-  heroku_deploy:
-    jobs:
-      - build-and-test
-      - heroku/deploy-via-git:
-          requires:
-            - build-and-test
