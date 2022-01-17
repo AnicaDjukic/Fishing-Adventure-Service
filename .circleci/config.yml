@@ -4,12 +4,12 @@ jobs:
   build-and-test:
     docker:
       - image: cimg/openjdk:11.0
+    working_directory: ~/FishingAdventureService/FishingAdventure
     steps:
       - checkout
+            path: ~/FishingAdventureService
       - run:
           command: pwd
-      - run:
-          command: cd FishingAdventure
       - run:
           name: Build
           command: mvn -B -DskipTests clean package
