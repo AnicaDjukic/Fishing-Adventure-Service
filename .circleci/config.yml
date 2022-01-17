@@ -41,7 +41,7 @@ workflows:
       - build-and-test
       - heroku/deploy-via-git:
           environment:
-            api-key: d09d9739-bf64-46a0-aa1c-d1b0c95ac5ab
-          app-name: fishing-adventure-front
+            HEROKU_API_KEY: d09d9739-bf64-46a0-aa1c-d1b0c95ac5ab
+            HEROKU_APP_NAME: fishing-adventure-front
           requires:
             - build-and-test
