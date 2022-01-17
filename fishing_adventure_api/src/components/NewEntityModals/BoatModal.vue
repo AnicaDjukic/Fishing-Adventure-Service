@@ -233,7 +233,7 @@
 
 <script>
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import BoatModalImages from "./CottageModalImages.vue";
 import BoatModalMap from "./CottageModalMap.vue";
 import BoatModalRules from "./CottageModalRules.vue";
@@ -549,7 +549,7 @@ export default {
         axios
           .put("/boat/update/" + this.boatId, boat, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
@@ -566,7 +566,7 @@ export default {
       axios
         .put("/boat/smallUpdate/" + this.boatId, dto, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -632,7 +632,7 @@ export default {
         axios
           .post("/boat/newBoat", boat, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })

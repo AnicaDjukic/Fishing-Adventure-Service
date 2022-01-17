@@ -139,7 +139,7 @@
 <script>
 import moment from "moment";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import YesNoModal from "@/components/Modals/YesNoModal.vue";
 export default {
   props: ["offer", "entityType"],
@@ -184,7 +184,7 @@ export default {
             this.offer.serviceProfileId,
           {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }

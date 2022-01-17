@@ -148,7 +148,7 @@
 <script>
 import moment from "moment";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
   props: ["entity"],
   emits: ["createReservation", "createReport"],
@@ -170,7 +170,7 @@ export default {
     axios
       .get("/users/getRole", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

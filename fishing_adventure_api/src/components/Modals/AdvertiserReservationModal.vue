@@ -187,7 +187,7 @@
 
 <script>
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import moment from "moment";
 export default {
   components: {},
@@ -219,7 +219,7 @@ export default {
     axios
       .get("/users/getRole", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -245,7 +245,7 @@ export default {
             selectedEntity,
           {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }
@@ -269,7 +269,7 @@ export default {
               selectedEntity,
             {
               headers: {
-                "Access-Control-Allow-Origin": process.env.BASE_URL,
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -291,7 +291,7 @@ export default {
                     this.serviceProfileId,
                   {
                     headers: {
-                      "Access-Control-Allow-Origin": process.env.BASE_URL,
+                      "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                       Authorization: "Bearer " + localStorage.refreshToken,
                     },
                   }
@@ -344,7 +344,7 @@ export default {
                 moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
               {
                 headers: {
-                  "Access-Control-Allow-Origin": process.env.BASE_URL,
+                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                   Authorization: "Bearer " + localStorage.refreshToken,
                 },
               }
@@ -369,7 +369,7 @@ export default {
                 moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
               {
                 headers: {
-                  "Access-Control-Allow-Origin": process.env.BASE_URL,
+                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                   Authorization: "Bearer " + localStorage.refreshToken,
                 },
               }
@@ -401,7 +401,7 @@ export default {
               moment(endDate).format("yyyy-MM-DD HH:mm:ss.SSS"),
             {
               headers: {
-                "Access-Control-Allow-Origin": process.env.BASE_URL,
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -495,7 +495,7 @@ export default {
             reservation,
             {
               headers: {
-                "Access-Control-Allow-Origin": process.env.BASE_URL,
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                 Authorization: "Bearer " + localStorage.refreshToken,
               },
             }
@@ -524,7 +524,7 @@ export default {
       axios
         .get("/vacationHome/getNamesByUser", {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -536,7 +536,7 @@ export default {
       axios
         .get("/boat/getNamesByUser", {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -549,7 +549,7 @@ export default {
       axios
         .get("/fishingAdventure/getNamesByUser", {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -568,7 +568,7 @@ export default {
             moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
           {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           }

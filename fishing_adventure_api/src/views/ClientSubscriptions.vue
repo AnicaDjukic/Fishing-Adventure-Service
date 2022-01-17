@@ -49,7 +49,7 @@
 <script>
 import SubscriptionCard from "@/components/EntityCards/SubscriptionCard.vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import moment from "moment";
 export default {
   components: { SubscriptionCard },
@@ -63,7 +63,7 @@ export default {
     axios
       .get("/client/subscriptions", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -98,7 +98,7 @@ export default {
             this.numberOfPersons,
           {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             },
           }
         )

@@ -182,8 +182,8 @@ import CottageCard from "@/components/EntityCards/CottageCard.vue";
 import BoatCard from "@/components/EntityCards/BoatCard.vue";
 import AdventureCard from "@/components/EntityCards/AdventureCard.vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = process.env.VUE_APP_URL;
 import moment from "moment";
 export default {
   components: { Datepicker, CottageCard, BoatCard, AdventureCard },
@@ -374,7 +374,7 @@ export default {
             this.numberOfPersons,
           {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             },
           }
         )
@@ -396,7 +396,7 @@ export default {
             this.numberOfPersons,
           {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             },
           }
         )

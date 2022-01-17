@@ -75,7 +75,7 @@
 <script>
 import AdventureCard from "@/components/EntityCards/AdventureCard.vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
   components: { AdventureCard },
   data: function () {
@@ -91,7 +91,7 @@ export default {
     axios
       .get("/fishingAdventure/allByUser", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

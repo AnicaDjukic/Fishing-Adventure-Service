@@ -51,7 +51,7 @@
 
 <script>
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
   components: {},
   props: ["email"],
@@ -78,7 +78,7 @@ export default {
                     this.email + "&reason=" + this.reason,
                 {
                     headers: {
-                    "Access-Control-Allow-Origin": process.env.BASE_URL,
+                    "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                     Authorization: "Bearer " + localStorage.refreshToken,
                     },
                 }

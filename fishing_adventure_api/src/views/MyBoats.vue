@@ -75,7 +75,7 @@
 <script>
 import BoatCard from "@/components/EntityCards/BoatCard.vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import NewBoatModal from "@/components/NewEntityModals/BoatModal.vue";
 export default {
   components: { BoatCard, NewBoatModal },
@@ -92,7 +92,7 @@ export default {
     axios
       .get("/boat/allByUser", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

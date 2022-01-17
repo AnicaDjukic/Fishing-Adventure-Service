@@ -75,7 +75,7 @@
 <script>
 import CottageCard from "@/components/EntityCards/CottageCard.vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import CottageModal from "@/components/NewEntityModals/CottageModal.vue";
 export default {
   components: { CottageCard, CottageModal },
@@ -92,7 +92,7 @@ export default {
     axios
       .get("/vacationHome/allByUser", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

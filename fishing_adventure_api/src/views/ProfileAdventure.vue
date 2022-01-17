@@ -287,7 +287,7 @@
 
 <script>
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import ReservationModal from "@/components/Modals/ReservationModal.vue";
 import OffersCardNoImage from "@/components/OfferCards/OffersCardNoImage.vue";
 import Review from "@/components/Utils/Review.vue";
@@ -325,7 +325,7 @@ export default {
     axios
       .get("/fishingAdventure/" + this.$route.query.id, {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -357,7 +357,7 @@ export default {
           this.$route.query.id,
         {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         }
@@ -372,7 +372,7 @@ export default {
           this.$route.query.id,
         {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         }
@@ -392,7 +392,7 @@ export default {
       axios
         .get("/users/getRole", {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -406,7 +406,7 @@ export default {
                 "/client/isSubscribed/" + this.entity.id,
                 {
                   headers: {
-                    "Access-Control-Allow-Origin": process.env.BASE_URL,
+                    "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
                     Authorization: "Bearer " + localStorage.refreshToken,
                   },
                 }
@@ -463,7 +463,7 @@ export default {
       axios
         .get("/client/subscribe/" + this.entity.id, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -475,7 +475,7 @@ export default {
       axios
         .get("/client/unsubscribe/" + this.entity.id, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })

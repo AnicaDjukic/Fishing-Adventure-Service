@@ -106,7 +106,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import BoatModal from "../NewEntityModals/BoatModal.vue";
 
 export default {
@@ -174,7 +174,7 @@ export default {
       axios
         .get("/boat/deleteBoat/" + this.boatEntity.id, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })

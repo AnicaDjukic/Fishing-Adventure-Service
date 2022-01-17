@@ -254,7 +254,7 @@
 
 <script>
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import DeleteAccountModal from "@/components/UserProfile/DeleteAccountModal.vue"
 export default {
   data: function () {
@@ -275,7 +275,7 @@ export default {
     axios
       .get("/deleteRequest/isRequested", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -286,7 +286,7 @@ export default {
       axios
         .get("/users/getRole", {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         })
@@ -298,7 +298,7 @@ export default {
     axios
       .get("/users/get", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -362,7 +362,7 @@ export default {
       if (this.password1 === this.password2) {
         axios.put("/users/changePassword", dto, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             Authorization: "Bearer " + localStorage.refreshToken,
           },
         });
@@ -411,7 +411,7 @@ export default {
         axios
           .put("/users/update", user, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
             },
           })
           .then((res) => {

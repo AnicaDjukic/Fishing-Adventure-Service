@@ -71,7 +71,7 @@ import ClientReservationCard from "@/components/ReservationCards/ClientReservati
 import ReviewModal from "@/components/Modals/ReviewModal.vue";
 import ComplaintModal from "@/components/Modals/ComplaintModal.vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URLURL;
 export default {
   components: { ClientReservationCard, ReviewModal, ComplaintModal },
   data: function () {
@@ -90,7 +90,7 @@ export default {
     axios
       .get("/reservation/client/past", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URLURL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })

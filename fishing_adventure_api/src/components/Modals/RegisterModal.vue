@@ -261,7 +261,7 @@
 
 <script>
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
   name: "RegisterModal",
   data: function () {
@@ -357,7 +357,7 @@ export default {
       axios
         .post("/auth/login", user, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           },
         })
         .then((res) => {
@@ -406,7 +406,7 @@ export default {
       axios
         .post(path, user, {
           headers: {
-            "Access-Control-Allow-Origin": process.env.BASE_URL,
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           },
         })
         .then((res) => {

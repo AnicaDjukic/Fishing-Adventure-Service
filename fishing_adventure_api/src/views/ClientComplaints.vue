@@ -62,7 +62,7 @@
 <script>
 import ComplaintResponseModal from "@/components/Admin/ComplaintResponseModal.vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
   components: { "complaint-response": ComplaintResponseModal },
   data: function () {   
@@ -76,7 +76,7 @@ export default {
     axios
       .get("/complaint/getClientComplaints", {
         headers: {
-          "Access-Control-Allow-Origin": process.env.BASE_URL,
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
       })
@@ -89,7 +89,7 @@ export default {
         axios
           .put("/reservationReport/sanctionClient/", report, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
@@ -107,7 +107,7 @@ export default {
         axios
           .put("/reservationReport/rejectPenalty/", report, {
             headers: {
-              "Access-Control-Allow-Origin": process.env.BASE_URL,
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })

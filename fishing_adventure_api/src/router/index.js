@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import axios from 'axios'
 
-axios.defaults.baseURL = process.env.BASE_URL;
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = process.env.BASE_URL;
+axios.defaults.baseURL = process.env.VUE_APP_URL;
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = process.env.VUE_APP_URL;
 const routes = [{
     path: '/',
     name: 'Home',
@@ -295,7 +295,7 @@ const routes = [{
     }
 }]
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHistory(process.env.VUE_APP_URL),
     routes
 })
 async function checkAuthentification() {
