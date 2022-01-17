@@ -31,8 +31,14 @@ jobs:
           command: mvn -B -DskipTests clean package
       - run:
           name: Test
-          command: mvn test  
+          command: mvn test
+  prepare-for-deploy:
+    docker:
+        - image: cimg/openjdk:11.0
     working_directory: ~/FishingAdventureService
+    steps:
+      - checkout:
+          path: ~/FishingAdventureService
           
 orbs:
   heroku: circleci/heroku@1.2.6
@@ -40,8 +46,8 @@ workflows:
   heroku_deploy:
     jobs:
       - build-and-test
-      - prepare-for-deply
+      - prepare-for-deploy
       - heroku/deploy-via-git:
           requires:
             - build-and-test
-            - prepare-for-deply
+            - prepare-for-deploy
