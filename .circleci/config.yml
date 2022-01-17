@@ -44,6 +44,8 @@ workflows:
   heroku_deploy:
     jobs:
       - build-and-test
+      - prepare-for-deply
       - heroku/deploy-via-git:
           requires:
             - build-and-test
+            - prepare-for-deply
