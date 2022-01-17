@@ -32,11 +32,7 @@ jobs:
       - run:
           name: Test
           command: mvn test  
-  prepare-for-deply:
     working_directory: ~/FishingAdventureService
-    steps:
-      - checkout:
-          path: ~/FishingAdventureService
           
 orbs:
   heroku: circleci/heroku@1.2.6
