@@ -1,5 +1,7 @@
 module.exports = {
     devServer: {
-        proxy: 'http://localhost:8080/'
+        proxy: process.env.NODE_ENV === 'production'
+        ? 'https://fishing-adventure-website-back.herokuapp.com/'
+        : 'http://localhost:8080/'
     }
 }
