@@ -31,4 +31,9 @@ jobs:
           command: mvn -B -DskipTests clean package
       - run:
           name: Test
-          command: mvn test
+          command: mvn test 
+          
+workflows:
+  test:
+    jobs:
+      - build-and-test
