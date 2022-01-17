@@ -23,6 +23,7 @@ jobs:
           name: Wait for db
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: sudo apt-get update
+      - run: sudo apt-get upgrade
       - run: sudo apt-get install postgresql-client-9.6
       - run:
           name: Build
