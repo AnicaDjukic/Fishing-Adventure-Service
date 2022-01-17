@@ -45,12 +45,12 @@ orbs:
 workflows:
   heroku_deploy:
     jobs:
-      - build-and-test
+      - build-and-test:
           filters:  # using regex filters requires the entire branch to match
                 branches:
                   only:  # only branches matching the below regex filters will run
                     - develop
-      - prepare-for-deploy
+      - prepare-for-deploy:
           filters:  # using regex filters requires the entire branch to match
                 branches:
                   only:  # only branches matching the below regex filters will run
