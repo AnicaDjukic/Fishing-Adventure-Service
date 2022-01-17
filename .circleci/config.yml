@@ -46,7 +46,15 @@ workflows:
   heroku_deploy:
     jobs:
       - build-and-test
+          filters:  # using regex filters requires the entire branch to match
+                branches:
+                  only:  # only branches matching the below regex filters will run
+                    - develop
       - prepare-for-deploy
+          filters:  # using regex filters requires the entire branch to match
+                branches:
+                  only:  # only branches matching the below regex filters will run
+                    - develop
       - heroku/deploy-via-git:
           filters:  # using regex filters requires the entire branch to match
                 branches:
