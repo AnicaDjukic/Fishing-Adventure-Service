@@ -4,12 +4,16 @@ jobs:
   build-and-test:
     docker:
       - image: cimg/openjdk:11.0
+      - image: circleci/postgres:9.6.5-alpine-ram
+        auth:
+          username: postgres
+          password: password
     working_directory: ~/FishingAdventureService/FishingAdventure
     steps:
       - checkout:
           path: ~/FishingAdventureService
-      - run:
-          command: pwd
+      - run: sudo apt-get update
+      - run: sudo apt-get install postgresql-client-9.6
       - run:
           name: Build
           command: mvn -B -DskipTests clean package
