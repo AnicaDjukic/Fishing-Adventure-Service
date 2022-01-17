@@ -49,17 +49,17 @@ workflows:
           filters:  # using regex filters requires the entire branch to match
                 branches:
                   only:  # only branches matching the below regex filters will run
-                    - feat(4.7)/deploy-workflow
+                    - develop
       - prepare-for-deploy:
           filters:  # using regex filters requires the entire branch to match
                 branches:
                   only:  # only branches matching the below regex filters will run
-                    - feat(4.7)/deploy-workflow
+                    - develop
       - heroku/deploy-via-git:
           filters:  # using regex filters requires the entire branch to match
                 branches:
                   only:  # only branches matching the below regex filters will run
-                    - feat(4.7)/deploy-workflow
+                    - develop
           requires:
             - build-and-test
             - prepare-for-deploy
