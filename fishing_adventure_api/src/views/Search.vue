@@ -466,7 +466,9 @@ export default {
             "&end=" +
             moment(this.date[1]).format("yyyy-MM-DD HH:mm:ss.SSS") +
             "&persons=" +
-            this.numberOfPersons,
+            this.numberOfPersons +
+            "&rating=" +
+            this.rating + "&input=" + this.input,
           {
             headers: {
               "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
