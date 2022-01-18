@@ -430,7 +430,12 @@ export default {
       } else if (window.location.href.includes("/search/boats")) {
         this.searching = "boats";
         if (this.date[0] != undefined && this.date[1] != undefined) {
-          this.searchBoatsByDateAndPersons();
+          this.searchBoats();
+        }
+      } else {
+        this.searching = "boats";
+        if (this.date[0] != undefined && this.date[1] != undefined) {
+          this.searchAdventures();
         }
       }
     },
@@ -458,7 +463,7 @@ export default {
           }
         });
     },
-    searchBoatsByDateAndPersons: function () {
+    searchBoats: function () {
       axios
         .get(
           "/boat/search?start=" +
@@ -482,6 +487,30 @@ export default {
           }
         });
     },
+    searchAdventures : function() {
+      axios
+        .get(
+          "/fishingAdventure/search?start=" +
+            moment(this.date[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
+            "&end=" +
+            moment(this.date[1]).format("yyyy-MM-DD HH:mm:ss.SSS") +
+            "&persons=" +
+            this.numberOfPersons +
+            "&rating=" +
+            this.rating + "&input=" + this.input,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            },
+          }
+        )
+        .then((res) => {
+          this.adventureEntities = res.data;
+          for (let e of this.adventureEntities) {
+            e.rating = Number(e.rating).toFixed(2);
+          }
+        });
+    }
   },
 };
 </script>
