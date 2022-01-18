@@ -82,13 +82,16 @@ public class Appointment {
         this.startDate = dto.getStartDate();
         this.endDate = dto.getEndDate();
         long duration = (dto.getEndDate().getTime() - dto.getStartDate().getTime()) / (1000 * 60 * 60 * 24);
-        this.duration = Duration.ofDays(duration);
+        if(duration != 0) {
+            this.duration = Duration.ofDays(duration);
+        } else {
+            duration = (dto.getEndDate().getTime() - dto.getStartDate().getTime()) / (1000 * 60);
+            this.duration = Duration.ofMinutes(duration);
+        }
 
         this.chosenServices = new HashSet<>();
 
-        for (AdditionalService as : dto.getChosenServices()) {
-            this.chosenServices.add(as);
-        }
+        this.chosenServices.addAll(dto.getChosenServices());
     }
 
     public Appointment(NewReservationDto dto) {
@@ -100,14 +103,17 @@ public class Appointment {
         this.startDate = dto.getStartDate();
         this.endDate = dto.getEndDate();
         long duration = (dto.getEndDate().getTime() - dto.getStartDate().getTime()) / (1000 * 60 * 60 * 24);
-        this.duration = Duration.ofDays(duration);
+        if(duration != 0) {
+            this.duration = Duration.ofDays(duration);
+        } else {
+            duration = (dto.getEndDate().getTime() - dto.getStartDate().getTime()) / (1000 * 60);
+            this.duration = Duration.ofMinutes(duration);
+        }
         this.maxPersons = dto.getPersons();
         if (this.chosenServices == null) {
             this.chosenServices = new HashSet<AdditionalService>();
         }
-        for (AdditionalService as : dto.getChosenServices()) {
-            this.chosenServices.add(as);
-        }
+        this.chosenServices.addAll(dto.getChosenServices());
         this.price = dto.getPrice();
         this.ownerPresence = dto.isOwnersPresence();
     }

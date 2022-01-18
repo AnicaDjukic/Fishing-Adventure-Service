@@ -60,11 +60,6 @@
                       style="font-size: 80%"
                     ></i
                     >{{ offer.price }}
-                    <span
-                      class="shadow-none"
-                      v-if="this.entityType != 'adventure'"
-                      >/day</span
-                    >
                   </p>
                 </div>
                 <div class="row shadow-none">

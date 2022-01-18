@@ -1,7 +1,5 @@
 package isa.FishingAdventure.model;
 
-import java.sql.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.util.Date;
 
 @Entity
 public class AdvertiserEarnings {
@@ -39,6 +38,13 @@ public class AdvertiserEarnings {
     }
 
     public AdvertiserEarnings() {
+    }
+
+    public AdvertiserEarnings(Reservation reservation, String advertiserEmail, Double amountEarned) {
+        this.reservation = reservation;
+        this.advertiserEmail = advertiserEmail;
+        this.amountEarned = amountEarned;
+        this.dateOfTransaction = (Date) reservation.getAppointment().getDateCreated();
     }
 
     public Integer getId() {

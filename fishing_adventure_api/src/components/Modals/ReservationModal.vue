@@ -150,10 +150,10 @@
             </div>
           </div>
           <h5 style="color: white; margin-top: 5%" v-if="totalPrice != 0">
-            <b>~ Total price: {{ totalPrice }} $/day ~</b>
+            <b>~ Total price: {{ totalPrice }} $ ~</b>
           </h5>
           <h5 style="color: white; margin-top: 5%" v-if="totalPrice == 0">
-            <b>~ Total price: {{ price }} $/day ~</b>
+            <b>~ Total price: {{ price }} $ ~</b>
           </h5>
           <h6 style="color: red">
             <b>{{ error }}</b>
@@ -201,6 +201,7 @@ export default {
       chosenServices: [],
       maxPersons: 0,
       availableForDateRange: true,
+      adventureAvailability: true,
       cancelled: false,
       boat: false,
       boatOwner: false,
@@ -221,17 +222,50 @@ export default {
     if (window.location.href.includes("adventure")) this.adventure = true;
 
     if (this.date !== "undefined" && !this.adventure) {
-      this.dateRange.push(new Date(Date.parse(this.date.split(",")[0])));
-      this.dateRange.push(new Date(Date.parse(this.date.split(",")[1])));
+      this.dateRange.push(
+        moment(new Date(Date.parse(this.date.split(",")[0]))).subtract(
+          1,
+          "hours"
+        )
+      );
+      this.dateRange.push(
+        moment(new Date(Date.parse(this.date.split(",")[1]))).subtract(
+          1,
+          "hours"
+        )
+      );
     } else {
       if (this.dateRange == null) {
         this.dateRange = [];
       }
-      this.dateRange.push(new Date());
-      this.dateRange.push(new Date());
+      this.dateRange.push(moment(new Date()));
+      this.dateRange.push(moment(new Date()).add(7, "days"));
     }
     if (this.persons !== "undefined" && !this.adventure) {
       if (this.persons != 0) this.numberOfPersons = this.persons;
+    }
+
+    if (!this.adventure) {
+      this.totalPrice = Math.round(
+        ((this.dateRange[1] - this.dateRange[0]) / (1000 * 3600 * 24)) *
+          this.$props.price
+      );
+    } else {
+      this.totalPrice = this.$props.price;
+    }
+    for (let as of this.chosenServices) {
+      this.totalPrice += as.price;
+    }
+
+    if (this.selectedDateRange != undefined && !this.adventure) {
+      this.totalPrice = Math.round(
+        ((this.selectedDateRange[1] - this.selectedDateRange[0]) /
+          (1000 * 3600 * 24)) *
+          this.$props.price
+      );
+    }
+    for (let as of this.chosenServices) {
+      this.totalPrice += as.price;
     }
   },
   methods: {
@@ -256,7 +290,10 @@ export default {
         }
       }
 
-      this.totalPrice = this.$props.price;
+      this.totalPrice = Math.round(
+        ((this.dateRange[1] - this.dateRange[0]) / (1000 * 3600 * 24)) *
+          this.$props.price
+      );
       for (let as of this.chosenServices) {
         this.totalPrice += as.price;
       }
@@ -269,7 +306,7 @@ export default {
           this.dateRange = [];
         }
         this.dateRange.push(new Date());
-        this.dateRange.push(new Date());
+        this.dateRange.push(new Date() + 7);
       }
     },
     changeDateRange: function () {
@@ -310,15 +347,12 @@ export default {
     },
     checkPersonsForCottage: function () {
       axios
-        .get(
-          "/vacationHome/persons?id=" + this.serviceId,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-              Authorization: "Bearer " + localStorage.refreshToken,
-            },
-          }
-        )
+        .get("/vacationHome/persons?id=" + this.serviceId, {
+          headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
         .then((response) => {
           this.maxPersons = response.data;
         });
@@ -337,15 +371,12 @@ export default {
     },
     checkPersonsForAdventure: function () {
       axios
-        .get(
-          "/fishingAdventure/persons?id=" + this.serviceId,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-              Authorization: "Bearer " + localStorage.refreshToken,
-            },
-          }
-        )
+        .get("/fishingAdventure/persons?id=" + this.serviceId, {
+          headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
         .then((response) => {
           this.maxPersons = response.data;
         });
@@ -463,7 +494,7 @@ export default {
           }
         )
         .then((res) => {
-          this.checkAdventureAvailability = res.data;
+          this.adventureAvailability = res.data;
           this.checkClientReservations();
         });
     },
@@ -507,7 +538,8 @@ export default {
       if (
         this.maxPersons >= this.numOfPersons &&
         this.availableForDateRange &&
-        this.boatOwnerAvailable && !this.cancelled
+        this.boatOwnerAvailable &&
+        !this.cancelled && this.adventureAvailability
       ) {
         let startDate = {};
         let endDate = {};
@@ -541,10 +573,13 @@ export default {
       } else {
         if (this.maxPersons < this.numOfPersons)
           this.error = "Maximum number of people is " + this.maxPersons + ".";
-        else if (!this.availableForDateRange || !this.checkAdventureAvailability)
+        else if (!this.availableForDateRange)
           this.error = "Not available for selected date range!";
-        else if(!this.boatOwnerAvailable)this.error = "Boat owner is not available";
-        else this.error = "Already cancelled reservation in this period!"
+        else if (!this.adventureAvailability)
+          this.error = "Not available for selected date!";
+        else if (!this.boatOwnerAvailable)
+          this.error = "Boat owner is not available";
+        else this.error = "Already cancelled reservation in this period!";
       }
     },
     closeModal: function () {

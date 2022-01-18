@@ -41,7 +41,7 @@ public class ReservationController {
     @Transactional
     public ResponseEntity<AppointmentDto> reserveSpecialOffer(@RequestHeader("Authorization") String token,
             @RequestBody AppointmentDto dto) {
-        reservationService.reserveSpecialOffer(token.split(" ")[1], dto.getOfferId());
+        reservationService.reserveSpecialOffer(token.split(" ")[1], dto.getOfferId(), dto.getServiceProfileId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
