@@ -76,7 +76,7 @@ public class ReservationService {
             saveNewAppointment(newAppointment, serviceProfile);
             Reservation newReservation = new Reservation(false, newAppointment, client, false);
             save(newReservation);
-            advertiserEarningsService.calculateEarnings(getAdvertiserByServiceId(serviceProfileId).getEmail(), newReservation);
+            advertiserEarningsService.calculateEarningsForNewReservation(getAdvertiserByServiceId(serviceProfileId).getEmail(), newReservation);
             String text = emailService.createConfirmReservationEmail(client, newAppointment, serviceProfile);
             emailService.sendEmail(clientEmail, "Reservation confirmation", text);
         } catch (Exception e) {
@@ -239,7 +239,7 @@ public class ReservationService {
         appointmentService.save(appointment);
         Reservation newReservation = new Reservation(false, appointment, client, false);
         save(newReservation);
-        advertiserEarningsService.calculateEarnings(getAdvertiserByServiceId(serviceProfileId).getEmail(), newReservation);
+        advertiserEarningsService.calculateEarningsForNewReservation(getAdvertiserByServiceId(serviceProfileId).getEmail(), newReservation);
     }
 
     public Reservation findById(Integer id) {
@@ -253,10 +253,23 @@ public class ReservationService {
                 r.getAppointment().setCancelled(true);
                 appointmentService.save(r.getAppointment());
                 save(r);
+                ServiceProfile serviceProfile = findServiceProfilesByReservation(r);
+                if(serviceProfile != null)
+                    advertiserEarningsService.calculateEarningsForCancelledReservation(r, serviceProfile.getCancellationRule());
                 return true;
             }
         }
         return false;
+    }
+
+    private ServiceProfile findServiceProfilesByReservation(Reservation reservation) {
+        for(ServiceProfile serviceProfile: serviceProfileService.findAll()){
+            for(Appointment appointment : serviceProfile.getAppointments()){
+                if(appointment.getAppointmentId().equals(reservation.getAppointment().getAppointmentId()))
+                    return serviceProfile;
+            }
+        }
+        return null;
     }
 
     public List<Reservation> getClientReservationsForServiceProfile(String token, Integer serviceId) {
