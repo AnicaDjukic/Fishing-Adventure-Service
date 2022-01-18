@@ -50,19 +50,19 @@ public class FishingAdventureController {
 	}
 
 	@GetMapping(value = "/search")
-	public ResponseEntity<List<VacationHomeDto>> getSearchedVFishingAdventures(
+	public ResponseEntity<List<FishingAdventureDto>> getSearchedVFishingAdventures(
 			@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
 			@RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end,
 			@RequestParam("persons") int persons, @RequestParam("rating") double rating, @RequestParam("input") String input) {
 		List<FishingAdventure> fishingAdventures = new ArrayList<>();
-		for (VacationHome vh : serv.findAllAvailableVacationHomes(start, end, persons))
-			if (vh.getRating() >= rating && (searchByAddress(vh, input) || vh.getVacationHomeOwner().getName().contains(input) || vh.getVacationHomeOwner().getSurname().contains(input)))
-				fishingAdventures.add(vh);
-		return new ResponseEntity<>(createVacationHomeDtos(fishingAdventures), HttpStatus.OK);
+		for (FishingAdventure fa : adventureService.findAllAvailableAdventures(start, end, persons))
+			if (fa.getRating() >= rating && (searchByAddress(fa, input) || fa.getFishingInstructor().getName().contains(input) || fa.getFishingInstructor().getSurname().contains(input)))
+				fishingAdventures.add(fa);
+		return new ResponseEntity<>(createFishingAdventureDtos(fishingAdventures), HttpStatus.OK);
 	}
 
-	private boolean searchByAddress(VacationHome vh, String input) {
-		return vh.getName().contains(input) || vh.getLocation().getAddress().getStreet().contains(input) || vh.getLocation().getAddress().getCity().contains(input) || vh.getLocation().getAddress().getCountry().contains(input);
+	private boolean searchByAddress(FishingAdventure fa, String input) {
+		return fa.getName().contains(input) || fa.getLocation().getAddress().getStreet().contains(input) || fa.getLocation().getAddress().getCity().contains(input) || fa.getLocation().getAddress().getCountry().contains(input);
 	}
 
 	@Transactional

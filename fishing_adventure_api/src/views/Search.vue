@@ -148,7 +148,7 @@
                   class="form-control me-2"
                   type="search"
                   v-model="input"
-                  placeholder="Search by everything..."
+                  placeholder="Search by name, address or advertiser..."
                   aria-label="Search"
                 />
               </div>

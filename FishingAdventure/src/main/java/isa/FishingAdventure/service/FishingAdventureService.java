@@ -119,4 +119,15 @@ public class FishingAdventureService {
         return fishingAdventure.getPersons();
     }
 
+    public List<FishingAdventure> findAllAvailableAdventures(Date start, Date end, int persons) {
+        List<FishingAdventure> fishingAdventures = new ArrayList<>();
+        for(FishingInstructor fi: instructorService.findAll()) {
+            if(isInstructorAvailable(fi, start, end)) {
+                for(FishingAdventure fa: findByFishingInstructor(fi))
+                    if(fa.getPersons() >= persons)
+                        fishingAdventures.add(fa);
+            }
+        }
+        return fishingAdventures;
+    }
 }
