@@ -49,9 +49,16 @@ public class VacationHomeController {
     public ResponseEntity<List<VacationHomeDto>> getSearchedVacationHomes(
             @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
             @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end,
-            @RequestParam("persons") int persons) throws ParseException {
-        List<VacationHome> vacationHomes = homeService.findAllAvailableVacationHomes(start, end, persons);
+            @RequestParam("persons") int persons, @RequestParam("rating") double rating, @RequestParam("input") String input) {
+        List<VacationHome> vacationHomes = new ArrayList<>();
+        for (VacationHome vh : homeService.findAllAvailableVacationHomes(start, end, persons))
+            if (vh.getRating() >= rating && (searchByAddress(vh, input) || vh.getVacationHomeOwner().getName().contains(input) || vh.getVacationHomeOwner().getSurname().contains(input)))
+                vacationHomes.add(vh);
         return new ResponseEntity<>(createVacationHomeDtos(vacationHomes), HttpStatus.OK);
+    }
+
+    private boolean searchByAddress(VacationHome vh, String input) {
+        return vh.getName().contains(input) || vh.getLocation().getAddress().getStreet().contains(input) || vh.getLocation().getAddress().getCity().contains(input) || vh.getLocation().getAddress().getCountry().contains(input);
     }
 
     @GetMapping(value = "/additionalServices/{id}")
@@ -79,8 +86,8 @@ public class VacationHomeController {
 
     @GetMapping(value = "/available/dateRange")
     public ResponseEntity<Boolean> getIsCottageAvailable(@RequestParam("id") Integer id,
-            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
-            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
+                                                         @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
+                                                         @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end) throws ParseException {
         return new ResponseEntity<>(homeService.isCottageAvailableForDateRange(id, start, end), HttpStatus.OK);
     }
 
@@ -115,7 +122,7 @@ public class VacationHomeController {
     @PostMapping(value = "/newHome")
     @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
     public ResponseEntity<NewHomeDto> saveNewCottage(@RequestHeader("Authorization") String token,
-            @RequestBody NewHomeDto dto) {
+                                                     @RequestBody NewHomeDto dto) {
         homeService.saveNewHome(new VacationHome(dto), token.split(" ")[1]);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
