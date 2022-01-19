@@ -36,7 +36,6 @@ public class ReservationController {
 
     @PostMapping(value = "/new/specialOffer")
     @PreAuthorize("hasRole('ROLE_CLIENT')")
-    @Transactional
     public ResponseEntity<AppointmentDto> reserveSpecialOffer(@RequestHeader("Authorization") String token,
             @RequestBody AppointmentDto dto) {
         reservationService.reserveSpecialOffer(token.split(" ")[1], dto.getOfferId(), dto.getServiceProfileId());

@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.util.ArrayList;
@@ -234,6 +235,7 @@ public class ReservationService {
         return reservationStatus;
     }
 
+    @Transactional
     public void reserveSpecialOffer(String token, Integer offerId, Integer serviceProfileId) {
         String email = tokenUtils.getEmailFromToken(token);
         Client client = clientService.findByEmail(email);

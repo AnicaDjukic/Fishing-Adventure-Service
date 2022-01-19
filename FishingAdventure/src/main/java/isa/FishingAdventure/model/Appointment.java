@@ -16,6 +16,10 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer appointmentId;
 
+    @Version
+    @Column(nullable = false)
+    private Integer version;
+
     @Column(name = "place", nullable = false)
     private String place;
 
