@@ -1,6 +1,8 @@
 package isa.FishingAdventure.service;
 
+import isa.FishingAdventure.dto.LoyaltyProgramDto;
 import isa.FishingAdventure.model.Reservation;
+import isa.FishingAdventure.model.ReservationPoints;
 import isa.FishingAdventure.model.User;
 import isa.FishingAdventure.model.UserCategory;
 import isa.FishingAdventure.repository.UserCategoryRepository;
@@ -17,6 +19,8 @@ public class UserCategoryService {
 	@Autowired
 	private UserCategoryRepository categoryRepository;
 
+	@Autowired
+	private ReservationPointsService pointsService;
 
 	@Autowired
 	private UserService userService;
@@ -44,6 +48,15 @@ public class UserCategoryService {
 				user.setCategory(category);
 		}
 		userService.save(user);
+	}
+
+	public LoyaltyProgramDto getLoyaltyProgramInfo() {
+		LoyaltyProgramDto dto = new LoyaltyProgramDto(findAll());
+		ReservationPoints rp = pointsService.getReservationPoints();
+		dto.setAdvertiserPointsPercentage(rp.getAdvertiserPointsPercentage());
+		dto.setClientPointsPercentage(rp.getClientPointsPercentage());
+
+		return dto;
 	}
 
 }

@@ -16,6 +16,7 @@
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
+            v-on:click="updateLoyaltyProgram"
           >
             <i class="fas fa-times fa-lg"></i>
           </button>
@@ -33,30 +34,26 @@
                          <input
                             class="input-lp"
                             type="text"
-                            v-model="reservationPointsClient"
+                            v-model="loyaltyProgram.clientPointsPercentage"
                         />
 
 
                         <h6 for="" style="margin-top: 40px; font-size: 17px">Points management</h6>
-                         <input
-                            style="border: 3px solid rgb(141 79 36);"
+
+                        <h6 for="" style="margin-top:20px; font-size: 15px; margin-bottom:0; color:rgb(131,137,150)">SILVER</h6>
+                        <input
+                            style="border: 3px solid rgb(131,137,150); margin-top:5px"
                             class="input-lp"
                             type="text"
-                            v-model="clientRegularPoints"
+                            v-model="loyaltyProgram.clientSilverPoints"
                         />
 
+                        <h6 for="" style="margin-top:10px; font-size: 15px; margin-bottom:0; color:rgb(218 165 32)">GOLD</h6>
                         <input
-                            style="border: 3px solid rgb(131,137,150); margin-top:20px"
+                            style="border: 3px solid rgb(218 165 32); margin-top:5px"
                             class="input-lp"
                             type="text"
-                            v-model="clientSilverPoints"
-                        />
-
-                        <input
-                            style="border: 3px solid rgb(218 165 32); margin-top:20px"
-                            class="input-lp"
-                            type="text"
-                            v-model="clientGoldPoints"
+                            v-model="loyaltyProgram.clientGoldPoints"
                         />
                         
                     </span>
@@ -67,47 +64,42 @@
                          <input
                             class="input-lp"
                             type="text"
-                            v-model="reservationPointsAdvertiser"
+                            v-model="loyaltyProgram.advertiserPointsPercentage"
                         />
 
                         <h6 for="" style="margin-top: 40px; font-size: 17px">Points management</h6>
-                         <input 
-                            style="border: 3px solid rgb(141 79 36);"
+
+                        <h6 for="" style="margin-top:20px; font-size: 15px; margin-bottom:0; color:rgb(131,137,150)">SILVER</h6>
+                        <input
+                            style="border: 3px solid rgb(131,137,150); margin-top:5px"
                             class="input-lp"
                             type="text"
-                            v-model="advertiserRegularPoints"
+                            v-model="loyaltyProgram.advertiserSilverPoints"
                         />
 
+                        <h6 for="" style="margin-top:10px; font-size: 15px; margin-bottom:0; color:rgb(218 165 32)">GOLD</h6>
                         <input
-                            style="border: 3px solid rgb(131,137,150); margin-top:20px"
+                            style="border: 3px solid rgb(218 165 32); margin-top:5px"
                             class="input-lp"
                             type="text"
-                            v-model="advertiserSilverPoints"
-                        />
-
-                        <input
-                            style="border: 3px solid rgb(218 165 32); margin-top:20px"
-                            class="input-lp"
-                            type="text"
-                            v-model="advertiserGoldPoints"
+                            v-model="loyaltyProgram.advertiserGoldPoints"
                         />
 
                     </span>
 
                 </div>
                 
-                <p style="text-align: center; margin-top: 10px; font-size 17px; margin-bottom: 5px">Base cut for advertisers</p>
+                <p style="text-align: center; margin-top: 10px; font-size 17px; margin-bottom: 5px">Base cut for advertisers (%)</p>
                 <div style="text-align: center; padding: 0">
                     <input
                     style="margin-top: 2px; margin-bottom: 10px; width: 30%"
                     class="input-lp"
                     type="text"
-                    v-model="advertiserCut"
+                    v-model="loyaltyProgram.advertiserBaseCut"
                     />
                 </div>
           </div>
         </div>
-
        
         <div class="modal-footer" style="border-top: 1px solid rgba(218, 165, 32, 0.432);">
           <button
@@ -123,7 +115,7 @@
             type="button"
             class="btn btn-outline-primary"
             style="width: 20%"
-            v-on:click="closeModal"
+            v-on:click="reloadLoyaltyProgram"
             data-bs-dismiss="modal"
           >
             Cancel
@@ -141,26 +133,20 @@ export default {
     name: "LoyaltyProgramModal",
     data: function () {
         return {
-            reservationPointsClient: [],
-            reservationPointsAdvertiser: [],
-            clientRegularPoints: [],
-            clientSilverPoints: [],
-            clientGoldPoints: [],
-            advertiserRegularPoints: [],
-            advertiserSilverPoints: [],
-            advertiserGoldPoints: [],
-            advertiserCut: []
+            loyaltyProgram: [],
         };
     },
     mounted: function () {
+        this.reloadLoyaltyProgram();
 
     },
     methods: {
-      approveRequest: function () {
+    updateLoyaltyProgram: function () {
+       
+        },
+    reloadLoyaltyProgram: function () {
         axios
-          .get(
-            "/users/approveRegistrationRequest/" +
-              this.user.email,
+          .get("/userCategory/getLoyaltyProgram",
             {
               headers: {
                 "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
@@ -168,12 +154,10 @@ export default {
               },
             }
           )
-          .then(
-            window.location.reload()
-          );
-      },
-      rejectRequest: function () {
-        this.$emit("rejectRequest", this.user.email);
+          .then((res) => {
+            this.loyaltyProgram = res.data;
+            console.log(res.data)
+        });
     },
     },
 };
