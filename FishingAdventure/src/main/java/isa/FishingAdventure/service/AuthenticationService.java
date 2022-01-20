@@ -49,6 +49,9 @@ public class AuthenticationService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserCategoryService categoryService;
+
     private static final String EMAIL_EXISTS = "Email already exists";
 
     public UserTokenState login(JwtAuthenticationRequest authenticationRequest) {
@@ -123,6 +126,7 @@ public class AuthenticationService {
         ConfirmationToken confirmationToken = confirmationTokenService.findByConfirmationToken(token);
         Client user = clientService.findByEmail(confirmationToken.getEmail());
         user.setActivated(true);
+        user.setCategory(categoryService.getUserCategoryByName("REGULAR_CLIENT"));
         clientService.save(user);
         confirmationTokenService.delete(confirmationToken);
     }

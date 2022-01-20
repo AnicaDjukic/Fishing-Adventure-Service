@@ -144,13 +144,13 @@ VALUES (5, 'ROLE_BOAT_OWNER');
 
 INSERT INTO admin
 VALUES (113, true, '', 'admin1@gmail.com', false, NULL, 'Natalie',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Jones', 101, NULL, 4, true);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Jones', 101, 1, 4, true);
 INSERT INTO admin
 VALUES (114, true, '', 'admin2@gmail.com', false, NULL, 'Billy',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Morales', 102, NULL, 4, false);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Morales', 102, 1, 4, false);
 INSERT INTO admin
 VALUES (115, true, '', 'admin3@gmail.com', false, NULL, 'Toby',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Dale', 108, NULL, 4, false);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Dale', 108, 1, 4, false);
 
 
 --
@@ -158,13 +158,13 @@ VALUES (115, true, '', 'admin3@gmail.com', false, NULL, 'Toby',
 --
 INSERT INTO boat_owner
 VALUES (110, true, '', 'boatOwner1@gmail.com', false, NULL, 'Samuel',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Bull', 110, NULL, 5);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Bull', 110, 1, 5);
 INSERT INTO boat_owner
 VALUES (111, true, '', 'boatOwner2@gmail.com', false, NULL, 'Zakk',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Morales', 103, NULL, 5);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Morales', 103, 1, 5);
 INSERT INTO boat_owner
 VALUES (112, true, '', 'boatOwner3@gmail.com', false, NULL, 'Toby',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Puckett', 106, NULL, 5);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '608-216-4921', 0, 'Puckett', 106, 1, 5);
 
 
 
@@ -249,17 +249,17 @@ INSERT INTO fishing_instructor
 VALUES (107, true,
         'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don''t look even slightly believable.',
         'instructor1@gmail.com', false, NULL, 'Niko', '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2',
-        '347-668-3901', 0, 'Moore', 105, NULL, 3);
+        '347-668-3901', 0, 'Moore', 105, 1, 3);
 INSERT INTO fishing_instructor
 VALUES (108, true,
         'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don''t look even slightly believable.',
         'instructor2@gmail.com', false, NULL, 'Olivia', '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2',
-        '310-496-6362', 0, 'Wolf', 102, NULL, 3);
+        '310-496-6362', 0, 'Wolf', 102, 1, 3);
 INSERT INTO fishing_instructor
 VALUES (109, true,
         'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don''t look even slightly believable.',
         'instructor3@gmail.com', false, NULL, 'Samuel', '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2',
-        '608-216-4921', 0, 'Crossley', 110, NULL, 3);
+        '608-216-4921', 0, 'Crossley', 110, 1, 3);
 
 
 --
@@ -487,13 +487,13 @@ VALUES (113, 103);
 
 INSERT INTO vacation_home_owner
 VALUES (101, true, '', 'homeOwner1@gmail.com', false, NULL, 'Marisa',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '704-249-0886', 0, 'Car', 104, NULL, 1);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '704-249-0886', 0, 'Car', 104, 1, 1);
 INSERT INTO vacation_home_owner
 VALUES (102, true, '', 'homeOwner2@gmail.com', false, NULL, 'Kie',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '859-486-5125', 0, 'Mathews', 105, NULL, 1);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '859-486-5125', 0, 'Mathews', 105, 1, 1);
 INSERT INTO vacation_home_owner
 VALUES (103, true, '', 'homeOwner3@gmail.com', false, NULL, 'Beverly',
-        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '316-302-5432', 0, 'Barnard', 106, NULL, 1);
+        '$2a$10$jE9Jzh8T5l/xn92gu6pfOOC/Y4tVRZNruktQFMM13FOSwxYuvSgc2', '316-302-5432', 0, 'Barnard', 106, 1, 1);
 
 
 --

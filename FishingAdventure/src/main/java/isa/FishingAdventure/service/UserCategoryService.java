@@ -29,6 +29,8 @@ public class UserCategoryService {
 		return categoryRepository.findAll();
 	}
 
+	public void save(UserCategory category) { categoryRepository.save(category); }
+
 	public double calculateAmountEarned(String advertiserEmail, Reservation reservation) {
 		double originalPrice = reservation.getAppointment().getPrice();
 		double percentage = userService.getUserCategory(advertiserEmail).getPercentage()
@@ -47,6 +49,8 @@ public class UserCategoryService {
 					&& category.getPoints() < user.getPoints())
 				user.setCategory(category);
 		}
+		System.out.println("OVDEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+		System.out.println(user.getPoints());
 		userService.save(user);
 	}
 
@@ -57,6 +61,37 @@ public class UserCategoryService {
 		dto.setClientPointsPercentage(rp.getClientPointsPercentage());
 
 		return dto;
+	}
+
+	public UserCategory getUserCategoryByName(String name) {
+		UserCategory userCategory = new UserCategory();
+		for (UserCategory category : findAll()) {
+			if (category.getName().equals(name))
+				userCategory = category;
+		}
+		return userCategory;
+	}
+
+	public void updateCategoryPoints(String name, double points) {
+		UserCategory category = getUserCategoryByName(name);
+		category.setPoints(points);
+		save(category);
+	}
+
+	public void updateAdvertiserCuts(double percentage) {
+		UserCategory regular = getUserCategoryByName("REGULAR_ADVERTISER");
+		regular.setPercentage(percentage);
+		UserCategory silver = getUserCategoryByName("SILVER_ADVERTISER");
+		silver.setPercentage(percentage - 2);
+		UserCategory gold = getUserCategoryByName("GOLD_ADVERTISER");
+		gold.setPercentage(percentage - 4);
+		save(regular);
+		save(silver);
+		save(gold);
+	}
+
+	public void updateReservationPointPercentages(double clientPoints, double advertiserPoints) {
+		pointsService.updateReservationPointPercentages(clientPoints, advertiserPoints);
 	}
 
 }

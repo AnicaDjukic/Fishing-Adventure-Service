@@ -45,7 +45,7 @@ public abstract class User implements UserDetails {
 	@Column(name = "points", nullable = false)
 	private double points;
 
-	@ManyToOne(targetEntity = UserCategory.class, cascade = CascadeType.MERGE)
+	@ManyToOne(targetEntity = UserCategory.class)
 	private UserCategory category;
 
 	@Column(name = "activated", nullable = false)

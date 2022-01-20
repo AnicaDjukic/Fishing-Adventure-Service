@@ -264,16 +264,19 @@ public class ReservationService {
             if (r.getReservationId().equals(id)) {
                 r.setCanceled(true);
                 r.getAppointment().setCancelled(true);
-                appointmentService.save(r.getAppointment());
                 save(r);
-                ServiceProfile serviceProfile = findServiceProfilesByReservation(r);
-                if (serviceProfile != null)
-                    advertiserEarningsService.calculateEarningsForCancelledReservation(r,
-                            serviceProfile.getCancellationRule());
                 return true;
             }
         }
         return false;
+    }
+    
+    public void calculateEarningsForCancelledReservation(int id) {
+        Reservation res = getById(id);
+        ServiceProfile serviceProfile = findServiceProfilesByReservation(res);
+        if (serviceProfile != null)
+            advertiserEarningsService.calculateEarningsForCancelledReservation(res,
+                    serviceProfile.getCancellationRule());
     }
 
     private ServiceProfile findServiceProfilesByReservation(Reservation reservation) {

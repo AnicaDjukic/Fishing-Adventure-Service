@@ -97,6 +97,14 @@ public class ReservationController {
         return new ResponseEntity<>(reservationService.cancelReservation(Integer.parseInt(id)), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/calculateEarningsForCancelledReservation")
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @Transactional
+    public ResponseEntity<String> calculateEarningsForCancelledReservation(@RequestBody String id) {
+        reservationService.calculateEarningsForCancelledReservation(Integer.parseInt(id));
+        return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
+
     @GetMapping(value = "/cancelled")
     @Transactional
     public ResponseEntity<Boolean> hadCancelledReservation(@RequestHeader("Authorization") String token,

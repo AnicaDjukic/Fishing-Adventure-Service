@@ -1,6 +1,5 @@
 package isa.FishingAdventure.dto;
 
-import isa.FishingAdventure.model.User;
 import isa.FishingAdventure.model.UserCategory;
 
 import java.util.List;

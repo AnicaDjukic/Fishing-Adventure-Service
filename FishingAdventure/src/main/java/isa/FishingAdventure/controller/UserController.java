@@ -1,7 +1,6 @@
 package isa.FishingAdventure.controller;
 
-import isa.FishingAdventure.dto.RegistrationRequestDto;
-import isa.FishingAdventure.dto.UserDto;
+import isa.FishingAdventure.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,8 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import isa.FishingAdventure.dto.ChangePasswordDto;
-import isa.FishingAdventure.dto.UserInfoDto;
 import isa.FishingAdventure.model.User;
 import isa.FishingAdventure.service.UserService;
 
@@ -118,6 +115,12 @@ public class UserController {
 	public ResponseEntity<String> approveRegistrationRequest(@PathVariable String email) {
 		userService.approveRegistrationRequest(email);
 		return new ResponseEntity<>("ok", HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/getUserPointsInfo")
+	public ResponseEntity<UserPointsDto> getUserPointsInfo(@RequestHeader("Authorization") String token) {
+		User user = userService.findByToken(token.split(" ")[1]);
+		return new ResponseEntity(userService.getUserPointsInfo(user), HttpStatus.OK);
 	}
 
 }

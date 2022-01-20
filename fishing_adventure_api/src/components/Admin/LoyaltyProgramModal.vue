@@ -89,7 +89,7 @@
 
                 </div>
                 
-                <p style="text-align: center; margin-top: 10px; font-size 17px; margin-bottom: 5px">Base cut for advertisers (%)</p>
+                <p style="text-align: center; margin-top: 10px; font-size 17px; margin-bottom: 5px">Website base cut (%)</p>
                 <div style="text-align: center; padding: 0">
                     <input
                     style="margin-top: 2px; margin-bottom: 10px; width: 30%"
@@ -108,6 +108,7 @@
             class="btn btn-outline-primary"
             style="width: 20%"
             v-on:click="updateLoyaltyProgram"
+            data-bs-dismiss="modal"
           >
             Save
           </button>
@@ -142,6 +143,18 @@ export default {
     },
     methods: {
     updateLoyaltyProgram: function () {
+        axios
+          .put("/userCategory/updateLoyaltyProgram", this.loyaltyProgram,
+            {
+              headers: {
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            }
+          )
+          .then(() => {
+             this.$toast.show("Loyalty program updated.");
+        });
        
         },
     reloadLoyaltyProgram: function () {
@@ -156,7 +169,6 @@ export default {
           )
           .then((res) => {
             this.loyaltyProgram = res.data;
-            console.log(res.data)
         });
     },
     },

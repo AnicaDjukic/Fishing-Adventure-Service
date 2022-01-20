@@ -207,10 +207,25 @@ export default {
         )
         .then((res) => {
           if (res.data) {
-            this.$emit("refresh", this.reservation);
-            this.$toast.show("Reservation successfully cancelled!", {
-              duration: 2000,
-            });
+            
+
+            axios
+              .put("/reservation/calculateEarningsForCancelledReservation", this.reservation.id,
+                {
+                  headers: {
+                    "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                    Authorization: "Bearer " + localStorage.refreshToken,
+                  },
+                }
+              )
+              .then(() => {
+                this.$emit("refresh", this.reservation);
+
+                 this.$toast.show("Reservation successfully cancelled!", {
+                  duration: 2000,
+                  });
+              });
+
           } else {
             this.$toast.show("Unsuccessful cancellation! Try again, later!", {
               duration: 2000,

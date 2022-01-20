@@ -34,8 +34,8 @@
         </div>
         <div class="col-md-8 shadow-none main main-stats" name="main-col">
           <div class="points-container">
-            <h4 style="margin-right: auto">Gold</h4>
-            <h3 style="margin-right: 10px">{{ points }}</h3>
+            <h4 style="margin-right: auto">{{ userCategory }} </h4>
+            <h3 style="margin-right: 10px">{{ userPointsInfo.points }}</h3>
             <p>POINTS</p>
           </div>
           <div class="penalties-container">
@@ -62,9 +62,9 @@
           <div>
             <h3>Policy</h3>
             <p>
-              We want to give you bast offers for crating new memories. For
-              every reservation on our website you will get points. Try to take
-              as many points possible, because they can ensoure you best deals.
+              We want to bring you the best offers for creating new memories. For
+              every reservation on our website you will be rewarded with points. Try to gain
+              as many points as possible, the more points you gain the better offers you will get.
             </p>
             <table class="table table-striped">
               <thead>
@@ -73,19 +73,29 @@
                 <th>Points required</th>
               </thead>
               <tbody>
-                <tr v-for="category of userCategories" :key="category.id">
-                  <td>{{ category.name }}</td>
-                  <td>{{ category.percentage }}%</td>
-                  <td>{{ category.points }}</td>
+                <tr>
+                  <td> REGULAR </td>
+                  <td> 0 </td>
+                  <td> 0 </td>
+                </tr>
+                <tr>
+                  <td> SILVER </td>
+                  <td> 3% </td>
+                  <td> {{loyaltyProgram.clientSilverPoints}} </td>
+                </tr>
+                <tr>
+                  <td> GOLD </td>
+                  <td> 5% </td>
+                  <td> {{loyaltyProgram.clientGoldPoints}} </td>
                 </tr>
               </tbody>
             </table>
             <h3>Penalties</h3>
             <p>
-              Any advertiser may request the sanctioning of users if there is a
-              reason for that. In that case, based on the stated reason, the
-              administrator decides whether the sanctions will be executed. The
-              sanction is implemented in the form of a penalty.
+              Any advertiser may request the sanctioning of a user by filling out a
+              complaint against them. Based on the complaint the
+              administrator will decide whether the sanction will be applied. If a sanction
+              is approved the user will receive a penalty.
             </p>
             <p>
               If the user receives 3 penalties, the creation of new reservations
@@ -100,35 +110,55 @@
 </template>
 
 <script>
+import axios from "axios";
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
   data: function () {
     return {
-      points: 50,
+      userPointsInfo: [],
+      loyaltyProgram: [],
+      userCategory: [],
       penalties: 2,
       cottageReservations: 5,
       boatReservations: 1,
       adventureReservations: 2,
-      userCategories: [
-        {
-          id: 1,
-          name: "GOLD",
-          percentage: 15,
-          points: 1000,
-        },
-        {
-          id: 2,
-          name: "SILVER",
-          percentage: 12,
-          points: 500,
-        },
-        {
-          id: 3,
-          name: "BRONZE",
-          percentage: 7,
-          points: 200,
-        },
-      ],
     };
+  },
+  mounted: function () {
+    axios
+      .get("/users/getUserPointsInfo", {
+        headers: {
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.userPointsInfo = res.data;
+        if (this.userPointsInfo.userCategory.includes("GOLD")) {
+          this.userCategory = "GOLD";
+        }
+        else if (this.userPointsInfo.userCategory.includes("SILVER")) {
+          this.userCategory = "SILVER";
+        }
+        else {
+          this.userCategory = "REGULAR";
+        }
+
+        console.log(res.data)
+      });
+
+      axios
+          .get("/userCategory/getLoyaltyProgram",
+            {
+              headers: {
+                "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                Authorization: "Bearer " + localStorage.refreshToken,
+              },
+            }
+          )
+          .then((res) => {
+            this.loyaltyProgram = res.data;
+        });
   },
   methods: {
     changeMenuDisplay: function (event) {
