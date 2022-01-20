@@ -23,6 +23,7 @@
             type="button"
             class="btn btn-outline-primary text-nowrap me-2"
             data-bs-toggle="modal"
+            v-if="isHeadAdmin == true"
           >
             Add new admin
           </button>
@@ -114,7 +115,7 @@
                     <td>{{user.surname}}</td>
                     <td>{{user.email}}</td>
                     <td>
-                         <button class="black-btn" v-if="user.role =='ROLE_ADMIN'"  disabled ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                         <button class="black-btn" v-if="user.role =='ROLE_ADMIN' && isHeadAdmin == false"  disabled ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                         <button class="black-btn" v-else ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                     </td>
                 </tr>
@@ -124,24 +125,33 @@
             </tbody>
         </table>
         <div class="loyalty-button">
-          <button type="button" class="btn btn-secondary" style="background-color: #DAA520; color: black; font-size: 105%">
+          <button type="button" class="btn btn-secondary" style="background-color: #DAA520; color: black; font-size: 105%"
+            data-bs-toggle="modal"
+            data-bs-target="#loyalty-program-modal">
            <i class="fas fa-crown"></i> Loyalty program
           </button>
         </div>
     </div>
+    <loyalty-program-modal
+    id="loyalty-program-modal">
+    </loyalty-program-modal>
+
   </div>
  
 </template>
 
 <script>
+import LoyaltyProgramModal from "@/components/Admin/LoyaltyProgramModal.vue"
 import axios from "axios";
 axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
+  components: { "loyalty-program-modal": LoyaltyProgramModal },
   data: function () {
     return {
       searchText: "",
       searchResults: [],
-      users: []
+      users: [],
+      isHeadAdmin: false,
     };
   },
   mounted: function () {
@@ -154,6 +164,17 @@ export default {
       })
       .then((res) => {
         this.users = res.data;
+      });
+
+    axios
+      .get("admin/isHeadAdmin", {
+        headers: {
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.isHeadAdmin = res.data;
       });
   },
   methods: {
