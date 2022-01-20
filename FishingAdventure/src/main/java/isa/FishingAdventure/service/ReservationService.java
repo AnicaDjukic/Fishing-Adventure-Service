@@ -79,7 +79,6 @@ public class ReservationService {
     }
 
     public boolean createReservation(String clientEmail, Appointment newAppointment, Integer serviceProfileId) {
-        // TODO: calculate earnings (client and advertiser email)
         try {
             Client client = clientService.findByEmail(clientEmail);
             ServiceProfile serviceProfile = serviceProfileService.getById(serviceProfileId);

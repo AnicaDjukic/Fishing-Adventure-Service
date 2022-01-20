@@ -5,6 +5,7 @@ import isa.FishingAdventure.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import isa.FishingAdventure.model.UserCategory;
 import isa.FishingAdventure.repository.UserRepository;
 import isa.FishingAdventure.security.util.TokenUtils;
 
@@ -105,6 +106,10 @@ public class UserService implements UserDetailsService {
 		save(user);
 	}
 
+	public UserCategory getUserCategory(String email) {
+		return findByEmail(email).getCategory();
+	}
+
 	public Boolean isEmailRegistered(String email) {
 		return findByEmail(email) != null;
 	}
@@ -113,14 +118,15 @@ public class UserService implements UserDetailsService {
 		User user = findByEmail(email);
 		user.setDeleted(true);
 		save(user);
-		sendRegistrationRequestEmail(email, "Reservation approved", reason);
+		sendRegistrationRequestEmail(email, "Reservation rejected", reason);
 	}
 
 	public void approveRegistrationRequest(String email) {
 		User user = findByEmail(email);
 		user.setActivated(true);
+		user.setBiography("");
 		save(user);
-		sendRegistrationRequestEmail(email, "Reservation rejected", "");
+		sendRegistrationRequestEmail(email, "Reservation approved", "");
 	}
 
 	private void sendRegistrationRequestEmail(String email, String subject, String reason) {

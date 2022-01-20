@@ -15,6 +15,7 @@ public class VacationHomeOwner extends User {
 
     public VacationHomeOwner(UserDto userDto){
         super(userDto.getEmail(), userDto.getName(), userDto.getSurname(), userDto.getPassword(), userDto.getPhoneNumber(), userDto.getUserType(), userDto.getAddress(), null);
+        this.setBiography(userDto.getBiography());
     }
 
 

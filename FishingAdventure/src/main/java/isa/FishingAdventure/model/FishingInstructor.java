@@ -17,6 +17,7 @@ public class FishingInstructor extends User {
     public FishingInstructor(UserDto userDto) {
         super(userDto.getEmail(), userDto.getName(), userDto.getSurname(), userDto.getPassword(),
                 userDto.getPhoneNumber(), userDto.getUserType(), userDto.getAddress(), null);
+        this.setBiography(userDto.getBiography());
     }
 
     public FishingInstructor() {

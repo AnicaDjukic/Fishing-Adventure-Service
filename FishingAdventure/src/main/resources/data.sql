@@ -108,11 +108,17 @@ VALUES (102, 'Fish finder');
 -- Data for Name: user_category; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 INSERT INTO user_category
-VALUES (1, 'REGULAR', 0, 0);
+VALUES (1, 'REGULAR_CLIENT', 0, 0);
 INSERT INTO user_category
-VALUES (2, 'SILVER', 0, 0);
+VALUES (2, 'SILVER_CLIENT', 3, 4000);
 INSERT INTO user_category
-VALUES (3, 'GOLD', 0, 0);
+VALUES (3, 'GOLD_CLIENT', 5, 7000);
+INSERT INTO user_category
+VALUES (4, 'REGULAR_ADVERTISER', 8, 0);
+INSERT INTO user_category
+VALUES (5, 'SILVER_ADVERTISER', 6, 3500);
+INSERT INTO user_category
+VALUES (6, 'GOLD_ADVERTISER', 4, 7000);
 
 
 --
@@ -356,6 +362,13 @@ VALUES (123, false, 'c16-5.jpg');
 --
 -- Data for Name: navigation_eq_in_boat; Type: TABLE DATA; Schema: public; Owner: postgres
 --
+
+--
+-- Data for Name: reservation_points; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+INSERT INTO reservation_points
+VALUES (101, 100, 80);
+
 
 
 --
