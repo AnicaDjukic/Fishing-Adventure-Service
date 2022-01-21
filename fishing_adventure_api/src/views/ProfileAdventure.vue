@@ -65,7 +65,7 @@
       <div class="menu-body-fa">
         <div class="menu-about-fa" style="text-align: justify">
           <div class="ma-top-part">
-            <h3>{{ entity.name }}</h3>
+            <h3>{{ entity.name }} <span style="font-size: 19px; color:#dddddd"> ({{durationInHours}} hours)  </span></h3>
             <h5>For up to {{ entity.persons }} people</h5>
           </div>
           <p>
@@ -307,6 +307,7 @@ export default {
       address: "",
       location: "",
       counter: 0,
+      durationInHours: [],
       instructorFullName: "",
       instructorBiography: "",
       center: { lat: 0, lng: 0 },
@@ -333,6 +334,7 @@ export default {
         this.entity = response.data;
         this.location = response.data.location;
         this.address = this.location.address;
+        this.durationInHours = response.data.duration / 60;
         this.instructorFullName =
           response.data.fishingInstructor.name +
           " " +
