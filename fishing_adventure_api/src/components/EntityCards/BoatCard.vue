@@ -40,6 +40,18 @@
                   v-on:click="deleteBoat"
                 ></i>
               </p>
+
+              <p
+                v-if="loggedInRole == 'ROLE_ADMIN'"
+                class="top-right-corner shadow-none"
+                v-on:click="preventPropagation"
+              >
+                <i
+                  class="fas fa-minus-square fa-lg shadow-none"
+                  v-on:click="deleteBoat"
+                ></i>
+              </p>
+              
             </div>
             <div class="card-text shadow-none" style="display: flex">
               <div class="shadow-none">
@@ -129,6 +141,7 @@ export default {
   data: function () {
     return {
       path: "",
+      loggedInRole: [],
     };
   },
   mounted: function () {
@@ -137,12 +150,23 @@ export default {
     } else if (window.location.href.includes("/boats")) {
       this.path = "myboats";
     }
+
+    axios
+      .get("/users/getRole", {
+        headers: {
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+       })
+      .then((res) => {
+        this.loggedInRole = res.data;
+      });
   },
   methods: {
     showAlert: function () {
       if (this.entity.hasAppointments) {
         this.$toast.show(
-          "Cottage can't be deleted because it has existing reservations."
+          "Cottage can't be edited because it has existing reservations."
         );
         return;
       }
@@ -167,7 +191,7 @@ export default {
     deleteBoat: function () {
       if (this.boatEntity.hasAppointments) {
         this.$toast.show(
-          "Cottage can't be edited because it has existing reservations."
+          "Cottage can't be deleted because it has existing reservations."
         );
         return;
       }

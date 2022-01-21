@@ -147,7 +147,7 @@ public class VacationHomeController {
     }
 
     @GetMapping(value = "/deleteHome/{id}")
-    @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_VACATION_HOME_OWNER', 'ROLE_ADMIN')")
     public ResponseEntity<String> deleteVacationHome(@PathVariable String id) {
         homeService.deleteById(Integer.parseInt(id));
         return new ResponseEntity<>("ok", HttpStatus.OK);

@@ -297,7 +297,6 @@ export default {
     };
   },
   mounted: function () {
-    console.log(process.env);
     axios
       .get("/users/getRole", {
         headers: {

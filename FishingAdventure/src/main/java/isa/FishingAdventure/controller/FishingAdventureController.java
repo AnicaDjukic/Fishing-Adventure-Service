@@ -34,7 +34,7 @@ public class FishingAdventureController {
 
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<FishingAdventureDto>> getAllFishingAdventures() {
-		List<FishingAdventure> fishingAdventures = adventureService.findAll();
+		List<FishingAdventure> fishingAdventures = adventureService.findAllNotDeleted();
 		List<FishingAdventureDto> fishingAdventureDtos = createFishingAdventureDtos(fishingAdventures);
 		return new ResponseEntity<>(fishingAdventureDtos, HttpStatus.OK);
 	}
@@ -96,6 +96,13 @@ public class FishingAdventureController {
 		return adventures;
 	}
 
+	@GetMapping(value = "/deleteAdventure/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_FISHING_INSTRUCTOR', 'ROLE_ADMIN')")
+	public ResponseEntity<String> deleteVacationHome(@PathVariable String id) {
+		adventureService.deleteById(Integer.parseInt(id));
+		return new ResponseEntity<>("ok", HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/getServiceOffersById/{id}")
 	@Transactional
 	public ResponseEntity<List<AppointmentDto>> getServiceOffersById(@PathVariable String id) {
@@ -134,4 +141,5 @@ public class FishingAdventureController {
 		int maxPersons = adventureService.getMaxPersons(id);
 		return new ResponseEntity<>(maxPersons, HttpStatus.OK);
 	}
+
 }

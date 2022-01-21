@@ -27,7 +27,7 @@ public class BoatController {
 
     @GetMapping(value = "/all")
     public ResponseEntity<List<BoatDto>> getAllBoats() {
-        List<Boat> boats = boatService.findAll();
+        List<Boat> boats = boatService.findAllNonDeleted();
         return new ResponseEntity<>(createBoatDtos(boats), HttpStatus.OK);
     }
 
@@ -71,7 +71,7 @@ public class BoatController {
     }
 
     @GetMapping(value = "/deleteBoat/{id}")
-    @PreAuthorize("hasRole('ROLE_BOAT_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_BOAT_OWNER', 'ROLE_ADMIN')")
     public ResponseEntity<String> deleteBoat(@PathVariable String id) {
         boatService.deleteById(Integer.parseInt(id));
         return new ResponseEntity<>("ok", HttpStatus.OK);

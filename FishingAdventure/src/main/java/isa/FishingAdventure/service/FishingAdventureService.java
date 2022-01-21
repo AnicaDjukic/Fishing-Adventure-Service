@@ -26,12 +26,29 @@ public class FishingAdventureService {
     @Autowired
     private ReservationService reservationService;
 
+    @Autowired
+    private ServiceProfileService profileService;
+
     public List<FishingAdventure> findAll() {
         return adventureRepository.findAll();
     }
 
+    public List<FishingAdventure> findAllNotDeleted() {
+        List<FishingAdventure> adventures = new ArrayList<>();
+        for (FishingAdventure adventure : findAll()) {
+            if (adventure.getDeleted().equals(false))
+                adventures.add(adventure);
+        }
+        return adventures;
+    }
+
     public List<FishingAdventure> findByFishingInstructor(FishingInstructor instructor) {
-        return adventureRepository.findByFishingInstructor(instructor);
+        List<FishingAdventure> adventures = new ArrayList<>();
+        for (FishingAdventure adventure : adventureRepository.findByFishingInstructor(instructor)) {
+            if (adventure.getDeleted().equals(false))
+                adventures.add(adventure);
+        }
+        return adventures;
     }
 
     public List<ServiceProfile> findFishingAdventuresByFishingInstructor(FishingInstructor instructor) {
@@ -44,6 +61,10 @@ public class FishingAdventureService {
 
     public Optional<FishingAdventure> findByIdIfExists(Integer id) {
         return adventureRepository.findById(id);
+    }
+
+    public void deleteById(int id) {
+        profileService.delete(id);
     }
 
     public List<Appointment> getOffersByAdvertiser(String email) {
@@ -131,4 +152,5 @@ public class FishingAdventureService {
         }
         return fishingAdventures;
     }
+
 }

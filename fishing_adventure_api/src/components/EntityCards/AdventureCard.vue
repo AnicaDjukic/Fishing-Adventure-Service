@@ -21,12 +21,28 @@
               <p
                 v-if="path == 'myadventures'"
                 class="top-right-corner shadow-none"
+                v-on:click="preventPropagation"
               >
                 <i
                   class="fas fa-edit fa-lg shadow-none me-3"
                   style="color: #293c4e"
                 ></i>
-                <i class="fas fa-minus-square fa-lg shadow-none"></i>
+
+                <i 
+                  class="fas fa-minus-square fa-lg shadow-none"
+                  v-on:click="deleteAdventure">
+                </i>
+              </p>
+
+              <p
+                v-if="loggedInRole == 'ROLE_ADMIN'"
+                class="top-right-corner shadow-none"
+                v-on:click="preventPropagation"
+              >
+                <i 
+                  class="fas fa-minus-square fa-lg shadow-none"
+                  v-on:click="deleteAdventure">
+                </i>
               </p>
             </div>
             <div class="card-text shadow-none" style="display: flex">
@@ -79,6 +95,8 @@
 </template>
 
 <script>
+import axios from "axios";
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 import { ref, onMounted } from "vue";
 
 export default {
@@ -97,6 +115,7 @@ export default {
   data: function () {
     return {
       path: "",
+      loggedInRole: [],
     };
   },
   mounted: function () {
@@ -105,10 +124,45 @@ export default {
     } else if (window.location.href.includes("/fishingAdventures")) {
       this.path = "myadventures";
     }
+
+     axios
+      .get("/users/getRole", {
+        headers: {
+          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+          Authorization: "Bearer " + localStorage.refreshToken,
+        },
+      })
+      .then((res) => {
+        this.loggedInRole = res.data;
+      });
   },
   methods: {
     openAdventure: function () {
       window.location.href = "/adventure?id=" + this.adventureEntity.id;
+    },
+    preventPropagation: function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    deleteAdventure: function () {
+      if (this.adventureEntity.hasAppointments) {
+        this.$toast.show(
+          "Adventure can't be deleted because it has existing reservations."
+        );
+        return;
+      }
+
+      axios
+        .get(
+          "/fishingAdventure/deleteAdventure/" + this.adventureEntity.id,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+              Authorization: "Bearer " + localStorage.refreshToken,
+            },
+          }
+        )
+        .then(window.location.reload());
     },
   },
 };
