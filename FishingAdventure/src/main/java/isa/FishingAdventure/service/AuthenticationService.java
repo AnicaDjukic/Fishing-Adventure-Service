@@ -41,6 +41,9 @@ public class AuthenticationService {
     private BoatOwnerService boatOwnerService;
 
     @Autowired
+    private AdminService adminService;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -119,6 +122,14 @@ public class AuthenticationService {
             throw new ResourceConflictException(EMAIL_EXISTS);
         } else {
             instructorService.saveNewInstructor(fishingInstructor);
+        }
+    }
+
+    public void signUpAdmin(Admin admin) {
+        if (userService.isEmailRegistered(admin.getEmail()).equals(true)) {
+            throw new ResourceConflictException(EMAIL_EXISTS);
+        } else {
+            adminService.saveNewAdmin(admin);
         }
     }
 

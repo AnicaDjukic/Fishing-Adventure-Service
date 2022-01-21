@@ -9,8 +9,6 @@ import isa.FishingAdventure.service.FishingInstructorService;
 @RestController
 @RequestMapping(value = "fishingInstructor")
 public class FishingInstructorController{
-	
-	@Autowired
-	private FishingInstructorService fishingInstructorService;
+
 	
 }

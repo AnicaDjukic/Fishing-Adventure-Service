@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -58,6 +59,13 @@ public class AuthenticationController {
         authenticationService.signUpFishingInstructor(new FishingInstructor(userDto));
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
+
+    @PostMapping("/signup/admin")
+    public ResponseEntity<UserDto> addAdmin(@RequestBody UserDto userDto) throws MailException {
+        authenticationService.signUpAdmin(new Admin(userDto));
+        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/confirm-account")
     public ResponseEntity<String> confirmAccount(@RequestParam(name = "token") String token) {

@@ -1,5 +1,7 @@
 package isa.FishingAdventure.model;
 
+import isa.FishingAdventure.dto.UserDto;
+
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -20,6 +22,13 @@ public class Admin extends User {
     }
 
     public Admin() {
+    }
+
+    public Admin(UserDto userDto) {
+        super(userDto.getEmail(), userDto.getName(), userDto.getSurname(), userDto.getPassword(),
+                userDto.getPhoneNumber(), userDto.getUserType(), userDto.getAddress(), null);
+        this.setBiography(userDto.getBiography());
+        this.isHeadAdmin = false;
     }
 
     public Boolean getHeadAdmin() {

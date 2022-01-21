@@ -17,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -154,5 +155,13 @@ public class UserService implements UserDetailsService {
 		} catch (Exception e) {
 			loggerLog.debug("Email could not be sent.");
 		}
+	}
+
+	public boolean hasPasswordBeenChanged(String email) {
+		boolean isChanged = true;
+		User user = findByEmail(email);
+		if (user.getLastPasswordResetDate().equals(null))
+			isChanged = false;
+		return isChanged;
 	}
 }

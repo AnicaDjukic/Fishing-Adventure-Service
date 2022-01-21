@@ -365,6 +365,33 @@ export default {
           if(res.data != "") {
             localStorage.setItem("jwt", res.data.accessToken);
             localStorage.setItem("refreshToken", res.data.refreshToken);
+
+
+            axios
+              .get("/users/getRole", {
+                headers: {
+                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                  Authorization: "Bearer " + localStorage.refreshToken,
+                },
+              })
+              .then((res) => {
+                let loggedInRole = res.data;
+
+                if (loggedInRole == "ROLE_ADMIN") {
+                  axios
+                    .get("/users/hasPasswordBeenChanged", {
+                      headers: {
+                        "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                        Authorization: "Bearer " + localStorage.refreshToken,
+                      },
+                    })
+                    .then((res) => {
+                      if (!res.data) {
+                        alert("NE MOZE!")
+                      }
+                    });
+                  }
+              });
           }
         });
     },

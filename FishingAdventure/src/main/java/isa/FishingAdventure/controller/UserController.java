@@ -1,6 +1,7 @@
 package isa.FishingAdventure.controller;
 
 import isa.FishingAdventure.dto.*;
+import isa.FishingAdventure.model.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import isa.FishingAdventure.model.User;
 import isa.FishingAdventure.service.UserService;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +68,7 @@ public class UserController {
 		User user = userService.findByToken(token.split(" ")[1]);
 		if (dto.getNewPassword().equals(dto.getPasswordAgain())) {
 			user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+			user.setLastPasswordResetDate(Timestamp.valueOf(LocalDateTime.now()));
 		}
 		userService.save(user);
 		return dto;
@@ -128,6 +132,13 @@ public class UserController {
 	public ResponseEntity<UserPointsDto> getUserPointsInfo(@RequestHeader("Authorization") String token) {
 		User user = userService.findByToken(token.split(" ")[1]);
 		return new ResponseEntity<>(userService.getUserPointsInfo(user), HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/hasPasswordBeenChanged")
+	public ResponseEntity<Boolean> hasPasswordBeenChanged(@RequestHeader("Authorization") String token) {
+		User user = userService.findByToken(token.split(" ")[1]);
+		boolean isPasswordChanged = userService.hasPasswordBeenChanged(user.getEmail());
+		return new ResponseEntity<>(isPasswordChanged, HttpStatus.OK);
 	}
 
 }

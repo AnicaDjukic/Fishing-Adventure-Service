@@ -23,6 +23,7 @@
             type="button"
             class="btn btn-outline-primary text-nowrap me-2"
             data-bs-toggle="modal"
+            data-bs-target="#AddAdminModal"
             v-if="isHeadAdmin == true"
           >
             Add new admin
@@ -136,16 +137,18 @@
     id="loyalty-program-modal">
     </loyalty-program-modal>
 
+    <add-new-admin-modal></add-new-admin-modal>
   </div>
  
 </template>
 
 <script>
 import LoyaltyProgramModal from "@/components/Admin/LoyaltyProgramModal.vue"
+import AddNewAdminModal from "@/components/Admin/AddNewAdminModal.vue";
 import axios from "axios";
 axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
-  components: { "loyalty-program-modal": LoyaltyProgramModal },
+  components: { "loyalty-program-modal": LoyaltyProgramModal,  "add-new-admin-modal": AddNewAdminModal },
   data: function () {
     return {
       searchText: "",
