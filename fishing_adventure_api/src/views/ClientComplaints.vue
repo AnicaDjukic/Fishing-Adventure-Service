@@ -94,7 +94,7 @@ export default {
             },
           })
           .then(() => {
-            this.reports.splice(this.reports.indexOf(report));
+            this.reports.splice(this.reports.indexOf(report), 1);
             this.$toast.show(
             "User has been sanctioned.",
             {
@@ -111,7 +111,7 @@ export default {
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
-          .then(this.reports.splice(this.reports.indexOf(report)));
+          .then(this.reports.splice(this.reports.indexOf(report), 1));
     },
   },
 };

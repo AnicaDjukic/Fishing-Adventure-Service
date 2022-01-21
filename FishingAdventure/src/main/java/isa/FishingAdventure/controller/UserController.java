@@ -117,6 +117,13 @@ public class UserController {
 		return new ResponseEntity<>("ok", HttpStatus.OK);
 	}
 
+	@PutMapping(value = "/deleteUser")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<String> deleteUser(@RequestBody String email) {
+		userService.delete(email);
+		return new ResponseEntity<>("ok", HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/getUserPointsInfo")
 	public ResponseEntity<UserPointsDto> getUserPointsInfo(@RequestHeader("Authorization") String token) {
 		User user = userService.findByToken(token.split(" ")[1]);

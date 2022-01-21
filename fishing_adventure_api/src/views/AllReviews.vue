@@ -152,7 +152,7 @@ export default {
             },
           })
           .then(() => {
-            this.reviews.splice(this.reviews.indexOf(review));
+            this.reviews.splice(this.reviews.indexOf(review), 1);
             this.$toast.show(
             "Review approved.",
             {
@@ -170,7 +170,7 @@ export default {
             },
           })
           .then(() => {
-            this.reviews.splice(this.reviews.indexOf(review));
+            this.reviews.splice(this.reviews.indexOf(review), 1);
             this.$toast.show(
             "Review rejected.",
             {
