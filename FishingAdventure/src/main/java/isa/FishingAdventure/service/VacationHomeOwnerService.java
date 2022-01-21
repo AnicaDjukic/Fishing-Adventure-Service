@@ -3,7 +3,6 @@ package isa.FishingAdventure.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import isa.FishingAdventure.model.UserType;
@@ -17,9 +16,6 @@ public class VacationHomeOwnerService {
 	private VacationHomeOwnerRepository homeOwnerRepository;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
 	private UserTypeService userTypeService;
 
 	public VacationHomeOwner findByEmail(String email) {
@@ -27,7 +23,6 @@ public class VacationHomeOwnerService {
 	}
 
 	public void saveNewHomeOwner(VacationHomeOwner vacationHomeOwner) {
-		vacationHomeOwner.setPassword(passwordEncoder.encode(vacationHomeOwner.getPassword()));
 		List<UserType> roles = userTypeService.findByName("ROLE_VACATION_HOME_OWNER");
 		vacationHomeOwner.setUserType(roles.get(0));
 		homeOwnerRepository.save(vacationHomeOwner);

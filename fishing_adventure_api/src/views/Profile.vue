@@ -1,21 +1,25 @@
 <template>
   <div>
     <UserInfo></UserInfo>
-    <StatisticsHomeOwner
-      v-if="loggedInRole == 'ROLE_VACATION_HOME_OWNER'"
-    ></StatisticsHomeOwner>
+    <StatisticsAdvertiser
+      v-if="loggedInRole != 'ROLE_CLIENT' && loggedInRole != 'ROLE_ADMIN'"
+    ></StatisticsAdvertiser>
     <StatisticsClient v-if="loggedInRole == 'ROLE_CLIENT'"></StatisticsClient>
+    <StatisticsAdmin v-if="loggedInRole == 'ROLE_ADMIN'"></StatisticsAdmin>
+
   </div>
 </template>
 
 <script>
 import UserInfo from "@/components/UserProfile/UserInfo.vue";
-import StatisticsHomeOwner from "@/components/UserProfile/StatisticsHomeOwner.vue";
+import StatisticsAdvertiser from "@/components/UserProfile/StatisticsAdvertiser.vue";
 import StatisticsClient from "@/components/UserProfile/StatisticsClient.vue";
+import StatisticsAdmin from "@/components/UserProfile/StatisticsAdmin.vue";
+
 import axios from "axios";
 axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
-  components: { UserInfo, StatisticsHomeOwner, StatisticsClient },
+  components: { UserInfo, StatisticsAdvertiser, StatisticsClient, StatisticsAdmin },
   data: function () {
     return {
       loggedInRole: "",

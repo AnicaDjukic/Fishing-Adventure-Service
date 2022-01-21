@@ -25,14 +25,14 @@
                     <p style="margin: 1rem 0">Stats</p>
                   </li>
                   <li v-on:click="changeMenuDisplay" id="terms">
-                    <p style="margin: 1rem 0">Terms</p>
+                    <p style="margin: 1rem 0">Earnings</p>
                   </li>
                 </ul>
               </div>
             </div>
           </nav>
         </div>
-        <div class="col-md-8 shadow-none main main-stats" name="main-col" style="height: 320px">
+        <div class="col-md-8 shadow-none main main-stats" name="main-col" style="min-height: 320px">
           <div class="points-container">
             <h4 style="margin-right: auto">{{ userCategory }} </h4>
             <h3 style="margin-right: 10px">{{ userPointsInfo.points }}</h3>
@@ -66,25 +66,36 @@
         </div>
         <div class="col-md-8 shadow-none main main-terms" name="main-col">
           <div>
-            <h3>Policy</h3>
-            <p>
-              We want to bring you the best offers for creating new memories. For
-              every reservation on our website you will be rewarded with points. Try to gain
-              as many points as possible, the more points you gain the better offers you will get.
-            </p>
+            <Datepicker
+              style="
+                width: 60%;
+                margin-right: 10px;
+                border: 1px solid white;
+                border-radius: 5px;
+              "
+              dark
+              v-model="dateRange"
+              @closed="dateRangeChanged"
+              placeholder="Select dates.."
+              range
+              :enableTimePicker="true"
+            ></Datepicker>
 
-            <h3>Penalties</h3>
-            <p>
-              Any advertiser may request the sanctioning of a user by filling out a
-              complaint against them. Based on the complaint the
-              administrator will decide whether the sanction will be applied. If a sanction
-              is approved the user will receive a penalty.
-            </p>
-            <p>
-              If the user receives 3 penalties, the creation of new reservations
-              will be prohibited. Penalties are cleared every first of the
-              month.
-            </p>
+           <table class="table table-striped"  style="margin-top: 50px">
+              <thead>
+                <th>Earnings</th>
+                <th>Date of payment</th>
+              </thead>
+              <tbody>
+                <tr v-for="earning in advertiserEarnings" :key="earning.id" v-bind:earning="earning">
+                  <td> ${{earning.amountEarned}} </td>
+                  <td> {{earning.dateOfTransaction}} </td>
+                </tr>
+              </tbody>
+            </table>
+            <h5 v-if="advertiserEarnings.length == 0" style="margin-top:20px; margin-bottom:90px"> No transactions </h5>
+            <!-- <h4 style="margin-top:15px"> Total earnings: {{ totalEarnings }}</h4> -->
+
           </div>
         </div>
       </div>
@@ -94,6 +105,7 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 axios.defaults.baseURL = process.env.VUE_APP_URL;
 export default {
   data: function () {
@@ -105,6 +117,8 @@ export default {
       cottageReservations: 5,
       boatReservations: 1,
       adventureReservations: 2,
+      totalEarnings: 0,
+      advertiserEarnings: [],
     };
   },
   mounted: function () {
@@ -159,6 +173,28 @@ export default {
         document.querySelector(".main-terms").style.display = "none";
       }
     },
+     dateRangeChanged: function () {
+      if (this.dateRange[0] != undefined && this.dateRange[1] != undefined) {
+        axios
+            .get(
+                "/advertiserEarnings/getTransactionsForPeriodForAdvertiser?start=" +
+                moment(this.dateRange[0]).format("yyyy-MM-DD HH:mm:ss.SSS") +
+                "&end=" +
+                moment(this.dateRange[1]).format("yyyy-MM-DD HH:mm:ss.SSS"),
+                {
+                    headers: {
+                    "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                    Authorization: "Bearer " + localStorage.refreshToken,
+                    },
+                }
+                )
+                .then((res) => {
+                    this.advertiserEarnings = res.data;
+                });
+      }
+
+    },
+   
   },
 };
 </script>

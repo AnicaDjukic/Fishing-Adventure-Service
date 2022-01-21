@@ -1,11 +1,15 @@
 package isa.FishingAdventure.service;
 
+import isa.FishingAdventure.dto.AdvertiserEarningsDto;
 import isa.FishingAdventure.model.*;
+import isa.FishingAdventure.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import isa.FishingAdventure.repository.AdvertiserEarningsRepository;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class AdvertiserEarningsService {
@@ -21,6 +25,9 @@ public class AdvertiserEarningsService {
 
     @Autowired
     private ReservationPointsService pointsService;
+
+    @Autowired
+    private TokenUtils tokenUtils;
 
     public void calculateEarningsForNewReservation(String advertiserEmail, Reservation reservation) {
         double amountEarned = categoryService.calculateAmountEarned(advertiserEmail, reservation);
@@ -44,5 +51,37 @@ public class AdvertiserEarningsService {
 
     public AdvertiserEarnings getByReservation(Reservation reservation) {
         return advertiserEarningsRepository.getByReservation(reservation);
+    }
+
+    public double calculateEarningForPeriod(Date periodStart, Date periodEnd) {
+        double sum = 0;
+        for (AdvertiserEarnings earnings : advertiserEarningsRepository.findAll()) {
+            if (earnings.getDateOfTransaction().after(periodStart)
+                    && earnings.getDateOfTransaction().before(periodEnd))
+                sum += earnings.getAmountEarned();
+        }
+        return sum;
+    }
+
+    public List<AdvertiserEarningsDto> getAllTransactionsForPeriod(Date periodStart, Date periodEnd) {
+        List<AdvertiserEarningsDto> earningsDtos = new ArrayList<>();
+        for (AdvertiserEarnings earnings : advertiserEarningsRepository.findAll()) {
+            if (earnings.getDateOfTransaction().after(periodStart)
+                    && earnings.getDateOfTransaction().before(periodEnd))
+                earningsDtos.add(new AdvertiserEarningsDto(earnings));
+        }
+        return earningsDtos;
+    }
+
+    public List<AdvertiserEarningsDto> getAllTransactionsForPeriodForAdvertiser(String token, Date periodStart, Date periodEnd) {
+        List<AdvertiserEarningsDto> earningsDtos = new ArrayList<>();
+        String email = tokenUtils.getEmailFromToken(token);
+        for (AdvertiserEarnings earnings : advertiserEarningsRepository.findAll()) {
+            if (earnings.getAdvertiserEmail().equals(email)
+                    && earnings.getDateOfTransaction().after(periodStart)
+                    && earnings.getDateOfTransaction().before(periodEnd))
+                earningsDtos.add(new AdvertiserEarningsDto(earnings));
+        }
+        return earningsDtos;
     }
 }

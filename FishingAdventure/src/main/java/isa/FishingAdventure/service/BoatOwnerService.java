@@ -6,7 +6,6 @@ import java.util.List;
 import isa.FishingAdventure.model.Appointment;
 import isa.FishingAdventure.model.Boat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import isa.FishingAdventure.model.BoatOwner;
@@ -23,9 +22,6 @@ public class BoatOwnerService {
 	private BoatService boatService;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
 	private UserTypeService userTypeService;
 
 	public BoatOwner findByEmail(String email) {
@@ -33,7 +29,6 @@ public class BoatOwnerService {
 	}
 
 	public void saveNewBoatOwner(BoatOwner boatOwner) {
-		boatOwner.setPassword(passwordEncoder.encode(boatOwner.getPassword()));
 		List<UserType> roles = userTypeService.findByName("ROLE_BOAT_OWNER");
 		boatOwner.setUserType(roles.get(0));
 		boatOwnerRepository.save(boatOwner);

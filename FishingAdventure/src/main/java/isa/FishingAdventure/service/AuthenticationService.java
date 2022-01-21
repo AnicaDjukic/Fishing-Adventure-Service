@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import isa.FishingAdventure.dto.JwtAuthenticationRequest;
 
@@ -48,6 +49,9 @@ public class AuthenticationService {
 
     @Autowired
     private ConfirmationTokenService confirmationTokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserService userService;
@@ -96,6 +100,7 @@ public class AuthenticationService {
         if (userService.isEmailRegistered(client.getEmail()).equals(true)) {
             throw new ResourceConflictException(EMAIL_EXISTS);
         } else {
+            client.setPassword(passwordEncoder.encode(client.getPassword()));
             clientService.saveNewClient(client);
             sendRegistrationEmail(client);
         }
@@ -105,6 +110,7 @@ public class AuthenticationService {
         if (userService.isEmailRegistered(vacationHomeOwner.getEmail()).equals(true)) {
             throw new ResourceConflictException(EMAIL_EXISTS);
         } else {
+            vacationHomeOwner.setPassword(passwordEncoder.encode(vacationHomeOwner.getPassword()));
             homeOwnerService.saveNewHomeOwner(vacationHomeOwner);
         }
     }
@@ -113,6 +119,7 @@ public class AuthenticationService {
         if (userService.isEmailRegistered(boatOwner.getEmail()).equals(true)) {
             throw new ResourceConflictException(EMAIL_EXISTS);
         } else {
+            boatOwner.setPassword(passwordEncoder.encode(boatOwner.getPassword()));
             boatOwnerService.saveNewBoatOwner(boatOwner);
         }
     }
@@ -121,6 +128,7 @@ public class AuthenticationService {
         if (userService.isEmailRegistered(fishingInstructor.getEmail()).equals(true)) {
             throw new ResourceConflictException(EMAIL_EXISTS);
         } else {
+            fishingInstructor.setPassword(passwordEncoder.encode(fishingInstructor.getPassword()));
             instructorService.saveNewInstructor(fishingInstructor);
         }
     }

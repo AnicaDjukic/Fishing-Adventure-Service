@@ -8,7 +8,6 @@ import isa.FishingAdventure.repository.ClientRepository;
 import isa.FishingAdventure.security.util.TokenUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,9 +21,6 @@ public class ClientService {
 
     @Autowired
     private TokenUtils tokenUtils;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserTypeService userTypeService;
@@ -41,7 +37,6 @@ public class ClientService {
     }
 
     public void saveNewClient(Client client) {
-        client.setPassword(passwordEncoder.encode(client.getPassword()));
         List<UserType> roles = userTypeService.findByName("ROLE_CLIENT");
         client.setUserType(roles.get(0));
         clientRepository.save(client);
