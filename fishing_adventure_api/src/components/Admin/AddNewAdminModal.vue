@@ -187,7 +187,7 @@ export default {
         })
         .then(() => {
           var myModalEl = document.getElementById('AddAdminModal');
-          var modal = window.bootstrap.Modal.getInstance(myModalEl)
+          var modal = window.bootstrap.Modal.getInstance(myModalEl);
           modal.hide();
         });
     },

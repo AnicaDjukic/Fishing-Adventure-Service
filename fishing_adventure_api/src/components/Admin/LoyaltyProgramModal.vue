@@ -108,7 +108,6 @@
             class="btn btn-outline-primary"
             style="width: 20%"
             v-on:click="updateLoyaltyProgram"
-            data-bs-dismiss="modal"
           >
             Save
           </button>
@@ -153,7 +152,10 @@ export default {
             }
           )
           .then(() => {
-             this.$toast.show("Loyalty program updated.");
+            var myModalEl = document.getElementById('loyalty-program-modal');
+            var modal = window.bootstrap.Modal.getInstance(myModalEl);
+            modal.hide();
+            this.$toast.show("Loyalty program updated.");
         });
        
         },
