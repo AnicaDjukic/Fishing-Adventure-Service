@@ -138,6 +138,7 @@ public class ServiceProfileService {
         }
     }
 
+    @Transactional
     public void recalculateServiceRating(int id) {
         ServiceProfile serviceProfile = getById(id);
         serviceProfile.setRating(calculateAverageRatingForService(id));

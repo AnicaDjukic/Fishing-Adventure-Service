@@ -7,8 +7,10 @@ import isa.FishingAdventure.repository.ReviewRepository;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,14 +98,20 @@ public class ReviewService {
         return reviews;
     }
 
+    @Transactional
     public void approveReview(Review review, String advertiserEmail) {
+        try {
         review.setApproved(true);
         repository.save(review);
         profileService.recalculateServiceRating(review.getServiceId());
         sendEmailAboutNewReview(review.getServiceId(), advertiserEmail);
+        } catch (OptimisticEntityLockException e) {
+            loggerLog.debug("Optimistic lock exception.");
+        }
     }
 
-    private void sendEmailAboutNewReview(int serviceId, String advertiserEmail) {
+    @Transactional
+    public void sendEmailAboutNewReview(int serviceId, String advertiserEmail) {
         String serviceName = profileService.getById(serviceId).getName();
         String emailText = emailService.createGenericEmail("Review posted", "A review has been posted for" +
                 serviceName + ".");
@@ -114,8 +122,13 @@ public class ReviewService {
         }
     }
 
+    @Transactional
     public void rejectReview(Review review) {
+        try {
         review.setRejected(true);
         repository.save(review);
+        } catch (OptimisticEntityLockException e) {
+            loggerLog.debug("Optimistic lock exception.");
+    }
     }
 }

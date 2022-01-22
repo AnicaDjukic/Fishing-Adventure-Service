@@ -9,6 +9,10 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Version
+    @Column(nullable = false)
+    private Integer version;
+
     @Column(name = "content", nullable = false)
     private String content;
 
