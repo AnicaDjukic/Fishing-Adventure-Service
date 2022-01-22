@@ -7,8 +7,10 @@ import isa.FishingAdventure.repository.ReservationReportRepository;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,9 @@ public class ReservationReportService {
         }
     }
 
+    @Transactional
     public void reviewReport(ReservationReport report, String advertiserEmail, boolean isSanctioned) {
+        try {
         if (isSanctioned) {
             clientService.addPenaltyToClient(report.getReservation().getClient().getEmail());
         }
@@ -69,6 +73,9 @@ public class ReservationReportService {
         sendEmailAboutReport(advertiserEmail, report, isSanctioned);
         if (isSanctioned)
             sendEmailAboutReport(report.getReservation().getClient().getEmail(), report, true);
+        } catch (OptimisticEntityLockException e) {
+            loggerLog.debug("Optimistic lock exception.");
+        }
     }
 
     public List<ReservationIssueDto> getAdvertiserReportsForAdmin() {
@@ -99,7 +106,8 @@ public class ReservationReportService {
         return reportDto;
     }
 
-    private void sendEmailAboutReport(String email, ReservationReport report, boolean isSanctioned) {
+    @Transactional
+    public void sendEmailAboutReport(String email, ReservationReport report, boolean isSanctioned) {
         String emailText;
         String emailTitle = "Reservation report";
         if (report.getReservation().getClient().getEmail().equals(email)) {

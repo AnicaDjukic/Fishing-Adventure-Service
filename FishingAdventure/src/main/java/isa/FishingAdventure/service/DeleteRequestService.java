@@ -8,8 +8,10 @@ import isa.FishingAdventure.security.util.TokenUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,15 +84,21 @@ public class DeleteRequestService {
         return deleteRequests;
     }
 
+    @Transactional
     public void approveRequest(int id, String response) {
+        try {
         DeleteRequest request = findById(id);
         request.setReviewed(true);
         userService.delete(request.getEmail());
         deleteRequestRepository.save(request);
         sendDeletionResponseEmail(response, request, true);
+        } catch (OptimisticEntityLockException e) {
+            loggerLog.debug("Optimistic lock exception.");
+        }
     }
 
-    private void sendDeletionResponseEmail(String response, DeleteRequest request, boolean requestApproved) {
+    @Transactional
+    public void sendDeletionResponseEmail(String response, DeleteRequest request, boolean requestApproved) {
         String emailText;
         if (requestApproved) {
             emailText = emailService.createDeletionResponseEmail("Account deleted", response,
@@ -106,10 +114,15 @@ public class DeleteRequestService {
         }
     }
 
+    @Transactional
     public void rejectRequest(int id, String response) {
+        try {
         DeleteRequest request = findById(id);
         request.setReviewed(true);
         deleteRequestRepository.save(request);
         sendDeletionResponseEmail(response, request, false);
+        } catch (OptimisticEntityLockException e) {
+            loggerLog.debug("Optimistic lock exception.");
+        }
     }
 }

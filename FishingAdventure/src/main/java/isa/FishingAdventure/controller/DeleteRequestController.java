@@ -48,7 +48,6 @@ public class DeleteRequestController {
 
     @GetMapping(value = "/approveDeletion")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @Transactional
     public ResponseEntity<String> approveDeletionRequest(@RequestParam("id") Integer id,
             @RequestParam("response") String response) {
         deleteRequestService.approveRequest(id, response);
@@ -57,7 +56,6 @@ public class DeleteRequestController {
 
     @GetMapping(value = "/rejectDeletion")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @Transactional
     public ResponseEntity<String> rejectDeletionRequest(@RequestParam("id") Integer id,
             @RequestParam("response") String response) {
         deleteRequestService.rejectRequest(id, response);

@@ -10,6 +10,10 @@ public class DeleteRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Version
+    @Column(nullable = false)
+    private Integer version;
+
     @Column(name = "email", nullable = false)
     private String email;
 

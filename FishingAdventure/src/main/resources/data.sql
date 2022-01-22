@@ -635,4 +635,4 @@ VALUES (103, false, false, 103, 104);
 --
 INSERT INTO delete_request
 VALUES (101, '2022-01-05 15:43:20.716', 'client3@gmail.com', 'Not interested in new adventures anymore.', false,
-        'ROLE_CLIENT');
+        'ROLE_CLIENT', 0);

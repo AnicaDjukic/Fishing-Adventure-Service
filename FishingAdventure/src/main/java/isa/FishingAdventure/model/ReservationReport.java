@@ -8,6 +8,10 @@ public class ReservationReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Version
+    @Column(nullable = false)
+    private Integer version;
+
     @Column(name = "report", nullable = false)
     private String report;
 
