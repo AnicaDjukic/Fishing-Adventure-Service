@@ -31,10 +31,10 @@ public class ServiceProfileController {
     public ResponseEntity<List<AdditionalServiceDto>> getAdditionalServicesByName(
             @RequestHeader("Authorization") String token, @PathVariable String name) {
         ServiceProfile profile = serviceProfileService.getByNameForAdvertiser(name, token.split(" ")[1]);
-        return new ResponseEntity<>(createAdditinalServiceDtos(profile), HttpStatus.OK);
+        return new ResponseEntity<>(createAdditionalServiceDos(profile), HttpStatus.OK);
     }
 
-    private List<AdditionalServiceDto> createAdditinalServiceDtos(ServiceProfile profile) {
+    private List<AdditionalServiceDto> createAdditionalServiceDos(ServiceProfile profile) {
         List<AdditionalServiceDto> dtos = new ArrayList<>();
         for (AdditionalService service : profile.getAdditionalServices()) {
             dtos.add(new AdditionalServiceDto(service));
@@ -54,11 +54,11 @@ public class ServiceProfileController {
     @PreAuthorize("hasRole('ROLE_BOAT_OWNER') || hasRole('ROLE_VACATION_HOME_OWNER') || hasRole('ROLE_FISHING_INSTRUCTOR')")
     public ResponseEntity<List<AppointmentDto>> getAppointmentsByServiceId(@PathVariable String id) {
         ServiceProfile profile = serviceProfileService.getById(Integer.parseInt(id));
-        List<AppointmentDto> dtos = creteAppointmentDtos(id, profile);
+        List<AppointmentDto> dtos = createAppointmentDtos(id, profile);
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
-    private List<AppointmentDto> creteAppointmentDtos(String id, ServiceProfile profile) {
+    private List<AppointmentDto> createAppointmentDtos(String id, ServiceProfile profile) {
         List<AppointmentDto> dtos = new ArrayList<>();
         for (Appointment appointment : profile.getAppointments()) {
             AppointmentDto dto = new AppointmentDto(appointment);

@@ -87,20 +87,20 @@ public class AppointmentService {
         List<Appointment> appointments;
         switch (advertiser.getUserType().getName()) {
             case "ROLE_VACATION_HOME_OWNER":
-                appointments = getValidAppointements(vacationHomeService.getOffersByAdvertiser(advertiser.getEmail()));
+                appointments = getValidAppointments(vacationHomeService.getOffersByAdvertiser(advertiser.getEmail()));
                 break;
             case "ROLE_BOAT_OWNER":
-                appointments = getValidAppointements(boatService.getOffersByAdvertiser(advertiser.getEmail()));
+                appointments = getValidAppointments(boatService.getOffersByAdvertiser(advertiser.getEmail()));
                 break;
             default:
-                appointments = getValidAppointements(adventureService.getOffersByAdvertiser(advertiser.getEmail()));
+                appointments = getValidAppointments(adventureService.getOffersByAdvertiser(advertiser.getEmail()));
                 break;
         }
 
         return createAppointmentDtos(appointments);
     }
 
-    public List<Appointment> getValidAppointements(List<Appointment> appointments) {
+    public List<Appointment> getValidAppointments(List<Appointment> appointments) {
         List<Appointment> validAppointments = new ArrayList<>();
         for (Appointment appointment : appointments) {
             if (!appointment.isReserved() && Date.from(
@@ -115,7 +115,7 @@ public class AppointmentService {
     public List<AppointmentDto> getOffersByServiceId(Integer id) {
         ServiceProfile serviceProfile = serviceProfileService.getById(id);
         return new ArrayList<>(
-                createAppointmentDtos(getValidAppointements(new ArrayList<>(serviceProfile.getAppointments()))));
+                createAppointmentDtos(getValidAppointments(new ArrayList<>(serviceProfile.getAppointments()))));
     }
 
     private List<AppointmentDto> createAppointmentDtos(List<Appointment> appointments) {

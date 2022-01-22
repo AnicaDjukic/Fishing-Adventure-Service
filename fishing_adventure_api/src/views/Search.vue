@@ -432,7 +432,7 @@ export default {
           this.searchBoats();
         }
       } else {
-        this.searching = "boats";
+        this.searching = "adventures";
         if (this.date[0] != undefined && this.date[1] != undefined) {
           this.searchAdventures();
         }

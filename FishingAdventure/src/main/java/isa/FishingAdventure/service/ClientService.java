@@ -9,6 +9,7 @@ import isa.FishingAdventure.security.util.TokenUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +43,16 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    @Transactional
     public void addPenaltyToClient(String email) {
         Client client = clientRepository.findClientWithPessimisticLock(email);
         client.setPenalties(client.getPenalties() + 1);
         save(client);
     }
 
-    public boolean subscribe(Client client, Integer id) {
-        ServiceProfile serviceProfile = serviceProfileService.getById(id);
-        if (isSubscribed(client, id))
+    public boolean subscribe(Client client, Integer serviceProfileId) {
+        ServiceProfile serviceProfile = serviceProfileService.getById(serviceProfileId);
+        if (isSubscribed(client, serviceProfileId))
             return false;
         client.getSubscriptions().add(serviceProfile);
         clientRepository.save(client);
