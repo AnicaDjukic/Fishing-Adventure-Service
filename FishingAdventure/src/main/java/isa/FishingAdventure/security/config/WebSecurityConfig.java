@@ -56,7 +56,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
+
 				.authorizeRequests().antMatchers("/api/foo").permitAll()
+				.antMatchers("/h2-console/*").permitAll()	// /h2-console/* ako se koristi H2 baza)
 				.antMatchers("/**").permitAll()
 				.anyRequest().authenticated().and()
 				.cors().and()
@@ -67,10 +69,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
+
 		web.ignoring().antMatchers(HttpMethod.POST, "/auth/**");
 		web.ignoring().antMatchers(HttpMethod.GET, "/auth/**");
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",
 				"*.css", "/**/*.js");
+
 	}
 
 }
