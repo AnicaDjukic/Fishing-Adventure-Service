@@ -53,7 +53,7 @@ public class ReservationReportService {
                 reportRepository.save(report);
                 break;
             case "didntShowUp":
-                clientService.addPenaltyToClient(report.getReservation().getClient());
+                clientService.addPenaltyToClient(report.getReservation().getClient().getEmail());
                 break;
             default:
                 break;
@@ -62,7 +62,7 @@ public class ReservationReportService {
 
     public void reviewReport(ReservationReport report, String advertiserEmail, boolean isSanctioned) {
         if (isSanctioned) {
-            clientService.addPenaltyToClient(report.getReservation().getClient());
+            clientService.addPenaltyToClient(report.getReservation().getClient().getEmail());
         }
         report.setWaitingReview(false);
         reportRepository.save(report);

@@ -80,7 +80,7 @@ public class ReservationService {
         boolean status = true;
         try {
             if (serviceProfileService.isServiceAvailableForDateRange(serviceProfileId, newAppointment.getStartDate(),
-                    newAppointment.getEndDate())) {
+                    newAppointment.getEndDate()) && !clientService.isClientBanned(clientEmail)) {
                 Client client = clientService.findByEmail(clientEmail);
                 saveNewAppointment(newAppointment, serviceProfileId);
                 Reservation newReservation = new Reservation(false, newAppointment, client, false);

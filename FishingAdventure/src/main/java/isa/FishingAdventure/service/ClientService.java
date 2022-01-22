@@ -42,7 +42,8 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    public void addPenaltyToClient(Client client) {
+    public void addPenaltyToClient(String email) {
+        Client client = clientRepository.findClientWithPessimisticLock(email);
         client.setPenalties(client.getPenalties() + 1);
         save(client);
     }
@@ -92,5 +93,10 @@ public class ClientService {
     public Client findByToken(String token) {
         String email = tokenUtils.getEmailFromToken(token);
         return findByEmail(email);
+    }
+
+    public boolean isClientBanned(String email) {
+        Client client = clientRepository.findByEmail(email);
+        return client.getPenalties() >= 3;
     }
 }

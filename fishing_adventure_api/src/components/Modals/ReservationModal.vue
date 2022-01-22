@@ -573,7 +573,7 @@ export default {
           .then((res) => {
             window.location.reload();
             if (!res.data)
-              this.$toast.show("Something went wrong, please try again.");
+              this.$toast.show("Something went wrong, please check your penalties and try again");
           });
       } else {
         if (this.maxPersons < this.numOfPersons)
