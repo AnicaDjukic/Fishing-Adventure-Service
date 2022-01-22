@@ -137,6 +137,7 @@ public class AuthenticationService {
         if (userService.isEmailRegistered(admin.getEmail()).equals(true)) {
             throw new ResourceConflictException(EMAIL_EXISTS);
         } else {
+            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
             adminService.saveNewAdmin(admin);
         }
     }
