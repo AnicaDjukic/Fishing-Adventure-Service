@@ -636,3 +636,19 @@ VALUES (103, false, false, 103, 104);
 INSERT INTO delete_request
 VALUES (101, '2022-01-05 15:43:20.716', 'client3@gmail.com', 'Not interested in new adventures anymore.', false,
         'ROLE_CLIENT', 0);
+
+
+INSERT INTO review
+VALUES (101, 'It was great!', '2022-01-15 20:11:52.452', false, false, 5, 101, 0, 101);
+INSERT INTO review
+VALUES (102, 'It was fine.', '2022-01-15 20:11:52.452', false, false, 5, 101, 0, 101);
+INSERT INTO review
+VALUES (103, 'It was great!', '2022-01-15 20:11:52.452', true, false, 4, 101, 0, 101);
+
+INSERT INTO complaint
+VALUES (101, 'It was horrible!', false, 101, 101);
+INSERT INTO complaint
+VALUES (102, 'It was too expensive.', false, 101, 101);
+INSERT INTO complaint
+VALUES (103, 'It was bad.', false, 101, 101);
+
