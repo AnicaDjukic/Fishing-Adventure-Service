@@ -48,6 +48,8 @@ public class ReservationReportService {
         return reportRepository.getById(id);
     }
 
+    public List<ReservationReport> findAll() { return reportRepository.findAll(); }
+
     public void managePenalties(String option, ReservationReport report) {
         switch (option) {
             case "sanctionRequest":
@@ -86,7 +88,7 @@ public class ReservationReportService {
         return reportDtos;
     }
 
-    private List<ReservationReport> getAllReportsAwaitingReview() {
+    public List<ReservationReport> getAllReportsAwaitingReview() {
         List<ReservationReport> reports = new ArrayList<>();
         for (ReservationReport report : reportRepository.findAll()) {
             if (report.getWaitingReview().equals(true)) {

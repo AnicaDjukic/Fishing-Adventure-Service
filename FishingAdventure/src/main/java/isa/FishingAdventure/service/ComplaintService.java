@@ -52,6 +52,8 @@ public class ComplaintService {
         return compliantRepository.getById(id);
     }
 
+    public List<Complaint> findAll() { return compliantRepository.findAll(); }
+
     public List<ReservationIssueDto> getComplaintsForAdmin() {
         List<ReservationIssueDto> complaintDtos = new ArrayList<>();
         for (Complaint complaint : getUnansweredComplaints()) {
@@ -60,7 +62,7 @@ public class ComplaintService {
         return complaintDtos;
     }
 
-    private List<Complaint> getUnansweredComplaints() {
+    public List<Complaint> getUnansweredComplaints() {
         List<Complaint> complaints = new ArrayList<>();
         for (Complaint complaint : compliantRepository.findAll()) {
             if (!complaint.isReplySent()) {

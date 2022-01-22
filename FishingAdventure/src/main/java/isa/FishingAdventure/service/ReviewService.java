@@ -38,6 +38,8 @@ public class ReviewService {
         repository.save(newReview);
     }
 
+    public List<Review> findAll() { return repository.findAll(); }
+
     public boolean exists(Integer reservationId) {
         for (Review review : repository.findAll()) {
             if (review.getReservation().getReservationId().equals(reservationId))
