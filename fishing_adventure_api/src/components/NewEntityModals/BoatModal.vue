@@ -295,6 +295,7 @@ export default {
       motorPower: "",
       maxSpeed: "",
       cancellationRule: 0.0,
+      imageStrings: [],
     };
   },
   mounted: function () {
@@ -458,6 +459,14 @@ export default {
 
     uploaded: function (files) {
       this.files = files;
+      for (let aFile of this.files) {
+        const file = aFile;
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+          this.imageStrings.push(e.target.result.split(",")[1]);
+        };
+      }
     },
     changeAddress: function (address) {
       if (address == undefined) {
@@ -535,41 +544,59 @@ export default {
         for (let equip of this.navEquipment) {
           navigationEqFinal.push({ name: equip.name });
         }
-        let boat = {
-          type: this.type,
-          length: this.length,
-          motorNumber: this.motorNumber,
-          motorPower: this.motorPower,
-          maxSpeed: this.maxSpeed,
-          name: this.boatName,
-          description: this.boatDescription,
-          images: null,
-          location: {
-            longitude: this.lng,
-            latitude: this.lat,
-            address: {
-              street: this.street,
-              city: this.city,
-              country: this.country,
-              zipCode: this.postal_code,
-            },
-          },
-          fishingEquipments: fishingEqFinal,
-          navigationEquipments: navigationEqFinal,
-          rules: rulesFinal,
-          additionalServices: additionalServices,
-          persons: this.persons,
-          cancellationRule: this.cancellationRule,
+
+        let cover = document.coverImage;
+        console.log(cover);
+        let imageFiles = {
+          images: this.imageStrings,
+          serviceName: this.boatName,
+          coverImage: cover,
         };
+        console.log(imageFiles);
 
         axios
-          .put("/boat/update/" + this.boatId, boat, {
+          .post("/uploadMultipleFiles", imageFiles, {
             headers: {
               "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
-          .then(window.location.reload());
+          .then((res) => {
+            let boat = {
+              type: this.type,
+              length: this.length,
+              motorNumber: this.motorNumber,
+              motorPower: this.motorPower,
+              maxSpeed: this.maxSpeed,
+              name: this.boatName,
+              description: this.boatDescription,
+              images: res.data,
+              location: {
+                longitude: this.lng,
+                latitude: this.lat,
+                address: {
+                  street: this.street,
+                  city: this.city,
+                  country: this.country,
+                  zipCode: this.postal_code,
+                },
+              },
+              fishingEquipments: fishingEqFinal,
+              navigationEquipments: navigationEqFinal,
+              rules: rulesFinal,
+              additionalServices: additionalServices,
+              persons: this.persons,
+              cancellationRule: this.cancellationRule,
+            };
+            axios
+              .put("/boat/update/" + this.boatId, boat, {
+                headers: {
+                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                  Authorization: "Bearer " + localStorage.refreshToken,
+                },
+              })
+              .then(window.location.reload());
+          });
       }
     },
     updatePrice: function () {
@@ -616,43 +643,60 @@ export default {
           navigationEqFinal.push({ name: equip.name });
         }
 
-        let boat = {
-          type: this.type,
-          length: this.length,
-          motorNumber: this.motorNumber,
-          motorPower: this.motorPower,
-          maxSpeed: this.maxSpeed,
-          name: this.boatName,
-          description: this.boatDescription,
-          images: null,
-          location: {
-            longitude: this.lng,
-            latitude: this.lat,
-            address: {
-              street: this.street,
-              city: this.city,
-              country: this.country,
-              zipCode: this.postal_code,
-            },
-          },
-          fishingEquipments: fishingEqFinal,
-          navigationEquipments: navigationEqFinal,
-          rules: rulesFinal,
-          additionalServices: additionalServices,
-          persons: this.persons,
-          cancellationRule: this.cancellationRule,
+        let cover = document.coverImage;
+        console.log(cover);
+        let imageFiles = {
+          images: this.imageStrings,
+          serviceName: this.boatName,
+          coverImage: cover,
         };
-
-        console.log(boat);
+        console.log(imageFiles);
 
         axios
-          .post("/boat/newBoat", boat, {
+          .post("/uploadMultipleFiles", imageFiles, {
             headers: {
               "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
-          .then(window.location.reload());
+          .then((res) => {
+            let boat = {
+              type: this.type,
+              length: this.length,
+              motorNumber: this.motorNumber,
+              motorPower: this.motorPower,
+              maxSpeed: this.maxSpeed,
+              name: this.boatName,
+              description: this.boatDescription,
+              images: res.data,
+              location: {
+                longitude: this.lng,
+                latitude: this.lat,
+                address: {
+                  street: this.street,
+                  city: this.city,
+                  country: this.country,
+                  zipCode: this.postal_code,
+                },
+              },
+              fishingEquipments: fishingEqFinal,
+              navigationEquipments: navigationEqFinal,
+              rules: rulesFinal,
+              additionalServices: additionalServices,
+              persons: this.persons,
+              cancellationRule: this.cancellationRule,
+            };
+            axios
+              .post("/boat/newBoat", boat, {
+                headers: {
+                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                  Authorization: "Bearer " + localStorage.refreshToken,
+                },
+              })
+              .then
+              //window.location.reload()
+              ();
+          });
       }
     },
   },

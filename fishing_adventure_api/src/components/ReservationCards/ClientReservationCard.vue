@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            :src="require('@/assets/' + reservation.imagePath)"
+            :src="env + '/downloadFile/' + reservation.imagePath"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -145,9 +145,11 @@ export default {
       persons: 0,
       hasComplaint: false,
       hasReview: false,
+      env: undefined,
     };
   },
-  mounted: function () {
+  mounted() {
+    this.env = process.env.VUE_APP_URL;
     axios
       .get("/users/get", {
         headers: {
@@ -196,21 +198,18 @@ export default {
     },
     cancelReservation: function () {
       axios
-        .put(
-          "/reservation/cancel", this.reservation.id,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-              Authorization: "Bearer " + localStorage.refreshToken,
-            },
-          }
-        )
+        .put("/reservation/cancel", this.reservation.id, {
+          headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
         .then((res) => {
           if (res.data) {
-            
-
             axios
-              .put("/reservation/calculateEarningsForCancelledReservation", this.reservation.id,
+              .put(
+                "/reservation/calculateEarningsForCancelledReservation",
+                this.reservation.id,
                 {
                   headers: {
                     "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
@@ -221,11 +220,10 @@ export default {
               .then(() => {
                 this.$emit("refresh", this.reservation);
 
-                 this.$toast.show("Reservation successfully cancelled!", {
+                this.$toast.show("Reservation successfully cancelled!", {
                   duration: 2000,
-                  });
+                });
               });
-
           } else {
             this.$toast.show("Unsuccessful cancellation! Try again, later!", {
               duration: 2000,

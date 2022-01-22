@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            :src="require('@/assets/' + adventureEntity.imagePath)"
+            :src="env + '/downloadFile/' + adventureEntity.imagePath"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -28,9 +28,10 @@
                   style="color: #293c4e"
                 ></i>
 
-                <i 
+                <i
                   class="fas fa-minus-square fa-lg shadow-none"
-                  v-on:click="deleteAdventure">
+                  v-on:click="deleteAdventure"
+                >
                 </i>
               </p>
 
@@ -39,9 +40,10 @@
                 class="top-right-corner shadow-none"
                 v-on:click="preventPropagation"
               >
-                <i 
+                <i
                   class="fas fa-minus-square fa-lg shadow-none"
-                  v-on:click="deleteAdventure">
+                  v-on:click="deleteAdventure"
+                >
                 </i>
               </p>
             </div>
@@ -53,9 +55,7 @@
                 <p
                   class="card-text text-left shadow-none mb-3 flex-column d-flex flex-md-row"
                   style="align-items: center"
-                >
-                 
-                </p>
+                ></p>
               </div>
               <p
                 class="shadow-none"
@@ -74,7 +74,8 @@
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
               <p class="shadow-none" style="margin: 0">
-                {{ adventureEntity.location.address.street }} {{ adventureEntity.location.address.city }}
+                {{ adventureEntity.location.address.street }}
+                {{ adventureEntity.location.address.city }}
                 {{ adventureEntity.location.address.country }}
               </p>
               <p
@@ -116,16 +117,18 @@ export default {
     return {
       path: "",
       loggedInRole: [],
+      env: undefined,
     };
   },
   mounted: function () {
+    this.env = process.env.VUE_APP_URL;
     if (window.location.href.includes("/search/adventures")) {
       this.path = "searchadventures";
     } else if (window.location.href.includes("/fishingAdventures")) {
       this.path = "myadventures";
     }
 
-     axios
+    axios
       .get("/users/getRole", {
         headers: {
           "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
@@ -153,15 +156,12 @@ export default {
       }
 
       axios
-        .get(
-          "/fishingAdventure/deleteAdventure/" + this.adventureEntity.id,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-              Authorization: "Bearer " + localStorage.refreshToken,
-            },
-          }
-        )
+        .get("/fishingAdventure/deleteAdventure/" + this.adventureEntity.id, {
+          headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
         .then(window.location.reload());
     },
   },

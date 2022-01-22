@@ -48,16 +48,21 @@ public class VacationHomeController {
     public ResponseEntity<List<VacationHomeDto>> getSearchedVacationHomes(
             @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
             @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end,
-            @RequestParam("persons") int persons, @RequestParam("rating") double rating, @RequestParam("input") String input) {
+            @RequestParam("persons") int persons, @RequestParam("rating") double rating,
+            @RequestParam("input") String input) {
         List<VacationHome> vacationHomes = new ArrayList<>();
         for (VacationHome vh : homeService.findAllAvailableVacationHomes(start, end, persons))
-            if (vh.getRating() >= rating && (searchByAddress(vh, input) || vh.getVacationHomeOwner().getName().contains(input) || vh.getVacationHomeOwner().getSurname().contains(input)))
+            if (vh.getRating() >= rating
+                    && (searchByAddress(vh, input) || vh.getVacationHomeOwner().getName().contains(input)
+                            || vh.getVacationHomeOwner().getSurname().contains(input)))
                 vacationHomes.add(vh);
         return new ResponseEntity<>(createVacationHomeDtos(vacationHomes), HttpStatus.OK);
     }
 
     private boolean searchByAddress(VacationHome vh, String input) {
-        return vh.getName().contains(input) || vh.getLocation().getAddress().getStreet().contains(input) || vh.getLocation().getAddress().getCity().contains(input) || vh.getLocation().getAddress().getCountry().contains(input);
+        return vh.getName().contains(input) || vh.getLocation().getAddress().getStreet().contains(input)
+                || vh.getLocation().getAddress().getCity().contains(input)
+                || vh.getLocation().getAddress().getCountry().contains(input);
     }
 
     @GetMapping(value = "/additionalServices/{id}")
@@ -120,7 +125,7 @@ public class VacationHomeController {
     @PostMapping(value = "/newHome")
     @PreAuthorize("hasRole('ROLE_VACATION_HOME_OWNER')")
     public ResponseEntity<NewHomeDto> saveNewCottage(@RequestHeader("Authorization") String token,
-                                                     @RequestBody NewHomeDto dto) {
+            @RequestBody NewHomeDto dto) {
         homeService.saveNewHome(new VacationHome(dto), token.split(" ")[1]);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -143,6 +148,7 @@ public class VacationHomeController {
         home.setRules(dto.getRules());
         home.setPersons(dto.getPersons());
         home.setLocation(dto.getLocation());
+        home.setImages(dto.getImages());
         return home;
     }
 

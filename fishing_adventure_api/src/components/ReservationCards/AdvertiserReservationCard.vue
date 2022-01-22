@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            :src="require('@/assets/' + entity.imagePath)"
+            :src="env + '/downloadFile/' + entity.imagePath"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -159,9 +159,11 @@ export default {
       endDate: "",
       entityType: "",
       hours: "",
+      env: undefined,
     };
   },
   mounted() {
+    this.env = process.env.VUE_APP_URL;
     this.startDate = new Date(this.entity.startDate);
     this.endDate = new Date(this.entity.endDate);
     this.startDate = moment(this.startDate).format("MM/DD/yyyy HH:mm");

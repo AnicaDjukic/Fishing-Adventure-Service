@@ -31,7 +31,14 @@
 <script>
 export default {
   props: ["files", "images"],
-  mounted() {
+  data: function () {
+    return {
+      coverImage: undefined,
+      env: undefined,
+    };
+  },
+  mounted: function () {
+    this.env = process.env.VUE_APP_URL;
     let fileInput = document.getElementById("inpFile");
     if (this.files) {
       fileInput.files = this.files;
@@ -39,6 +46,15 @@ export default {
     } else if (this.images) {
       this.loadImages();
     }
+
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.length > 0) {
+        if (e.target.classList[0].includes("radio-image")) {
+          console.log(e);
+          document.coverImage = e.target.id;
+        }
+      }
+    });
   },
   methods: {
     fileUploaded: function () {
@@ -108,7 +124,7 @@ export default {
         let img = document.createElement("img");
         img.className = "imageLoaded";
         img.style = "width:8rem";
-        img.setAttribute("src", require("@/assets/" + i.path));
+        img.setAttribute("src", this.env + "/downloadFile/" + i.path);
         label.insertBefore(img, figCap);
         div.appendChild(button);
         div.appendChild(label);

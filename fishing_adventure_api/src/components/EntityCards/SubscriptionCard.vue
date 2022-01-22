@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            :src="require('@/assets/' + subscription.imagePath)"
+            :src="env + '/downloadFile/' + subscription.imagePath"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -13,12 +13,9 @@
         <div class="col-md-8 shadow-none" name="main-col">
           <div class="card-body shadow-none">
             <div class="card-text shadow-none" style="display: flex">
-              <h5 class="card-title shadow-none">{{subscription.name}}</h5>
+              <h5 class="card-title shadow-none">{{ subscription.name }}</h5>
               <!--<p class="advertiserTitle shadow-none">@marinaGibson</p>-->
-              <p
-                class="top-right-corner shadow-none"
-                v-on:click="unsubscribe"
-              >
+              <p class="top-right-corner shadow-none" v-on:click="unsubscribe">
                 <button
                   class="btn btn-primary shadow-none mb-2"
                   style="
@@ -29,12 +26,11 @@
                   Unsubscribe
                 </button>
               </p>
-              
             </div>
             <div class="card-text shadow-none" style="display: flex">
               <div class="shadow-none">
                 <p class="card-text text-left shadow-none mb-1">
-                  {{subscription.description}}
+                  {{ subscription.description }}
                 </p>
               </div>
               <p
@@ -47,12 +43,16 @@
                   width: 30%;
                 "
               >
-                <i class="fas fa-star shadow-none"> {{subscription.rating}}</i>
+                <i class="fas fa-star shadow-none">
+                  {{ subscription.rating }}</i
+                >
               </p>
             </div>
             <div class="card-text fw-bold shadow-none" style="display: flex">
               <p class="shadow-none" style="margin: 0">
-                {{subscription.location.address.street}}, {{subscription.location.address.city}}, {{subscription.location.address.country}}
+                {{ subscription.location.address.street }},
+                {{ subscription.location.address.city }},
+                {{ subscription.location.address.country }}
               </p>
               <p
                 class="shadow-none"
@@ -62,8 +62,7 @@
                   margin-left: auto;
                   font-size: x-large;
                 "
-              >
-              </p>
+              ></p>
             </div>
           </div>
         </div>
@@ -80,10 +79,11 @@ export default {
   data: function () {
     return {
       founded: false,
+      env: undefined,
     };
   },
   mounted: function () {
-    
+    this.env = process.env.VUE_APP_URL;
   },
   methods: {
     unsubscribe: function (event) {
@@ -99,44 +99,46 @@ export default {
         .then();
 
       this.$nextTick(() => {
-          this.$emit('refresh', this.subscription);
+        this.$emit("refresh", this.subscription);
       });
     },
     open: function () {
       axios
-      .get("/vacationHome/exists/" + this.subscription.id, {
-        headers: {
-          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-          Authorization: "Bearer " + localStorage.refreshToken,
-        },
-      })
-      .then((res) => {
-        this.founded = res.data;
-        if(this.founded == true){
-          window.location.href = "/cottage/?id=" + this.subscription.id + "&date=undefined&persons=undefined";
-        } else {
-          this.findBoat();
-        }
-      });
+        .get("/vacationHome/exists/" + this.subscription.id, {
+          headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          this.founded = res.data;
+          if (this.founded == true) {
+            window.location.href =
+              "/cottage/?id=" +
+              this.subscription.id +
+              "&date=undefined&persons=undefined";
+          } else {
+            this.findBoat();
+          }
+        });
     },
-    findBoat: function() {
+    findBoat: function () {
       axios
-      .get("/boat/exists/" + this.subscription.id,
-      {
-        headers: {
-          "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-          Authorization: "Bearer " + localStorage.refreshToken,
-        },
-      })
-      .then((res) => {
-        this.founded = res.data;
-        if(this.founded == true){
-          window.location.href = "/boat/?id=" + this.subscription.id;
-        } else {
-          window.location.href = "/fishingAdventure";
-        }
-      });
-    }
+        .get("/boat/exists/" + this.subscription.id, {
+          headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
+        .then((res) => {
+          this.founded = res.data;
+          if (this.founded == true) {
+            window.location.href = "/boat/?id=" + this.subscription.id;
+          } else {
+            window.location.href = "/fishingAdventure";
+          }
+        });
+    },
   },
 };
 </script>

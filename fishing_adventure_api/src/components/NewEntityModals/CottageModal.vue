@@ -271,13 +271,13 @@ export default {
       pricePerDay: "",
       date: "",
       cancellationRule: 0.0,
+      imageStrings: [],
     };
   },
   mounted: function () {
     var element = document.getElementById("logIn-btn");
     element.classList.add("active");
     if (this.cottage) {
-      console.log(this.cottage);
       this.mode = "0";
       this.cottageId = this.cottage.id;
       this.cottageName = this.cottage.name;
@@ -388,9 +388,18 @@ export default {
         container.remove();
       }
     },
-
     uploaded: function (files) {
       this.files = files;
+      console.log(files);
+
+      for (let aFile of this.files) {
+        const file = aFile;
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+          this.imageStrings.push(e.target.result.split(",")[1]);
+        };
+      }
     },
     changeAddress: function (address) {
       if (address == undefined) {
@@ -450,35 +459,53 @@ export default {
         for (let room of this.rooms) {
           roomsFinal.push({ bedNumber: room.beds });
         }
-        let home = {
-          name: this.cottageName,
-          description: this.cottageDescription,
-          images: null,
-          location: {
-            longitude: this.lng,
-            latitude: this.lat,
-            address: {
-              street: this.street,
-              city: this.city,
-              country: this.country,
-              zipCode: this.postal_code,
-            },
-          },
-          rooms: roomsFinal,
-          rules: rulesFinal,
-          additionalServices: additionalServices,
-          persons: this.persons,
-          cancellationRule: this.cancellationRule,
+
+        let cover = document.coverImage;
+        console.log(cover);
+        let imageFiles = {
+          images: this.imageStrings,
+          serviceName: this.cottageName,
+          coverImage: cover,
         };
+        console.log(imageFiles);
 
         axios
-          .put("/vacationHome/update/" + this.cottageId, home, {
+          .post("/uploadMultipleFiles", imageFiles, {
             headers: {
               "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
-          .then(window.location.reload());
+          .then((res) => {
+            let home = {
+              name: this.cottageName,
+              description: this.cottageDescription,
+              images: res.data,
+              location: {
+                longitude: this.lng,
+                latitude: this.lat,
+                address: {
+                  street: this.street,
+                  city: this.city,
+                  country: this.country,
+                  zipCode: this.postal_code,
+                },
+              },
+              rooms: roomsFinal,
+              rules: rulesFinal,
+              additionalServices: additionalServices,
+              persons: this.persons,
+              cancellationRule: this.cancellationRule,
+            };
+            axios
+              .put("/vacationHome/update/" + this.cottageId, home, {
+                headers: {
+                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                  Authorization: "Bearer " + localStorage.refreshToken,
+                },
+              })
+              .then(window.location.reload());
+          });
       }
     },
     smallUpdate: function () {
@@ -519,35 +546,53 @@ export default {
         for (let room of this.rooms) {
           roomsFinal.push({ bedNumber: room.beds });
         }
-        let home = {
-          name: this.cottageName,
-          description: this.cottageDescription,
-          images: null,
-          location: {
-            longitude: this.lng,
-            latitude: this.lat,
-            address: {
-              street: this.street,
-              city: this.city,
-              country: this.country,
-              zipCode: this.postal_code,
-            },
-          },
-          rooms: roomsFinal,
-          rules: rulesFinal,
-          additionalServices: additionalServices,
-          persons: this.persons,
-          cancellationRule: this.cancellationRule,
+
+        let cover = document.coverImage;
+        console.log(cover);
+        let imageFiles = {
+          images: this.imageStrings,
+          serviceName: this.cottageName,
+          coverImage: cover,
         };
+        console.log(imageFiles);
 
         axios
-          .post("/vacationHome/newHome", home, {
+          .post("/uploadMultipleFiles", imageFiles, {
             headers: {
               "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
               Authorization: "Bearer " + localStorage.refreshToken,
             },
           })
-          .then(window.location.reload());
+          .then((res) => {
+            let home = {
+              name: this.cottageName,
+              description: this.cottageDescription,
+              location: {
+                longitude: this.lng,
+                latitude: this.lat,
+                address: {
+                  street: this.street,
+                  city: this.city,
+                  country: this.country,
+                  zipCode: this.postal_code,
+                },
+              },
+              rooms: roomsFinal,
+              rules: rulesFinal,
+              additionalServices: additionalServices,
+              persons: this.persons,
+              cancellationRule: this.cancellationRule,
+              images: res.data,
+            };
+            axios
+              .post("/vacationHome/newHome", home, {
+                headers: {
+                  "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+                  Authorization: "Bearer " + localStorage.refreshToken,
+                },
+              })
+              .then(window.location.reload());
+          });
       }
     },
   },

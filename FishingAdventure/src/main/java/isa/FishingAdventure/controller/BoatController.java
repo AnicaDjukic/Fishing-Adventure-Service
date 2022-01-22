@@ -109,6 +109,7 @@ public class BoatController {
         boat.setRules(dto.getRules());
         boat.setPersons(dto.getPersons());
         boat.setLocation(dto.getLocation());
+        boat.setImages(dto.getImages());
 
         return boat;
     }
@@ -142,16 +143,20 @@ public class BoatController {
     public ResponseEntity<List<BoatDto>> getSearchedVacationHomes(
             @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date start,
             @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") Date end,
-            @RequestParam("persons") int persons, @RequestParam("rating") double rating, @RequestParam("input") String input) {
+            @RequestParam("persons") int persons, @RequestParam("rating") double rating,
+            @RequestParam("input") String input) {
         List<Boat> boats = new ArrayList<>();
-        for(Boat b : boatService.findAllAvailableBoats(start, end, persons))
-            if(b.getRating() >= rating && (searchByAddress(b, input) || b.getBoatOwner().getName().contains(input) || b.getBoatOwner().getSurname().contains(input)))
+        for (Boat b : boatService.findAllAvailableBoats(start, end, persons))
+            if (b.getRating() >= rating && (searchByAddress(b, input) || b.getBoatOwner().getName().contains(input)
+                    || b.getBoatOwner().getSurname().contains(input)))
                 boats.add(b);
         return new ResponseEntity<>(createBoatDtos(boats), HttpStatus.OK);
     }
 
     private boolean searchByAddress(Boat boat, String input) {
-        return boat.getName().contains(input) || boat.getLocation().getAddress().getStreet().contains(input) || boat.getLocation().getAddress().getCity().contains(input) || boat.getLocation().getAddress().getCountry().contains(input);
+        return boat.getName().contains(input) || boat.getLocation().getAddress().getStreet().contains(input)
+                || boat.getLocation().getAddress().getCity().contains(input)
+                || boat.getLocation().getAddress().getCountry().contains(input);
     }
 
     @GetMapping(value = "/persons")

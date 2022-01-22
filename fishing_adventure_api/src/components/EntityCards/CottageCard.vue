@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            :src="getImageUrl(entity.imagePath)"
+            :src="env + '/downloadFile/' + entity.imagePath"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -41,8 +41,8 @@
                   v-on:click="deleteCottage"
                 ></i>
               </p>
-              
-               <p
+
+              <p
                 v-if="loggedInRole == 'ROLE_ADMIN'"
                 class="top-right-corner shadow-none"
                 v-on:click="preventPropagation"
@@ -52,7 +52,6 @@
                   v-on:click="deleteCottage"
                 ></i>
               </p>
-
             </div>
             <div class="card-text shadow-none" style="display: flex">
               <div class="shadow-none">
@@ -143,9 +142,11 @@ export default {
     return {
       path: "",
       loggedInRole: [],
+      env: undefined,
     };
   },
   mounted: function () {
+    this.env = process.env.VUE_APP_URL;
     if (window.location.href.includes("/search/cottages")) {
       this.path = "searchcottages";
     } else if (window.location.href.includes("/cottages")) {
@@ -199,15 +200,12 @@ export default {
       }
 
       axios
-        .get(
-          "/vacationHome/deleteHome/" + this.entity.id,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
-              Authorization: "Bearer " + localStorage.refreshToken,
-            },
-          }
-        )
+        .get("/vacationHome/deleteHome/" + this.entity.id, {
+          headers: {
+            "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
+            Authorization: "Bearer " + localStorage.refreshToken,
+          },
+        })
         .then(window.location.reload());
     },
     getImageUrl: function (imagePath) {

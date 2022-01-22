@@ -62,6 +62,7 @@ public class Boat extends ServiceProfile {
         this.boatOwner = dto.getBoatOwner();
         this.navigationEquipment = new HashSet<>(dto.getNavigationEquipments());
         this.fishingEquipment = new HashSet<>(dto.getFishingEquipments());
+        this.setImages(dto.getImages());
     }
 
     public String getType() {

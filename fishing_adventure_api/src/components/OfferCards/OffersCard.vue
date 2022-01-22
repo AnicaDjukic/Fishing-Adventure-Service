@@ -8,7 +8,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            :src="require('@/assets/' + offer.coverImage)"
+            :src="env + '/downloadFile/' + offer.coverImage"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -147,9 +147,11 @@ export default {
       ends: "",
       starts: "",
       durationString: "",
+      env: undefined,
     };
   },
   mounted() {
+    this.env = process.env.VUE_APP_URL;
     this.ends = new Date(this.offer.endDate);
     this.starts = new Date(this.offer.startDate);
     let offerEnds = this.offer.dateCreated + this.offer.duration;

@@ -5,7 +5,7 @@
         <div class="col-md-4 shadow-none">
           <img
             style="width: 100%; height: 225px; object-fit: cover"
-            :src="require('@/assets/' + boatEntity.imagePath)"
+            :src="env + '/downloadFile/' + boatEntity.imagePath"
             class="img-fluid rounded-start shadow-none"
           />
         </div>
@@ -51,7 +51,6 @@
                   v-on:click="deleteBoat"
                 ></i>
               </p>
-              
             </div>
             <div class="card-text shadow-none" style="display: flex">
               <div class="shadow-none">
@@ -142,9 +141,11 @@ export default {
     return {
       path: "",
       loggedInRole: [],
+      env: undefined,
     };
   },
   mounted: function () {
+    this.env = process.env.VUE_APP_URL;
     if (window.location.href.includes("/search/boats")) {
       this.path = "searchboats";
     } else if (window.location.href.includes("/boats")) {
@@ -157,7 +158,7 @@ export default {
           "Access-Control-Allow-Origin": process.env.VUE_APP_URL,
           Authorization: "Bearer " + localStorage.refreshToken,
         },
-       })
+      })
       .then((res) => {
         this.loggedInRole = res.data;
       });

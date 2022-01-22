@@ -31,6 +31,7 @@ public class VacationHome extends ServiceProfile {
 		super(dto.getName(), dto.getDescription(), dto.getCancellationRule(), 0.0, dto.getLocation(), dto.getRules(),
 				dto.getAdditionalServices(), dto.getPersons());
 		this.rooms = dto.getRooms();
+		this.setImages(dto.getImages());
 	}
 
 	public VacationHomeOwner getVacationHomeOwner() {
