@@ -83,8 +83,8 @@ public class FishingAdventureService {
     public boolean isInstructorAvailable(FishingInstructor instructor, Date start, Date end) {
         List<FishingAdventure> adventures = findByFishingInstructor(instructor);
         boolean available = false;
-        List<AvailabilityDateRange> availabilityPeriods = dateRangeService.findByServiceProfile(adventures.get(0));
-        for (AvailabilityDateRange period : availabilityPeriods) {
+        List<InstructorAvailability> availabilityPeriods = new ArrayList<>(instructor.getInstructorAvailabilities());
+        for (InstructorAvailability period : availabilityPeriods) {
             if (start.after(period.getStartDate()) && end.before(period.getEndDate())) {
                 available = true;
                 for (FishingAdventure adventure : adventures) {
